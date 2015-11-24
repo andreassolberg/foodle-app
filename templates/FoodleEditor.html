@@ -1,0 +1,324 @@
+
+
+<div class="container gutter">
+	<div class="row">
+		<div class="col-lg-12 uninett-color-white uninett-padded" style=""> 
+
+			<div id="editfoodle"></div>
+
+
+
+
+<form class="form-horizontal" role="form">
+
+	<h1 style="margin: 0px 0px 1em 0px">{_.createnew}</h1>
+
+
+	<div class="form-group" id="form-group-title">
+		<label for="inputTitle" class="col-sm-2 control-label">{_.title}</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="inputTitle" value="{foodle.name}" placeholder="{_.title}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="inputDescr" class="col-sm-2 control-label">{_.description}</label>
+		<div class="col-sm-10">
+
+			<textarea class="form-control" id="inputDescr" placeholder="{_.description}">{foodle.descr}</textarea>
+			<p class="help-block"><a target="_blank" href="http://daringfireball.net/projects/markdown/syntax">Markdown syntax</a></p>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="form-group gutter">
+		<label for="enableDeadline" class="col-sm-2 control-label">{_.deadline}</label>
+
+		<div class="col-sm-10 ">
+			<div class="checkbox">
+				<label>
+					<input id="enableDeadline" class="updatedynamics" type="checkbox"> {_.deadlineenable}.
+				</label>
+			</div>
+		</div>
+	</div>
+	<div id="sectionDeadline" class="deadlineselector"></div>
+
+
+
+
+
+
+
+
+
+	<div class="form-group gutter" style="margin-bottom: 0px">
+		<label for="enableTime" class="col-sm-2 control-label">{_.datetime}</label>
+
+		<div class="col-sm-10 ">
+			<div class="checkbox">
+				<label>
+					<input id="enableTime" class="updatedynamics" type="checkbox"> {_.datetimeenabled}.
+				</label>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="form-group datetimesection"></div>
+
+
+
+
+	<div id="sectionTimezone" class="form-group gutter">
+		<label for="enableTimezone" class="col-sm-2 control-label">{_.timezone}</label>
+
+		<div class="col-sm-10 "style="" id="timezoneselector" ></div>
+
+	</div>
+
+
+
+
+
+
+	<div class="form-group gutter" style="margin-bottom: 0px">
+		<label for="enableGroups" class="col-sm-2 control-label">{_.groups}</label>
+
+		<div class="col-sm-10 ">
+			<div class="checkbox">
+				<label>
+					<input id="enableGroups" class="updatedynamics" type="checkbox"> {_.sharewithgroups}.
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div id="sectionGroups" class=""></div>
+
+
+
+
+
+
+
+
+
+	<div class="form-group gutter">
+
+		<label for="inputEmail3" class="col-sm-2 control-label">{_.location}</label>
+
+
+		<div class="col-sm-10">
+
+			<div class="checkbox">
+				<label>
+					<input id="enableLocation" class="updatedynamics" type="checkbox"> {_.locationenable}.
+				</label>
+			</div>
+		</div>
+
+	</div>
+
+	
+
+
+	<div id="sectionLocationDetails" class="form-group" ></div>
+
+
+<!--
+
+
+	<div class="form-group">
+		<label for="ss" class="col-sm-2 control-label">{_.videomeeting}</label>
+
+		<div class="col-sm-10">
+			<div class="checkbox">
+				<label>
+					<input disabled="disabled" type="checkbox"> {_.ac}.
+				</label>
+			</div>
+		</div>
+	</div>
+
+-->
+
+
+	<div id="columneditor" class="well">
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<div class="checkbox">
+				<label>
+					<input id="inputResponseTypeMaybe" type="checkbox" checked="checked"> {_.maybeenable}.
+				</label>
+			</div>
+		</div>
+	</div>
+
+<!--
+
+
+	<div class="form-group gutter">
+		<div class="col-sm-offset-2 col-sm-10">
+			<div class="checkbox">
+				<label>
+					<input id="inputRequireLogin" type="checkbox" checked="checked"> {_.requirelogin} 
+				</label>
+			</div>
+			<p class="help-block">{_.logininfo}.</p>
+		</div>
+	</div>
+-->
+
+
+	<div class="form-group gutter">
+		<label for="ss" class="col-sm-2 control-label">{_.restrictions}</label>
+
+		<div class="col-sm-10">
+			<div class="checkbox">
+				<label>
+					<input id="enableRestrictions" type="checkbox" class="updatedynamics" > {_.restrictionsinfo}
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div id="sectionRestrictions">
+
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+
+				<div class="form-inline">
+
+					<div class="form-group col-sm-5">
+						<label>
+							<input id="enableRestrictionColLimit" type="checkbox" checked="checked"> {_.restr1} 
+						</label>
+					</div>
+				
+					<div class="form-group col-sm-5">
+						<select id="inputRestrictionColselector" class="form-control"></select>
+					</div>
+
+					<div class="form-group col-sm-2">
+						<input id="inputRestrictionColLimit" class="form-control" type="number" value="20" />
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+
+				<div class="form-inline">
+
+						<div class="form-group col-sm-5">
+							<label>
+								<input id="enableRestrictionRowlimit" class="" type="checkbox" > {_.restr2}
+							</label>
+						</div>
+					
+						<div class="form-group col-sm-5">
+							<input id="inputRestrictionRowlimit" class="form-control" type="number" value="20" />
+						</div>
+					
+				</div>
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+
+				<div class="form-inline">
+
+					<div class="form-group col-sm-5">
+						<label>
+							<input id="enableRestrictionCheckLimit" class="" type="checkbox" > {_.restr3} 
+						</label>
+					</div>
+				
+					<div class="form-group col-sm-5">
+						<input id="inputRestrictionCheckLimit" class="form-control" type="number" value="1" />
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="sectionFeed"  class="form-group gutter" style="display: none">
+		<label for="ss" class="col-sm-2 control-label">{_.publishfeed}</label>
+		<div class="col-sm-10">
+			<div class="checkbox">
+				<label>
+					<input id="enableFeed" type="checkbox" /> {_.publishfeed2}.
+				</label>
+			</div>
+			<select id="feedSelector" class="form-control">
+			</select>
+			<p class="help-block">{_.feedinfo}.</p>
+		</div>
+	</div>
+
+
+
+	<!-- <pre style="display: none" id="debug" class="gutterc"></pre> -->
+
+
+	<div class="form-group gutter">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button id="submitFoodle" type="submit" class="btn btn-large btn-primary">
+				<span class="glyphicon glyphicon-pencil"></span>
+				&nbsp;{_.save}
+			</button>
+		</div>
+	</div>
+
+
+</form>
+
+
+
+
+
+
+
+<div id="modalSuccess" class="modal fade">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">{_.savesuccess}</h4>
+			</div>
+			<div class="modal-body">
+				<p>{_.saveinfo}:</p>
+
+				<p><input id="shareURL" type="text" class="form-control" value="" /></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="actContinue btn btn-primary"><span class=""></span> {_.continuefoodle}</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+			
+
+
+

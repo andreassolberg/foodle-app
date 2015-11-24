@@ -1,0 +1,15 @@
+{#items}
+	<a href="#!/respond/{identifier}" data-clientid="{identifier}" class="list-group-item media clientEntry">
+
+
+			<p class="pull-right" style="color: #666; font-size: 82%">Created {createdAgo}, updated {updatedAgo}</p>
+			<h4 class="list-group-item-heading">{title}</h4>
+			<!-- <p class="list-group-item-text" style="font-size: 80%" ><i class="glyphicon glyphicon-chevron-right"></i> {identifier}</p> -->
+			<p class="list-group-item-text">{descr}</p>
+
+
+	</a>
+{:else}
+	<p>No foodles available. You can create a new Foodle, or find a direct link to a foodle that someone else have provided to you.</p>
+{/items}
+

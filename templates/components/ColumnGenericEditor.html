@@ -1,0 +1,126 @@
+<div>
+	<div class="colerrors"></div>
+
+
+
+	<div class="row" style="margin-bottom: 2.2em">
+
+
+		<div class="col-md-5">
+			<p><strong>Setup you column definitions</strong></p>
+		</div>
+
+		<div class="col-md-3">
+
+
+			<div class="checkbox">
+				<label>
+					<input class="checkIncludeOptions" {?coldef.tworowheaders}checked="checked"{/coldef.tworowheaders} type="checkbox" > Headers in two rows 
+				</label>
+			</div>
+		</div>
+
+		<div class="col-md-4" style="text-align: right">
+			<button class="btn btn-default btn-sm actColDecr">
+				<span class="fa fa-minus"></span>
+				&nbsp; Less columns
+			</button>
+			<button class="btn btn-default btn-sm actColIncr">
+				More columns &nbsp; 
+				<span class="fa fa-plus"></span>
+			</button>
+		</div>
+	</div>
+
+
+	<div class="row">
+			
+		<div id="columneditorMain" class="col-md-12">
+
+			{#coldef}
+			<table id="columnEditorTable" class="table table-bordered">
+				{#rows}
+					<tr>
+						{#.}
+							<td colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle">
+								<input class="coldefheader form-control" data-colid="{id}"
+									style="width: 100%" type="text" value="{title}" placeholder="{_.header}" />
+							</td>
+						{/.}
+					</tr>
+				{/rows}
+
+				<tr>
+				{#cols}
+					<td>
+						<select class="coldefdatatype" data-colid="{id}">
+							{#datatypes}
+								<option value="{id}" {?selected}selected="selected"{/selected}>{title}</option>
+							{/datatypes}
+						</select>
+					</td>
+				{/cols}
+				</tr>
+
+				<tr>
+				{#cols}
+					<td>
+						<div class="checkbox">
+							<label for="restr-{id}">
+								
+								<input type="checkbox" id="restr-{id}" data-colid="{id}" 
+									class="inputRestrictionsEnable"
+									{?restrictions.enabled}checked="checked"{/restrictions.enabled} />
+								&nbsp; Restrictions</label>
+						</div>
+
+							{#restrictions}
+
+								{#maxcheck}
+								<div>
+									<label for="restr-maxcheck-{id}" style="font-size: 90%">
+										<input type="number" id="restr-maxcheck-{id}" data-colid="{id}" 
+											class="form-control inputMaxcheck" value="{maxcheck}" style="width: 4.5em" />
+										&nbsp; Max. checked resp</label>
+								</div>
+								{/maxcheck}
+
+								{#maxnum}
+								<div>
+									<label for="restr-maxnum-{id}" style="font-size: 90%">
+										<input type="number" id="restr-maxnum-{id}" data-colid="{id}" 
+											class="form-control inputMaxnum" value="{maxnum}" style="width: 5.5em" />
+										&nbsp; Max. sum</label>
+								</div>
+								{/maxnum}
+
+							{/restrictions}
+
+
+					</td>
+				{/cols}
+				</tr>
+
+				<tr>
+				{#rowopts}
+					<td colspan="{colspan}">
+						<button title="Decrease number of suboptions (remove last)" data-colid="{id}" 
+							class="btn btn-default btn-sm actSubDecr" {^itemMayDecrease}disabled="disabled"{/itemMayDecrease}>
+							<span class="fa fa-minus"></span></button>
+						<button title="Increase suboptions" data-colid="{id}" 
+							class="btn btn-default btn-sm actSubIncr" {^itemMayIncrease}disabled="disabled"{/itemMayIncrease}>
+							<span class="fa fa-plus"></span></button>
+					</td>
+				{/rowopts}
+				</tr>
+
+			</table>
+			{/coldef}
+
+
+		</div>
+	</div>
+
+</div>
+
+<div style="clear: both"></div>
