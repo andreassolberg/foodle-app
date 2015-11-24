@@ -43,7 +43,7 @@
 					<tr>
 						{#.}
 							<td colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle">
-								<input class="coldefheader form-control" data-colid="{id}"
+								<input class="coldefheader form-control" data-colid="{idx}"
 									style="width: 100%" type="text" value="{title}" placeholder="{_.header}" />
 							</td>
 						{/.}
@@ -53,7 +53,7 @@
 				<tr>
 				{#cols}
 					<td>
-						<select class="coldefdatatype" data-colid="{id}">
+						<select class="coldefdatatype" data-colid="{idx}">
 							{#datatypes}
 								<option value="{id}" {?selected}selected="selected"{/selected}>{title}</option>
 							{/datatypes}
@@ -66,9 +66,9 @@
 				{#cols}
 					<td>
 						<div class="checkbox">
-							<label for="restr-{id}">
+							<label for="restr-{idx}">
 								
-								<input type="checkbox" id="restr-{id}" data-colid="{id}" 
+								<input type="checkbox" id="restr-{idx}" data-colid="{idx}" 
 									class="inputRestrictionsEnable"
 									{?restrictions.enabled}checked="checked"{/restrictions.enabled} />
 								&nbsp; Restrictions</label>
@@ -78,8 +78,8 @@
 
 								{#maxcheck}
 								<div>
-									<label for="restr-maxcheck-{id}" style="font-size: 90%">
-										<input type="number" id="restr-maxcheck-{id}" data-colid="{id}" 
+									<label for="restr-maxcheck-{idx}" style="font-size: 90%">
+										<input type="number" id="restr-maxcheck-{idx}" data-colid="{idx}" 
 											class="form-control inputMaxcheck" value="{maxcheck}" style="width: 4.5em" />
 										&nbsp; Max. checked resp</label>
 								</div>
@@ -87,8 +87,8 @@
 
 								{#maxnum}
 								<div>
-									<label for="restr-maxnum-{id}" style="font-size: 90%">
-										<input type="number" id="restr-maxnum-{id}" data-colid="{id}" 
+									<label for="restr-maxnum-{idx}" style="font-size: 90%">
+										<input type="number" id="restr-maxnum-{idx}" data-colid="{idx}" 
 											class="form-control inputMaxnum" value="{maxnum}" style="width: 5.5em" />
 										&nbsp; Max. sum</label>
 								</div>
@@ -104,10 +104,10 @@
 				<tr>
 				{#rowopts}
 					<td colspan="{colspan}">
-						<button title="Decrease number of suboptions (remove last)" data-colid="{id}" 
+						<button title="Decrease number of suboptions (remove last)" data-colid="{idx}" 
 							class="btn btn-default btn-sm actSubDecr" {^itemMayDecrease}disabled="disabled"{/itemMayDecrease}>
 							<span class="fa fa-minus"></span></button>
-						<button title="Increase suboptions" data-colid="{id}" 
+						<button title="Increase suboptions" data-colid="{idx}" 
 							class="btn btn-default btn-sm actSubIncr" {^itemMayIncrease}disabled="disabled"{/itemMayIncrease}>
 							<span class="fa fa-plus"></span></button>
 					</td>

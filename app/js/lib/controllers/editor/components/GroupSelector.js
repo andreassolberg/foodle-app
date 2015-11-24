@@ -1,13 +1,12 @@
-	define(function(require, exports, module) {
-	"use strict";	
+define(function(require, exports, module) {
+	"use strict";
 
-	var 
+	var
 		$ = require('jquery'),
 
 		ComponentController = require('./ComponentController'),
 		Dictionary = require('bower/feideconnectjs/src/Dictionary'),
-		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine')
-		;
+		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine');
 
 	var template = require('text!templates/components/Groups.html');
 
@@ -43,7 +42,7 @@
 			if (!this.isActive()) {
 				return null;
 			}
-			
+
 			var groups = [];
 
 			this.el.find('input.groupoption').each(function(i, item) {
@@ -53,7 +52,9 @@
 				}
 
 			});
-			if  (groups.length === 0) {return null;}
+			if (groups.length === 0) {
+				return null;
+			}
 			return groups;
 		},
 
@@ -64,8 +65,25 @@
 					// console.error("Groups data", groups);
 					that.groups = groups;
 				});
-		},	
+		},
 
+		"updateView": function(foodle) {
+			var that = this;
+			return this.onLoaded()
+				.then(function() {
+					if (!foodle.groups) {
+						return;
+					}
+					var gindex = {};
+					for (var i = 0; i < foodle.groups.length; i++) {
+						gindex[foodle.groups[i]] = true;
+					}
+					that.el.find('.groupoption').each(function(i, item) {
+						// console.error("About to process", $(item).attr('data-groupid'), gindex.hasOwnProperty($(item).attr('data-groupid')));
+						$(item).prop("checked", gindex.hasOwnProperty($(item).attr('data-groupid')));
+					});
+				});
+		},
 
 		"draw": function() {
 			var view = {

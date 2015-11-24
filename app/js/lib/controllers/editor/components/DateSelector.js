@@ -1,14 +1,13 @@
 define(function(require, exports, module) {
-	"use strict";	
+	"use strict";
 
-	var 
-		moment = require('moment-timezone'),		
+	var
+		moment = require('moment-timezone'),
 		$ = require('jquery'),
 
 		ComponentController = require('./ComponentController'),
 		Dictionary = require('bower/feideconnectjs/src/Dictionary'),
-		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine')
-		;
+		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine');
 
 	require('bootstrap-datepicker');
 
@@ -84,29 +83,44 @@ define(function(require, exports, module) {
 		"setup": function() {
 			// console.error("SETU(P");
 			var that = this;
-			var dptimeStart = this.el.find('#inputDateStart').datepicker(stdDatepickerConfig);
-			var dptimeEnd   = this.el.find('#inputDateEnd'  ).datepicker(endDatepickerConfig);
+			this.dptimeStart = this.el.find('#inputDateStart').datepicker(stdDatepickerConfig);
+			this.dptimeEnd = this.el.find('#inputDateEnd').datepicker(endDatepickerConfig);
 
-			dptimeStart.on('changeDate', function(e) {
+			this.dptimeStart.on('changeDate', function(e) {
 				// console.log("Change date event on START", e);
-				dptimeEnd.datepicker('update');
+				that.dptimeEnd.datepicker('update');
 				that.updateDynamics();
 			});
-			dptimeEnd.on('changeDate', function(e) {
+			this.dptimeEnd.on('changeDate', function(e) {
 				that.updateDynamics();
 			});
-
-
-			// var dpdeadline = $('#inputDeadlineDate').datepicker(stdDatepickerConfig);
-			// dpdeadline.on('changeDate', function(e) {
-			// 	// console.log("Change date event", e);
-			// 	that.el.find("#inputDeadlineCheck").prop('checked', true);
-			// 	that.updateDynamics();
-			// });
-
 		},
 
 
+		"updateView": function(foodle) {
+
+			var dtstart, dtend;
+
+			if (foodle.datetime) {
+				this.el.find('#inputTimeAllDay').prop('checked', foodle.datetime.allDay);
+				this.el.find('#inputTimeMultipleDays').prop('checked', foodle.datetime.multipleDays);
+
+				if (foodle.datetime.start) {
+					dtstart = moment(foodle.datetime.start);
+					this.dptimeStart.datepicker('setUTCDate', dtstart.toDate());
+					this.el.find('#inputTimeStart').val(dtstart.format('HH:mm'));
+
+				}
+				if (foodle.datetime.end) {
+					dtend = moment(foodle.datetime.end);
+					this.dptimeEnd.datepicker('setUTCDate', dtend.toDate());
+					this.el.find('#inputTimeEnd').val(dtend.format('HH:mm'));
+				}
+
+				this.updateDynamics();
+			}
+
+		},
 
 		"draw": function() {
 			var view = {
@@ -127,19 +141,8 @@ define(function(require, exports, module) {
 		},
 
 		"updateDynamics": function(e) {
-			// console.error("Update dynamics datetime seletor");
 
-			// var enableTime = this.el.find('#enableTime').prop('checked');
-			// // console.log("enableTime", enableTime);
 
-			// if (enableTime) {
-			// 	this.el.find('#sectionTime').show();
-			// 	this.el.find('#sectionTimeDetails').show();
-				
-			// } else {
-			// 	this.el.find('#sectionTime').hide();
-			// 	this.el.find('#sectionTimeDetails').hide();
-			// }
 
 			if (this.uiAllDay()) {
 				this.el.find('#sectioninputTimeStart').hide();
@@ -171,32 +174,14 @@ define(function(require, exports, module) {
 			var end = this.getDateEnd();
 
 			$("#timeDetails").empty();
+
+			// console.error("About to update dynamics on datetime object", start, end);
 			if (start !== null && end !== null) {
-				var str = 'Event starts in <i>' + start.fromNow() + '</i>';
+				var str = 'Event starts <i>' + start.fromNow() + '</i>';
 				str += ' and last for <i>' + start.from(end, true) + '</i>';
-				$("#timeDetails").append(str );
-					
+				this.el.find("#timeDetails").append(str);
+
 			}
-
-			// if (enableDeadline || enableTime || 
-			// 	(this.columneditor.getColumntype() === 'dates') || 
-			// 	(this.columneditor.getColumntype() === 'dates2')
-			// 	) {
-
-			// 	this.el.find('#sectionTimezone').show();
-			// } else {
-			// 	this.el.find('#sectionTimezone').hide();
-			// }
-
-
-
-			// console.log('enableDeadline', enableDeadline);
-			// console.log(' enableTime',  enableTime);
-			// console.log('this.columneditor.getColumntype()', this.columneditor.getColumntype());
-
-			// console.log("start", start);
-			// console.log("end", end);
-
 
 		},
 
@@ -210,9 +195,6 @@ define(function(require, exports, module) {
 			var start = this.getDateStart();
 			var end = this.getDateEnd();
 
-			// console.error("STart", start);
-			// console.error("End", end);
-
 			return {
 				start: start,
 				end: end,
@@ -225,7 +207,9 @@ define(function(require, exports, module) {
 			var startDateStr = this.el.find("#inputDateStart").val();
 			var startTimeStr = this.el.find("#inputTimeStart").val();
 
-			if (startDateStr === '') {return null;}
+			if (startDateStr === '') {
+				return null;
+			}
 			if (this.uiAllDay()) {
 				startTimeStr = '00:00';
 			} else if (startTimeStr === '') {
@@ -248,10 +232,14 @@ define(function(require, exports, module) {
 			var endDateStr = this.el.find("#inputDateEnd").val();
 			var endTimeStr = this.el.find("#inputTimeEnd").val();
 
-			if (startDateStr === '') {return null;}
-			
+			if (startDateStr === '') {
+				return null;
+			}
+
 			if (this.uiMultipleDays()) {
-				if (endDateStr === '') {return null;}
+				if (endDateStr === '') {
+					return null;
+				}
 			} else {
 				endDateStr = startDateStr;
 			}

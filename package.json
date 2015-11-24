@@ -11,7 +11,7 @@
         "test": "grunt test"
     },
     "author": "Andreas Åkre Solberg",
-    "license": "BSD",
+    "license": "GPL-3.0",
     "devDependencies": {
         "requirejs": "~2.1.16",
         "almond": "^0.3.0",

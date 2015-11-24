@@ -1,8 +1,8 @@
-[![Code Climate](https://codeclimate.com/github/feideconnect/app-developer-dashboard/badges/gpa.svg)](https://codeclimate.com/github/feideconnect/app-developer-dashboard)
+[![Code Climate](https://codeclimate.com/github/andreassolberg/foodle-app/badges/gpa.svg)](https://codeclimate.com/github/andreassolberg/foodle-app)
 
-# Feide Connect Developer Dashboard	
+# Foodle frontend app
 
-Manage clients and API Gatekeepers.
+SPA web app frontend for Foodle Backend.
 
 
 ## Configuratioun

@@ -1,20 +1,20 @@
 define(function(require, exports, module) {
-	"use strict";	
+	"use strict";
 
-	var 
+	var
 		Pane = require('bower/feideconnectjs/src/controllers/Pane'),
 		Dictionary = require('bower/feideconnectjs/src/Dictionary'),
 		EventEmitter = require('bower/feideconnectjs/src/EventEmitter'),
 		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine'),
 		utils = require('bower/feideconnectjs/src/utils'),
 
-		$ = require('jquery')
-		;
+		Foodle = require('../../models/Foodle'),
 
-	var 
+		$ = require('jquery');
+
+	var
 		template = require('text!templates/MainListing.html'),
-		templateList = require('text!templates/MainListingFoodles.html')
-		;
+		templateList = require('text!templates/MainListingFoodles.html');
 
 
 	/*
@@ -27,13 +27,13 @@ define(function(require, exports, module) {
 			this.feideconnect = feideconnect;
 			this.app = app;
 
-            this.tmp = new TemplateEngine(template, this.app.dict);
-            this.tmpL = new TemplateEngine(templateList, this.app.dict);
+			this.tmp = new TemplateEngine(template, this.app.dict);
+			this.tmpL = new TemplateEngine(templateList, this.app.dict);
 
 			this.pool = pool;
 			this.pool.on('listChange', function(list) {
 				that.updateList(list);
-			});			
+			});
 
 
 			this._super();
@@ -47,6 +47,9 @@ define(function(require, exports, module) {
 			this.elList = $("<div></div>");
 			// this.elAPIGKs = $("<div></div>");
 
+
+			this.ebind('click', '.actNewP', 'actNewP');
+			this.ebind('click', '.actNewD', 'actNewD');
 
 
 			// this.clientcreate = new ClientCreate(this.app);
@@ -74,6 +77,36 @@ define(function(require, exports, module) {
 
 
 		},
+
+		"actNewD": function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var that = this;
+			var f = Foodle.getNew();
+			this.app.editor.edit(f)
+				.then(function() {
+					that.app.setHash('/create');
+				})
+				.catch(function(err) {
+					that.app.setErrorMessage("Error opening Foodle editor", "danger", err);
+				});
+		},
+		"actNewP": function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var that = this;
+			var f = Foodle.getNew();
+			this.app.editor.edit(f)
+				.then(function() {
+					that.app.setHash('/create');
+				})
+				.catch(function(err) {
+					that.app.setErrorMessage("Error opening Foodle editor", "danger", err);
+				});
+		},
+
 		"selectedClient": function(e) {
 			e.preventDefault(); // e.stopPropgate();
 			var clientid = $(e.currentTarget).data('clientid');
@@ -88,7 +121,7 @@ define(function(require, exports, module) {
 
 		"updateList": function(foodles) {
 
-			var 
+			var
 				that = this,
 				key,
 				clientlist = [],
@@ -144,10 +177,10 @@ define(function(require, exports, module) {
 
 			this.draw(false)
 				.then(this.proxy("_initLoaded"));
-				
+
 		},
 
-		
+
 		"draw": function(act) {
 			var that = this;
 

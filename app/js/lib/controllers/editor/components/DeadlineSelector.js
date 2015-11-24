@@ -1,14 +1,13 @@
 define(function(require, exports, module) {
-	"use strict";	
+	"use strict";
 
-	var 
-		moment = require('moment-timezone'),		
+	var
+		moment = require('moment-timezone'),
 		$ = require('jquery'),
 
 		ComponentController = require('./ComponentController'),
 		Dictionary = require('bower/feideconnectjs/src/Dictionary'),
-		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine')
-		;
+		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine');
 
 	require('bootstrap-datepicker');
 
@@ -52,7 +51,6 @@ define(function(require, exports, module) {
 				.then(this.proxy("setup"))
 				.then(this.proxy("_initLoaded"))
 				.catch(function(err) {
-
 					that.app.setErrorMessage("Error loading deadlineseletor", "danger", err);
 				});
 		},
@@ -61,8 +59,8 @@ define(function(require, exports, module) {
 
 			var that = this;
 			return new Promise(function(resolve, reject) {
-				var dpdeadline = that.el.find('#inputDeadlineDate').datepicker(stdDatepickerConfig);
-				dpdeadline.on('changeDate', function(e) {
+				that.dpdeadline = that.el.find('#inputDeadlineDate').datepicker(stdDatepickerConfig);
+				that.dpdeadline.on('changeDate', function(e) {
 					// console.log("Change date event", e);
 					that.el.find("#inputDeadlineCheck").prop('checked', true);
 					// that.updateDynamics();
@@ -75,7 +73,7 @@ define(function(require, exports, module) {
 			if (!this.isActive()) {
 				return null;
 			}
-			
+
 			var date = this.el.find('#inputDeadlineDate').val();
 			var time = this.el.find('#inputDeadlineTime').val();
 
@@ -91,8 +89,21 @@ define(function(require, exports, module) {
 			}
 
 			var parsed = moment(date + ' ' + time, "YYYY-MM-DD HH:mm");
-			console.error("PArsed", parsed);
+			// console.error("PArsed", parsed);
 			return parsed;
+		},
+
+		"updateView": function(foodle) {
+			var dt;
+			if (foodle.deadline) {
+				dt = moment(foodle.deadline)
+
+				// console.error("dp", dt, typeof dt._d);
+				this.dpdeadline.datepicker('setUTCDate', dt.toDate());
+
+				// this.el.find('#inputDeadlineDate').val(dt.format('YYYY-MM-DD'));
+				this.el.find('#inputDeadlineTime').val(dt.format('HH:mm'));
+			}
 		},
 
 

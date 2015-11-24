@@ -1,13 +1,12 @@
 define(function(require, exports, module) {
-	"use strict";	
+	"use strict";
 
-	var 
-		moment = require('moment-timezone'),		
+	var
+		moment = require('moment-timezone'),
 		// $ = require('jquery'),
 		$ = require('jquery'),
 
-		ComponentController = require('./ComponentController')
-		;
+		ComponentController = require('./ComponentController');
 
 	require('selectize');
 
@@ -35,13 +34,26 @@ define(function(require, exports, module) {
 			}
 			return null;
 		},
-		
+
 		"timezoneOK": function(tz) {
 			var zones = moment.tz.names();
-			for(var i = 0; i < zones.length; i++) {
-				if (tz === zones[i]) {return true;}
+			for (var i = 0; i < zones.length; i++) {
+				if (tz === zones[i]) {
+					return true;
+				}
 			}
 			return false;
+		},
+
+
+		"updateView": function(foodle) {
+			var that = this;
+			return this.onLoaded()
+				.then(function() {
+					if (foodle.timezone && that.timezoneOK(foodle.timezone)) {
+						that.selector.selectize.setValue(foodle.timezone);
+					}
+				});
 		},
 
 
@@ -53,24 +65,11 @@ define(function(require, exports, module) {
 				var zones = moment.tz.names();
 				var s = $('<select id="timezoneselect" ></select').appendTo(that.el);
 
-				// console.log("TIMEZONE");
-				// console.log(this.user);
-				// console.log("s", s);
-				
-				// ({
-				// 	"source": zones
-				// });
-
-				// if (this.timezoneOK(tz)) { 
-				// 	s.val(tz);
-				// } else if (this.timezoneOK(this.user.timezone)) {
-				// 	s.val(this.user.timezone);
-				// }
-				// console.error("options", zones);
-				for(var i = 0; i < zones.length; i++) {
-					s.append('<option value="' + zones[i]+ '">' + zones[i] + '</option>');
+				for (var i = 0; i < zones.length; i++) {
+					s.append('<option value="' + zones[i] + '">' + zones[i] + '</option>');
 				}
-				s.selectize();
+				var sres = s.selectize();
+				that.selector = sres[0];
 				resolve();
 			});
 

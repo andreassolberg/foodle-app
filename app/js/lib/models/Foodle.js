@@ -1,14 +1,13 @@
 define(function(require, exports, module) {
-	"use strict";	
+	"use strict";
 
-	var 
+	var
 		$ = require('jquery'),
 		moment = require('moment-timezone'),
 		utils = require('bower/feideconnectjs/src/utils'),
-        Model = require('bower/feideconnectjs/src/models/Model')
-	;
+		Model = require('bower/feideconnectjs/src/models/Model');
 
-	function parseDate (input) {
+	function parseDate(input) {
 		var x = input.substring(0, 19) + 'Z';
 		// console.log("About to parse date " + input, x);
 		return moment(x);
@@ -23,9 +22,19 @@ define(function(require, exports, module) {
 		},
 
 		"save": function(fc) {
-			var obj = this.getProperties(['identifier', 'title', 'descr', 'parent', 'deadline', 'location', 'publicresponses', 'datetime', 'defaults', 'columns', 'admins', 'groups']);
-			console.error("OBJECT", obj);
-			return Foodle.api.saveFoodle(obj);
+			var obj = this.getProperties(['title', 'descr', 'parent', 'deadline', 'location', 'publicresponses', 'datetime', 'timezone', 'defaults', 'columns', 'admins', 'groups']);
+
+
+			if (this.identifier) {
+				console.error("Updating an existing Foodle")
+				return Foodle.api.updateFoodle(this.identifier, obj);
+			} else {
+				console.error("Createing a new Foodle");
+				return Foodle.api.saveFoodle(obj);
+			}
+
+
+
 		},
 
 		// Detect two row header
@@ -36,13 +45,13 @@ define(function(require, exports, module) {
 				return;
 			}
 
-			for(i = 0; i < this.columns.length; i++) {
+			for (i = 0; i < this.columns.length; i++) {
 				if (this.columns[i].hasOwnProperty("items")) {
 					this.tworowheaders = true;
 					return;
 				}
 			}
-			
+
 		},
 
 		"coldefSetTitle": function(colid, title) {
@@ -63,12 +72,14 @@ define(function(require, exports, module) {
 
 		"coldefSetRestrictionsMaxcheck": function(colid, num) {
 			var item = this.coldefGetById(colid);
+			console.error("Setting coldefSetRestrictionsMaxcheck on", colid, num, item);
 			if (item === null) {
 				return;
 			}
 			if (item.hasOwnProperty("restrictions")) {
 				item.restrictions.maxcheck = num;
 			}
+			console.error("item", item.restrictions);
 		},
 		"coldefSetRestrictionsMaxnum": function(colid, num) {
 			var item = this.coldefGetById(colid);
@@ -82,7 +93,9 @@ define(function(require, exports, module) {
 
 		"coldefSetRestrictionsEnabled": function(colid, checked) {
 			var item = this.coldefGetById(colid);
-			
+
+			// console.error("Seting › coldefSetRestrictionsEnabled", colid, checked);
+
 			if (item === null) {
 				return;
 			}
@@ -94,7 +107,7 @@ define(function(require, exports, module) {
 					item.restrictions = {};
 				}
 				item.restrictions.enabled = true;
-				if (item.datatype === 'check' || item.datatype === 'checkmaybe') {
+				if (item.datatype === 'check' ||  item.datatype === 'checkmaybe') {
 					item.restrictions.maxcheck = ' ';
 					if (item.restrictions.hasOwnProperty('maxnum')) {
 						delete item.restrictions.maxnum;
@@ -148,18 +161,18 @@ define(function(require, exports, module) {
 
 		"coldefSetTwoHeaderRows": function(include) {
 			var i;
-			
+
 			this.tworowheaders = include;
 			if (include) {
-				for(i = 0; i < this.columns.length; i++) {
-					if (!this.columns[i].hasOwnProperty("items") || this.columns[i].items.length === 0) {
+				for (i = 0; i < this.columns.length; i++) {
+					if (!this.columns[i].hasOwnProperty("items") ||  this.columns[i].items.length === 0) {
 						this.columns[i].items = [];
 						this.columns[i].items.push(Foodle.getEmptyColDefItem());
 						this.columns[i].items.push(Foodle.getEmptyColDefItem());
 					}
 				}
 			} else {
-				for(i = 0; i < this.columns.length; i++) {
+				for (i = 0; i < this.columns.length; i++) {
 					if (this.columns[i].hasOwnProperty("items")) {
 						delete this.columns[i].items;
 					}
@@ -170,15 +183,15 @@ define(function(require, exports, module) {
 
 		"coldefGetById": function(colid) {
 			var i, j;
-			for(i = 0; i < this.columns.length; i++) {
-				if (this.columns[i].id === colid) {
+			for (i = 0; i < this.columns.length; i++) {
+				if (this.columns[i].idx === colid) {
 					return this.columns[i];
 				}
 
 				if (this.columns[i].hasOwnProperty("items")) {
-					for(j = 0; j < this.columns[i].items.length; j++) {
+					for (j = 0; j < this.columns[i].items.length; j++) {
 
-						if (this.columns[i].items[j].id === colid) {
+						if (this.columns[i].items[j].idx === colid) {
 							return this.columns[i].items[j];
 						}
 					}
@@ -191,7 +204,7 @@ define(function(require, exports, module) {
 		"getProperties": function(props) {
 
 			var obj = {};
-			for(var i = 0; i < props.length; i++) {
+			for (var i = 0; i < props.length; i++) {
 				if (this.hasOwnProperty(props[i])) {
 					obj[props[i]] = this[props[i]];
 				}
@@ -208,23 +221,27 @@ define(function(require, exports, module) {
 				res.createdH = res.created.format('D. MMM YYYY');
 			}
 
-			if  (this.updated) {
+			if (this.updated) {
 				res.updated = parseDate(this.updated);
 				res.updatedAgo = res.updated.fromNow();
 				res.updatedH = res.updated.format('D. MMM YYYY');
 			}
 
-			return res;			
+			res.isStored = !!this.identifier;
+
+
+
+			return res;
 		},
 
 
 		"getColDataTypes": function(sel) {
 			var candidates = {
 				"check": "Yes/No",
-				"checkmaybe":  "Yes/Maybe/No",
-				"radio":  "Radio (select one of)",
-				"number":  "Number",
-				"text":  "Text"
+				"checkmaybe": "Yes/Maybe/No",
+				"radio": "Radio (select one of)",
+				"number": "Number",
+				"text": "Text"
 			};
 
 			if (!candidates.hasOwnProperty(sel)) {
@@ -232,7 +249,7 @@ define(function(require, exports, module) {
 			}
 
 			var view = [];
-			for(var key in candidates) {
+			for (var key in candidates) {
 				view.push({
 					"id": key,
 					"title": candidates[key],
@@ -250,7 +267,10 @@ define(function(require, exports, module) {
 		"getViewColDefGeneric": function() {
 
 			var view = {};
-			view.rows = [[], []];
+			view.rows = [
+				[],
+				[]
+			];
 			view.cols = [];
 			view.rowopts = [];
 
@@ -258,21 +278,21 @@ define(function(require, exports, module) {
 
 			var i, j, x, x2, x3, y, z;
 
-			for(i = 0; i < this.columns.length; i++) {
+			for (i = 0; i < this.columns.length; i++) {
 
 				x = $.extend(true, {}, this.columns[i]);
 				x2 = $.extend(true, {}, this.columns[i]);
 				x3 = {}
 
 				x3.itemcount = 0;
-				x3.id = x.id;
+				x3.idx = x.idx;
 
 
 				if (this.columns[i].hasOwnProperty("items") && this.columns[i].items.length > 0) {
 					delete x.items;
 
 					x3.itemcount = this.columns[i].items.length;
-					for(j = 0; j < this.columns[i].items.length; j++) {
+					for (j = 0; j < this.columns[i].items.length; j++) {
 
 						y = $.extend(true, {}, this.columns[i].items[j]);
 						y.datatypes = this.getColDataTypes(y.datatype);
@@ -317,7 +337,7 @@ define(function(require, exports, module) {
 
 	Foodle.getEmptyColDefItem = function() {
 		return {
-			"id": utils.guid(),
+			"idx": utils.guid(),
 			"coltype": "text",
 			"datatype": "check"
 		};
@@ -329,9 +349,9 @@ define(function(require, exports, module) {
 
 			{
 				"title": "Blank",
-				"id": "2373465",
+				"idx": "2373465",
 				"items": [{
-					"id": "123",
+					"idx": "123",
 					"title": "Jeg deltar",
 					"coltype": "text",
 					"datatype": "checkmaybe",
@@ -346,42 +366,43 @@ define(function(require, exports, module) {
 
 			{
 				"title": "Kjører selv",
-				"id": "237fgh65",
+				"idx": "237fgh65",
 				"coltype": "text",
 				"datatype": "check"
 			},
 
 			{
 				"title": "Hvilken type bil",
-				"id": "23734hjk5",
+				"idx": "23734hjk5",
 				"coltype": "text",
 				"datatype": "none",
 
-				"items": [
-					{
-						"title": "Toyota",
-						"id": "18237",
-						"coltype": "text",
-						"datatype": "check",
-					},
-					{
-						"title": "Ford",
-						"id": "144",
-						"coltype": "text",
-						"datatype": "number",
-						"restrictions": {
-							"enabled": true,
-							"maxnum": 500
-						}
+				"items": [{
+					"title": "Toyota",
+					"idx": "18237",
+					"coltype": "text",
+					"datatype": "check",
+				}, {
+					"title": "Ford",
+					"idx": "144",
+					"coltype": "text",
+					"datatype": "number",
+					"restrictions": {
+						"enabled": true,
+						"maxnum": 500
 					}
-				]
+				}]
 			}
 
 		];
 		nf.coldefDetectTRH();
 		return nf;
 	}
+
+	Foodle.getById = function(id) {
+		return Foodle.api.getFoodleById(id);
+	}
+
 	return Foodle;
 
 });
-

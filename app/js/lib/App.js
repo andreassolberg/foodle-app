@@ -1,5 +1,4 @@
-
-define(function (require, exports, module) {
+define(function(require, exports, module) {
 
 	"use strict";
 
@@ -9,8 +8,8 @@ define(function (require, exports, module) {
 
 		FeideConnect = require('bower/feideconnectjs/src/FeideConnect').FeideConnect,
 		AppController = require('bower/feideconnectjs/src/controllers/AppController'),
-		BCController = require('bower/feideconnectjs/src/controllers/BCController'), 
-		LanguageController = require('bower/feideconnectjs/src/controllers/LanguageController'), 
+		BCController = require('bower/feideconnectjs/src/controllers/BCController'),
+		LanguageController = require('bower/feideconnectjs/src/controllers/LanguageController'),
 		PaneController = require('bower/feideconnectjs/src/controllers/PaneController'),
 		Dictionary = require('bower/feideconnectjs/src/Dictionary'),
 		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine'),
@@ -42,17 +41,15 @@ define(function (require, exports, module) {
 	 * 
 	 */
 
-	
 
 
-	 
 	var App = AppController.extend({
-		
+
 		"init": function() {
 			var that = this;
 
 			this.config = JSON.parse(rawconfig);
-			
+
 			this.feideconnect = new FeideConnect(this.config);
 			this.pool = new Pool(this.feideconnect);
 			this.api = new API(this.feideconnect, this.config);
@@ -66,11 +63,10 @@ define(function (require, exports, module) {
 
 			this.bccontroller = new BCController($("#breadcrumb"));
 			this.languageselector = new LanguageController(this);
-			
+
 
 			// Call contructor of the AppController(). Takes no parameters.
 			this._super(undefined, false);
-
 
 
 
@@ -80,7 +76,7 @@ define(function (require, exports, module) {
 			this.pc.add(this.mainlisting);
 
 			this.response = new RespondController(this.feideconnect, this);
-			this.pc.add(this.response);	
+			this.pc.add(this.response);
 
 
 			this.editor = new FoodleEditor(this.feideconnect, this);
@@ -161,9 +157,9 @@ define(function (require, exports, module) {
 
 			});
 
-			this.initLoad();	
+			this.initLoad();
 
-	
+
 		},
 
 
@@ -175,24 +171,24 @@ define(function (require, exports, module) {
 			// Draw template..
 			return this.draw()
 
-				.then(function() {
-					return that.feideconnect.onAuthenticated()
-				})
+			.then(function() {
+				return that.feideconnect.onAuthenticated()
+			})
 
-				// Wait for orgRoleSelector to be loaded.
-				.then(function() {
+			// Wait for orgRoleSelector to be loaded.
+			.then(function() {
 
-					// console.error("Juhu. Ready!");
+				// console.error("Juhu. Ready!");
 
-				})
+			})
 
-				// Then activate one of them
-				.then(function() {
+			// Then activate one of them
+			.then(function() {
 
 					that.route(true);
 				})
 				.then(this.proxy("_initLoaded"));
-				
+
 		},
 
 
@@ -234,7 +230,7 @@ define(function (require, exports, module) {
 
 			// this.setHash('/');
 			// this.bccontroller.hide();
-			return this.response.edit(item)	
+			return this.response.edit(item)
 				.catch(function(err) {
 					that.setErrorMessage("Error opening reponse display", "danger", err);
 				});
@@ -251,8 +247,11 @@ define(function (require, exports, module) {
 
 		"routeEdit": function(identifier) {
 			var that = this;
-			var f = Foodle.getNew();
-			this.editor.edit(f)
+			Foodle.getById(identifier)
+				.then(function(f) {
+					// console.log("Yes, we got somethibng", f);
+					that.editor.edit(f)
+				})
 				.catch(function(err) {
 					that.setErrorMessage("Error opening Foodle editor", "danger", err);
 				});
@@ -271,10 +270,10 @@ define(function (require, exports, module) {
 				pmsg = '<p>' + utils.escape(msg, false).replace("\n", "<br />") + '</p>';
 			}
 
-			var str = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' +  
+			var str = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' +
 				' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-				(title ? '<strong>' + utils.escape(title, false).replace("\n", "<br />")  + '</strong>' : '') +
-				pmsg + 
+				(title ? '<strong>' + utils.escape(title, false).replace("\n", "<br />") + '</strong>' : '') +
+				pmsg +
 				'</div>';
 
 			if (this.hasOwnProperty("errorClearCallback")) {
