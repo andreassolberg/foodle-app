@@ -27,12 +27,13 @@ define(function(require) {
 	var editorTemplate = require('text!templates/FoodleEditor.html');
 
 	var FoodleEditor = Pane.extend({
-		"init": function(feideconnect, app) {
+		"init": function(feideconnect, app, usercontext) {
 
 			var that = this;
 			this.feideconnect = feideconnect;
 			this.app = app;
-
+			this.usercontext = usercontext;
+			
 			this.foodle = null;
 
 			this._super();
@@ -75,6 +76,17 @@ define(function(require) {
 			console.error("About to edit foodle", foodle);
 			this.foodle = foodle;
 			this.detectEditorType();
+
+
+			var foodletitle = (this.foodle.title ? this.foodle.title : '(without name)');
+			var title = (this.foodle.identifier ? 'Edit Foodle ' + foodletitle : 'Create new Foodle');
+			this.app.bccontroller.draw([
+				this.app.getBCItem(),
+				{
+					"title": title,
+					"active": true
+				}
+			]);
 
 			return this.draw();
 		},
@@ -142,6 +154,9 @@ define(function(require) {
 		},
 
 
+		/*
+		 * Updates model from UI and prints a debug JSON of the Foodle object, without saving.
+		 */
 		"actDebug": function(e) {
 
 			e.preventDefault();
@@ -151,14 +166,6 @@ define(function(require) {
 			this.updateFromUI();
 
 			$("#debug").empty().append(JSON.stringify(this.foodle, undefined, 2));
-
-			// return this.foodle.save()
-			// 	.then(function() {
-			// 		this.app.setErrorMessage("Successfully saved Foodle", "success");
-			// 	})
-			// 	.catch(function(err) {
-			// 		this.app.setErrorMessage("Error saving foodle", "danger", err);
-			// 	});
 		},
 
 
@@ -170,8 +177,9 @@ define(function(require) {
 				this.foodle.title = $('#inputTitle').val().trim();
 				this.foodle.descr = $('#inputDescr').val().trim();
 
-
+				// Missing parameters to process:
 				// foodle.parent, 'publicresponses', '', 'defaults', '', 'admins'
+
 				this.foodle.location = this.locationinput.getData();
 				this.foodle.timezone = this.timezoneselector.getData();
 				this.foodle.datetime = this.dateselector.getData();
@@ -225,14 +233,6 @@ define(function(require) {
 			if (enableLocation) {
 				this.locationinput.resize();
 			}
-
-
-			// var enableRestrictions = this.el.find('#enableRestrictions').prop('checked');
-			// if (enableRestrictions) {
-			// 	this.el.find('#sectionRestrictions').show();
-			// } else {
-			// 	this.el.find('#sectionRestrictions').hide();
-			// }
 
 			var enableDeadline = this.el.find('#enableDeadline').prop('checked');
 			this.deadlineselector.setActiveState(enableDeadline);

@@ -1,0 +1,274 @@
+
+<div class="uninett-color-white uninett-padded">
+	<div class="row ">
+		<div class="col-lg-12 " style=""> 
+
+			<div id="ownerbar" class="btn-group pull-right">
+				<a class="btn btn-warning" href="#!/edit/{foodle.identifier}"><span class="glyphicon glyphicon-edit"></span> {_.bc_edit}</a>
+				<a class="btn btn-info" href="#!/create/{foodle.identifier}"><span class="glyphicon glyphicon-new-window"></span> {_.duplicate2}</a>
+				<a class="btn btn-danger" id="actDelete" ><span class="glyphicon glyphicon-remove"></span> {_.delete}</a>
+			</div>
+
+			<div id="otherbar" class="btn-group pull-right">
+				<!-- <div class="btn-group"> -->
+				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-share"></span>
+					{_.export} 
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="?output=csv">Excel (CSV)</a></li>
+					<li><a href="?output=rss">RSS Feed</a></li>
+				</ul>
+				<!-- </div> -->
+			</div>
+
+			<h1>{foodle.title}</h1>
+
+		</div>
+
+	</div>
+
+	<div class="row gutter">
+			
+		<div id="foodleDescription" class="col-md-5">
+
+			<p>
+
+			{#groups}
+				<span data-groupid="{id}" class="label label-warning">{displayName}</span> &nbsp; 
+			{/groups}
+			</p>
+
+			<p>{foodle.descr}</p>
+
+		</div>
+
+
+		<div id="colTime" class="col-md-3">
+
+			<div id="panelTime" class="panel panel-default">
+				<div class="uninett-color-lightBlue panel-heading">
+					<h3 class="panel-title"><span class="glyphicon glyphicon-calendar"></span> {_.datetime}</h3>
+				</div>
+				<div id="sectTime" class="panel-body">
+					{?dtinfo.display1}
+						<p>{dtinfo.display1}</p>
+					{/dtinfo.display1}
+					{?dtinfo.display2}
+						<p>{dtinfo.display2}</p>
+					{/dtinfo.display2}
+
+					{?dtinfo.until}
+						{?dtinfo.future}
+							<p style="color: #363; font-size: 92%">Event starts {dtinfo.until}</p>
+						{:else}
+							<p style="color: #833; font-size: 92%">Event started {dtinfo.until}</p>
+						{/dtinfo.future}
+					{/dtinfo.until}
+					{?dtinfo.duration}
+						{?dtinfo.endfuture}
+							<p style="color: #484; font-size: 92%">and lasts for {dtinfo.duration}</p>
+						{:else}
+							<p style="color: #833; font-size: 92%">and lasted for {dtinfo.duration}</p>
+						{/dtinfo.endfuture}
+					{/dtinfo.duration}
+				</div>
+			</div>
+
+			{?foodle.deadline}
+			<div id="panelDeadline" class="panel panel-default">
+				<div class="uninett-color-lightBlue panel-heading">
+					<h3 class="panel-title"><span class="glyphicon glyphicon-time"></span> {_.deadline}</h3>
+				</div>
+				<div id="sectDeadline" class="panel-body">
+					<p>{foodle.deadlineH}</p>
+					{?foodle.deadlineFuture}
+						<p style="color: #363; font-size: 92%"><i class="fa fa-unlock"></i> Respond within {foodle.deadlineAgo}</p>
+					{:else}
+						<p style="color: #833; font-size: 92%"><i class="fa fa-lock"></i> Foodle was locked {foodle.deadlineAgo}</p>
+					{/foodle.deadlineFuture}
+				</div>
+			</div>
+			{/foodle.deadline}
+
+			<div id="panelTimezone" class="panel panel-default hidden-print">
+				<div class="uninett-color-lightBlue panel-heading">
+					<h3 class="panel-title"><span class="glyphicon glyphicon-globe"></span> {_.timezone}</h3>
+				</div>
+
+				<div  class="panel-body">
+					<p style="margin: 0px; font-size: 88%">{_.selecttimezone}</p>
+					<div  id="timezoneselector"></div>
+				</div>
+			</div>
+
+
+
+		</div>
+
+
+
+
+
+		<div class="col-md-4">
+
+
+			{?seealso}
+				<h5>{_.seealso}</h5>
+				<div id="upcoming">
+					<div class="list-group">
+						{#seealso}
+							<a href="#!/respond/{id}" class="list-group-item {?iscurrent}active{/iscurrent}">
+								{title}
+							</a>
+						{/seealso}
+					</div>
+				</div>
+			{/seealso}
+
+			<div id="colLocation" class=" locationdisplay" style="width: 100%">
+			</div>
+
+		</div>
+
+
+		
+
+	</div>
+
+	<ul id="responsenav" class="nav nav-tabs">
+		<li id="navMyResponse" class="active"><a href="#">{_.myresponse}</a></li>
+		<li id="navAllResponses"><a href="#">{_.allresponses}</a></li>
+		<li id="navComments"><a href="#">{_.discussion} <span id="discussionCount" style="display: none" class="badge badge-primary">_</span></a></li>
+	</ul>
+
+
+
+	<div id="myResponseTable" class="row gutter clearfix">
+		<table class="table table-responsive table-condensed table-striped table-bordered">
+			<thead id="mytablehead"></thead>
+			<tbody id="mytablebody"></tbody>
+		</table>
+	</div>
+
+	<div id="responseTable" class="row gutter clearfix">
+		{#coldef}
+		<table class="table table-responsive table-condensed table-striped table-bordered">
+			<thead>
+
+				<tr class="info">
+					<th rowspan="2" style="vertical-align: bottom; width: 30%">Deltakere</th>
+					{#rows[0]}
+						<th colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
+							{title}
+						</th>
+					{/rows[0]}
+				</tr>
+				<tr class="info">
+					{#rows[1]}
+						<th colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
+							{title}
+						</th>
+					{/rows[1]}
+				</tr>
+				
+			</thead>
+			<tbody id="myresponse">
+
+			</tbody>
+		</table>
+		{/coldef}
+
+
+
+
+		{#coldef}
+		<table class="table table-responsive table-condensed table-striped table-bordered">
+			<thead>
+
+				<tr class="info">
+					<th rowspan="2" style="vertical-align: bottom; width: 30%">Deltakere</th>
+					{#rows[0]}
+						<th colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
+							{title}
+						</th>
+					{/rows[0]}
+				</tr>
+				<tr class="info">
+					{#rows[1]}
+						<th colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
+							{title}
+						</th>
+					{/rows[1]}
+				</tr>
+				
+			</thead>
+			<tbody id="allresponses">
+			</tbody>
+		</table>
+		{/coldef}
+	</div>
+
+
+
+<!--
+
+		<div id="showComments">
+			<div class="checkbox">
+				<label>
+					<input id="enableComments" type="checkbox" class="" checked="checked"> {_.showcomments}
+				</label>
+			</div>
+		</div>
+
+		<table class="table table-responsive table-condensed table-striped table-bordered">
+			<thead id="tablehead"></thead>
+			<tbody id="tablebody"></tbody>
+		</table>
+
+-->
+
+<!--
+	<div id="commentPane" class="row gutter clearfix">
+		
+		<div class="col-md-6">
+			<textarea id="commentText" class="form-control" rows="3"></textarea>
+			<div class="clearfix" style="margin-top: 5px">
+				<button class="btn btn-primary pull-right" id="submitComment"> {_.addcomment} <span class="glyphicon glyphicon-chevron-right"></span></button>
+			</div>
+		</div>
+
+
+		<div class="col-md-6" id="commentList"></div>
+
+	</div>
+-->
+
+
+	<div id="statusline"></div>
+
+		<div id="modalDelete" class="modal fade">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">{_.deleting}</h4>
+					</div>
+					<div class="modal-body">
+						<p>{_.deletewarning}</p>
+
+						<p><input id="foodleID" type="text" class="form-control" value="" /></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">{_.cancel}</button>
+						<button type="button" class="actContinue btn btn-danger"><span class="glyphicon glyphicon-remove"></span> {_.dodelete}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+</div>

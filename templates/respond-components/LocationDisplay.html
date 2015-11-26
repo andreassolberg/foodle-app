@@ -1,0 +1,23 @@
+
+	<div id="panelLocation" class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title"><span class="glyphicon glyphicon-map-marker"></span> {_.location}</h3>
+		</div>
+		<div class="panel-body">
+			<div id="sectLocation">
+
+				{?foodle.location.address}
+					<div style="border: 1px solid #444; height: 200px" id="location-canvas"></div>
+				{/foodle.location.address}
+
+				{?foodle.location.local}
+				<p class="loc-local">{foodle.location.local}</p>
+				{/foodle.location.local}
+
+				{?foodle.location.address}
+					<p>{foodle.location.address}</p>
+				{/foodle.location.address}
+				
+			</div>
+		</div>
+	</div>

@@ -215,23 +215,144 @@ define(function(require, exports, module) {
 		"getView": function() {
 			var res = this._super();
 
+			var now = moment();
+
 			if (this.created) {
-				res.created = parseDate(this.created);
+				res.created = moment(this.created);
 				res.createdAgo = res.created.fromNow();
 				res.createdH = res.created.format('D. MMM YYYY');
 			}
 
 			if (this.updated) {
-				res.updated = parseDate(this.updated);
+				res.updated = moment(this.updated);
 				res.updatedAgo = res.updated.fromNow();
 				res.updatedH = res.updated.format('D. MMM YYYY');
 			}
 
+			if (this.deadline) {
+				res.deadline = moment(this.deadline);
+				res.deadlineAgo = res.deadline.fromNow();
+				res.deadlineH = res.deadline.format('ddd Do MMM YYYY HH:mm');
+				res.deadlineFuture = res.deadline.isAfter(now);
+			}
+
 			res.isStored = !!this.identifier;
 
-
-
 			return res;
+		},
+
+		"getDateTimeView": function() {
+
+
+			if (!this.datetime) {
+				return null;
+			}
+
+			var dt = this.datetime;
+
+			if (!dt.start) {
+				return null;
+			}
+			if (!dt.end) {
+				return null;
+			}
+
+
+			var start = moment(dt.start);
+			var end = moment(dt.end);
+
+			var display1 = null;
+			var display2 = null;
+
+			if (dt.allDay && dt.multipleDays) {
+				display1 = start.format('Do MMM') + ' – ' + end.format('Do MMM, YYYY')
+			} else if (dt.allDay && !dt.multipleDays) {
+				display1 = start.format('ddd Do MMM, YYYY');				
+			} else if (!dt.allDay && dt.multipleDays) {
+				display1 = start.format('ddd Do MMM, YYYY HH:mm');
+				display2 = '- ' + end.format('ddd Do MMM, YYYY HH:mm');
+			} else {
+				display1 = start.format('ddd Do MMM, YYYY');
+				display2 = start.format('HH:mm') + ' - ' + end.format('HH:mm');
+			}
+
+			var untilStart = start.fromNow();
+			var duration = end.from(start, true);
+			var now = moment();
+			var future = start.isAfter(now);
+			var endfuture = end.isAfter(now);
+
+			return {
+				display1: display1,
+				display2: display2,
+				until: untilStart,
+				future: future,
+				endfuture: endfuture,
+				duration: duration
+			};
+
+
+
+
+			// var dt = this.foodle.datetime;
+			// var ct = $('#sectTime').empty();
+			// var mf, mt;
+
+
+			// var doTimezone = false;
+			// if (this.foodle.timezone && toTimezone) doTimezone = true;
+
+
+			// // console.log("Set time", dt);
+
+			// // Date range, full days
+			// if (dt.datefrom && dt.dateto && !dt.timefrom && !dt.timeto) {
+			// 	// console.log("Set time (1)", dt);
+			// 	mf = moment(dt.datefrom, 'YYYY-MM-DD');
+			// 	mt = moment(dt.dateto,   'YYYY-MM-DD');
+			// 	ct.append('<p>' + mf.format('ddd Do MMM') + ' to ' + mt.format('ddd Do MMM, YYYY')  + '</p>');
+			// } else if (dt.datefrom && dt.dateto && dt.timefrom && dt.timeto) {
+			// 	// console.log("Set time (2)", dt);
+				
+			// 	if (doTimezone) {
+			// 		mf = moment.tz(dt.datefrom + ' ' + dt.timefrom, this.foodle.timezone).tz(toTimezone);
+			// 		mt = moment.tz(dt.dateto   + ' ' + dt.timeto,   this.foodle.timezone).tz(toTimezone);
+			// 	} else {
+			// 		mf = moment(dt.datefrom + ' ' + dt.timefrom, 'YYYY-MM-DD HH:mm');
+			// 		mt = moment(dt.dateto   + ' ' + dt.timeto,   'YYYY-MM-DD HH:mm');
+			// 	}
+
+
+			// 	ct.append('<p>' + mf.format('ddd Do MMM, YYYY, HH:mm') + '</p>');
+			// 	ct.append('<p>to</p>');
+			// 	ct.append('<p>' + mt.format('ddd Do MMM, YYYY, HH:mm') + '</p>');
+			// } else if (dt.datefrom && !dt.dateto && dt.timefrom && dt.timeto) {
+			// 	// console.log("Set time (3)", dt);
+
+			// 	if (doTimezone) {
+			// 		mf = moment.tz(dt.datefrom + ' ' + dt.timefrom, this.foodle.timezone).tz(toTimezone);
+			// 		mt = moment.tz(dt.datefrom + ' ' + dt.timeto,   this.foodle.timezone).tz(toTimezone);
+			// 	} else {
+			// 		mf = moment(dt.datefrom + ' ' + dt.timefrom, 'YYYY-MM-DD HH:mm');
+			// 		mt = moment(dt.datefrom + ' ' + dt.timeto,   'YYYY-MM-DD HH:mm');
+			// 	}
+
+
+			// 	ct.append('<p class="s-lg">' + mf.format('ddd Do MMM, YYYY') + '</p>');
+			// 	ct.append('<p class="s-lg">' + mf.format('HH:mm') + ' – ' + mt.format('HH:mm') + '</p>');
+			// } else if (dt.datefrom && !dt.dateto && !dt.timefrom && !dt.timeto) {
+			// 	// console.log("Set time (4)", dt);
+			// 	mf = moment(dt.datefrom, 'YYYY-MM-DD');
+			// 	ct.append('<p>' + mf.format('ddd Do MMM, YYYY') + '</p>');
+			// }
+
+			// if (mf) {
+			// 	ct.append('<p class="time-fromnow">Event starts in ' + mf.fromNow() + '</p>');
+			// }
+			// if (mf && mt) {
+			// 	ct.append('<p class="time-duration">Event last for ' + mt.from(mf, true) + '</p>');	
+			// }
+
 		},
 
 

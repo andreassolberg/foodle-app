@@ -1,0 +1,15 @@
+{#coldef}
+<tr>
+	<td>
+		<img src="{profilephotoBase}{user.profilephoto}" class="" style="max-width: 48px; float: left; margin: 0px 5px; padding: 1px; border-radius: 3px; border: 1px solid #aaa"> 
+		<p style="margin: 0px; font-size: 100%">{user.name}</p>
+		<p style="margin: 0px; font-size: 80%">{user.email}</p>
+	</td>
+
+	{#cols}
+		<td class="responsebox" colspan="{colspan}" style="text-align: center">
+			<input class="responseoption" type="checkbox" />
+		</td>
+	{/cols}
+</tr>
+{/coldef}

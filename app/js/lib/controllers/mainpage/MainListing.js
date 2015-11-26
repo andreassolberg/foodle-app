@@ -35,47 +35,24 @@ define(function(require, exports, module) {
 				that.updateList(list);
 			});
 
-
 			this._super();
 
 			this.dict = new Dictionary();
 
-			// dust.loadSource(dust.compile(template, "mainlisting"));
-			// dust.loadSource(dust.compile(templateC, "mainlistingC"));
-			// dust.loadSource(dust.compile(templateA, "mainlistingA"));
-
 			this.elList = $("<div></div>");
-			// this.elAPIGKs = $("<div></div>");
-
 
 			this.ebind('click', '.actNewP', 'actNewP');
 			this.ebind('click', '.actNewD', 'actNewD');
 
 
-			// this.clientcreate = new ClientCreate(this.app);
-			// this.clientcreate.on("submit", function(obj) {
-			// 	that.emit("clientCreate", obj);
-			// });
-			// this.clientcreate.initLoad();
+		},
 
-			// this.apigkcreate = new APIGKCreate(this.feideconnect, this.app);
-			// this.apigkcreate.on("submit", function(obj) {
-			// 	that.emit("apigkCreate", obj);
-			// });
-			// this.apigkcreate.initLoad();
-
-			// this.el.on("click", ".registerNewClient", function() {
-			// 	that.clientcreate.activate();
-			// });
-			// this.el.on("click", ".registerNewAPIGK", function() {
-			// 	that.apigkcreate.activate();
-			// });
-
-
-			// this.ebind("click", ".clientEntry", "selectedClient");
-			// this.ebind("click", ".apigkEntry", "selectedAPIGK");
-
-
+		"updateList": function(foodles) {
+			var items = this.pool.getView();
+			var view = {
+				"items": items
+			};
+			this.tmpL.render(this.elList.empty(), view);
 		},
 
 		"actNewD": function(e) {
@@ -107,75 +84,9 @@ define(function(require, exports, module) {
 				});
 		},
 
-		"selectedClient": function(e) {
-			e.preventDefault(); // e.stopPropgate();
-			var clientid = $(e.currentTarget).data('clientid');
-			this.emit('clientSelected', clientid);
-		},
-
-		"selectedAPIGK": function(e) {
-			e.preventDefault(); // e.stopPropgate();
-			var apigkid = $(e.currentTarget).data('apigkid');
-			this.emit('apigkSelected', apigkid);
-		},
-
-		"updateList": function(foodles) {
-
-			var
-				that = this,
-				key,
-				clientlist = [],
-				view;
-
-
-			var items = this.pool.getView();
-
-			view = {
-				"items": items
-			};
-
-			// console.error("View", items);
-			this.tmpL.render(this.elList.empty(), view)
-
-
-			// return;
-			// for (key in clients) {
-			// 	if (clients.hasOwnProperty(key)) {
-			// 		clientlist.push(clients[key].getView());
-			// 	}
-			// }
-
-			// clientlist.sort(function(a, b) {
-			// 	if (a.updated < b.updated) {
-			// 		return 1;
-			// 	}
-			// 	if (a.updated > b.updated) {
-			// 		return -1;
-			// 	}
-			// 	return 0;
-			// });
-
-			// view = {
-			// 	"clients": clientlist,
-			// 	"random": utils.guid(),
-			// 	"_config": that.feideconnect.getConfig(),
-			// 	"_": that.dict.get()
-			// };
-
-			// this.tmp.render(that.elClients.empty(), view)
-			// 	.then(function() {
-			// 		if (!that.elClientsAttached && that.templateLoaded) {
-			// 			that.el.find('#listing').append(that.elClients);
-			// 			that.elClientsAttached = true;
-			// 		}
-			// 	});
-
-		},
-
-
 		"initLoad": function() {
 
-			this.draw(false)
+			return this.draw(false)
 				.then(this.proxy("_initLoaded"));
 
 		},

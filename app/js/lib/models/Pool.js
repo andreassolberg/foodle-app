@@ -31,13 +31,39 @@ define(function(require, exports, module) {
 			that.apigks = {};
 			return that.feideconnect._customRequest('https://foodle.gk.feideconnect.no/api/foodles/')
 				.then(function(foodles) {
-					// console.error("DATA", foodles);
 					var i;
 					for (i = 0; i < foodles.length; i++) {
 						that.foodles[foodles[i].identifier] = new Foodle(foodles[i]);
 					}
 					that.emit('listChange', that.apigks);
 				});
+		},
+
+		"getSeeAlso": function(foodle) {
+
+			var count = 10;
+			var items = [];
+			var xv;
+			var anynew = false;
+
+			for(var key in this.foodles) {
+				var x = this.foodles[key];
+				x.identifier = key;
+				xv = x.getView();
+				xv.iscurrent =  (foodle.identifier === x.identifier);
+				if (!xv.iscurrent) {
+					anynew = true;
+				}
+				items.push(xv);
+				if (count-- <= 0) {
+					break;
+				}
+			}
+			if (!anynew) {
+				return null;
+			}
+			return items;
+
 		},
 
 		"getView": function() {

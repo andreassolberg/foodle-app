@@ -21,6 +21,7 @@ define(function(require, exports, module) {
 		FoodleEditor = require('./controllers/editor/FoodleEditor'),
 		RespondController = require('./controllers/respond/RespondController'),
 		API = require('./API'),
+		UserContext = require('./UserContext'),
 
 		rawconfig = require('text!../../etc/config.js');
 
@@ -52,6 +53,7 @@ define(function(require, exports, module) {
 
 			this.feideconnect = new FeideConnect(this.config);
 			this.pool = new Pool(this.feideconnect);
+			this.usercontext = new UserContext(this.feideconnect);
 			this.api = new API(this.feideconnect, this.config);
 
 			Foodle.api = this.api;
@@ -65,6 +67,7 @@ define(function(require, exports, module) {
 			this.languageselector = new LanguageController(this);
 
 
+
 			// Call contructor of the AppController(). Takes no parameters.
 			this._super(undefined, false);
 
@@ -75,15 +78,18 @@ define(function(require, exports, module) {
 			this.mainlisting = new MainListing(this.feideconnect, this, this.pool);
 			this.pc.add(this.mainlisting);
 
-			this.response = new RespondController(this.feideconnect, this);
+			this.response = new RespondController(this.feideconnect, this, this.pool, this.usercontext);
 			this.pc.add(this.response);
 
 
-			this.editor = new FoodleEditor(this.feideconnect, this);
+			this.editor = new FoodleEditor(this.feideconnect, this, this.usercontext);
 			this.pc.add(this.editor);
 
 
-			this.mainlisting.initLoad();
+			this.mainlisting.initLoad()
+				.catch(function(err) {
+					that.setErrorMessage("Could not load Foodle front page listing", "danger", err);
+				})
 
 			this.setupRoute(/^\/?$/, "routeMainlisting");
 			this.setupRoute(/^\/respond\/([a-zA-Z0-9_\-:.]+)?$/, "routeResponse");
@@ -217,6 +223,16 @@ define(function(require, exports, module) {
 
 		},
 
+		"getBCItem": function() {
+			var title = 'Foodle frontpage';
+			var item = {
+				"href": "#!/",
+				"title": title,
+				"active": false
+			};
+			return item;
+		},
+
 		"routeMainlisting": function() {
 			this.setHash('/');
 			this.bccontroller.hide();
@@ -224,15 +240,16 @@ define(function(require, exports, module) {
 		},
 
 
-		"routeResponse": function(item) {
+		"routeResponse": function(identifier) {
 			var that = this;
-			console.error("About to respond to ", item);
-
-			// this.setHash('/');
-			// this.bccontroller.hide();
-			return this.response.edit(item)
+			Foodle.getById(identifier)
+				.then(function(f) {
+					return that.response.open(f)
+				})
 				.catch(function(err) {
-					that.setErrorMessage("Error opening reponse display", "danger", err);
+
+					that.setErrorMessage("Error opening Foodle response page", "danger", err);
+					console.error(err.stack);
 				});
 		},
 
@@ -249,8 +266,7 @@ define(function(require, exports, module) {
 			var that = this;
 			Foodle.getById(identifier)
 				.then(function(f) {
-					// console.log("Yes, we got somethibng", f);
-					that.editor.edit(f)
+					return that.editor.edit(f)
 				})
 				.catch(function(err) {
 					that.setErrorMessage("Error opening Foodle editor", "danger", err);
