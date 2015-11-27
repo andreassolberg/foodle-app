@@ -6,7 +6,7 @@ define(function(require) {
 		Pane = require('bower/feideconnectjs/src/controllers/Pane'),
 		utils = require('bower/feideconnectjs/src/utils'),
 		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine'),
-		
+
 		TimeZoneSelector = require('../editor/components/TimeZoneSelector'),
 		LocationDisplay = require('./components/LocationDisplay'),
 		MyResponseController = require('./components/MyResponseController'),
@@ -37,9 +37,9 @@ define(function(require) {
 			this.timezoneselector = new TimeZoneSelector(this.app);
 
 			this.template = new TemplateEngine(responseTemplate);
+
 			// this.template.loadPartial("apilisting", apilistingTemplate);
 			// this.template.loadPartial("apilistingpublic", publicAPIListingTemplate);
-
 			// this.ebind("click", ".actSaveChanges", "actSaveChanges");
 
 			this.initLoad();
@@ -50,9 +50,16 @@ define(function(require) {
 
 			return Promise.resolve()
 				.then(this.proxy("_initLoaded"));
-				
+
 		},
-		
+
+		"loadFoodleResponses": function() {
+
+			this.foodle.getMyResponse();
+			this.foodle.getAllResponses();
+
+		},
+
 		"open": function(foodle) {
 
 			var that = this;
@@ -60,8 +67,7 @@ define(function(require) {
 			this.foodle = foodle;
 
 			this.app.bccontroller.draw([
-				this.app.getBCItem(),
-				{
+				this.app.getBCItem(), {
 					"title": foodletitle,
 					"active": true
 				}
@@ -105,10 +111,10 @@ define(function(require) {
 
 
 			if (this.foodle.location) {
-				this.locationdisplay.draw(this.foodle);	
+				this.locationdisplay.draw(this.foodle);
 			}
 
-			
+
 			that.timezoneselector.updateView(this.foodle);
 
 			console.error("Responder view", JSON.stringify(view.user, undefined, 4));
@@ -116,10 +122,10 @@ define(function(require) {
 			return this.template.render(that.el, view)
 				.then(function() {
 					if (that.foodle.location) {
-						that.el.find('.locationdisplay').append(that.locationdisplay.el);	
+						that.el.find('.locationdisplay').append(that.locationdisplay.el);
 						that.el.find('#timezoneselector').append(that.timezoneselector.el);
-						that.el.find('#myresponse').append(that.myresponsecontroller.el);
-						that.el.find('#allresponses').append(that.allresponsescontroller.el);
+						that.el.find('#myresponse').replaceWith(that.myresponsecontroller.el);
+						that.el.find('#allresponses').replaceWith(that.allresponsescontroller.el);
 					}
 					that.activate();
 				});

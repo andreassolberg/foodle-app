@@ -5,6 +5,8 @@ define(function(require, exports, module) {
 		$ = require('jquery'),
 		moment = require('moment-timezone'),
 		utils = require('bower/feideconnectjs/src/utils'),
+
+		FoodleResponse = require('./FoodleResponse'),
 		Model = require('bower/feideconnectjs/src/models/Model');
 
 	function parseDate(input) {
@@ -36,6 +38,15 @@ define(function(require, exports, module) {
 
 
 		},
+
+		"getMyResponse": function() {
+
+		},
+		"getAllResponses": function() {
+
+		},
+
+
 
 		// Detect two row header
 		"coldefDetectTRH": function() {
@@ -267,7 +278,7 @@ define(function(require, exports, module) {
 			if (dt.allDay && dt.multipleDays) {
 				display1 = start.format('Do MMM') + ' – ' + end.format('Do MMM, YYYY')
 			} else if (dt.allDay && !dt.multipleDays) {
-				display1 = start.format('ddd Do MMM, YYYY');				
+				display1 = start.format('ddd Do MMM, YYYY');
 			} else if (!dt.allDay && dt.multipleDays) {
 				display1 = start.format('ddd Do MMM, YYYY HH:mm');
 				display2 = '- ' + end.format('ddd Do MMM, YYYY HH:mm');
@@ -293,7 +304,6 @@ define(function(require, exports, module) {
 
 
 
-
 			// var dt = this.foodle.datetime;
 			// var ct = $('#sectTime').empty();
 			// var mf, mt;
@@ -313,7 +323,7 @@ define(function(require, exports, module) {
 			// 	ct.append('<p>' + mf.format('ddd Do MMM') + ' to ' + mt.format('ddd Do MMM, YYYY')  + '</p>');
 			// } else if (dt.datefrom && dt.dateto && dt.timefrom && dt.timeto) {
 			// 	// console.log("Set time (2)", dt);
-				
+
 			// 	if (doTimezone) {
 			// 		mf = moment.tz(dt.datefrom + ' ' + dt.timefrom, this.foodle.timezone).tz(toTimezone);
 			// 		mt = moment.tz(dt.dateto   + ' ' + dt.timeto,   this.foodle.timezone).tz(toTimezone);

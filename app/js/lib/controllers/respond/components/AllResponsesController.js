@@ -14,7 +14,8 @@ define(function(require, exports, module) {
 		"init": function(app) {
 			this.app = app;
 			this.template = new TemplateEngine(template);
-			this._super();
+			var el = $('<tbody></tbody>')
+			this._super(el);
 			this.initLoad();
 		},
 
