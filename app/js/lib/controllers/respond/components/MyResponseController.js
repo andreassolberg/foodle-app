@@ -5,7 +5,9 @@ define(function(require, exports, module) {
 		$ = require('jquery'),
 		googleMapsLoader = require('google-maps'),
 		Controller = require('bower/feideconnectjs/src/controllers/Controller'),
-		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine');
+		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine'),
+
+		FoodleResponse = require('../../../models/FoodleResponse');
 
 	var template = require('text!templates/respond-components/MyResponse.html');
 
@@ -18,19 +20,37 @@ define(function(require, exports, module) {
 			var el = $('<tbody></tbody>')
 			this._super(el);
 
-			// this.ebind("click", ".responsebox", "click");
-
+			this.ebind("click", ".submitResponse", "actSubmit");
 
 			this.initLoad();
 		},
 
 
-		"click": function() {
+		"actSubmit": function(e) {
+			if (e) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+
+			// var r = new FoodleResponse({}, this.foodle);
+			// r.identifier = this.foodle.identifier;
+			// r.userinfo = this.app.usercontext.getPublic();
+			// r.columns = [
+			// 	{
+			// 		"idx": "2373465",
+			// 		"val": "yes"
+			// 	}
+			// ];
+			// // console.error("FoodleResponse", JSON.stringify(r, undefined, 2));
+			// r.save();
 
 		},
 
-		"setData": function(foodle) {
+
+		"setData": function(foodle, response) {
 			this.foodle = foodle;
+			this.response = response;
+			this.actSubmit();
 			return this.draw();
 		},
 
@@ -43,8 +63,10 @@ define(function(require, exports, module) {
 				"_": this.app.dict.get(),
 				"user": this.app.usercontext.user,
 				"coldef": this.foodle.getViewColDefGeneric(),
-				"profilephotoBase": profilephotoBase
+				"profilephotoBase": profilephotoBase,
+				"response": this.response.getView()
 			};
+			console.error("My response view", JSON.stringify(view, undefined, 3));
 			this.el.children().detach();
 			return this.template.render(this.el, view);
 		}

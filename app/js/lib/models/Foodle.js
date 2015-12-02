@@ -26,7 +26,6 @@ define(function(require, exports, module) {
 		"save": function(fc) {
 			var obj = this.getProperties(['title', 'descr', 'parent', 'deadline', 'location', 'publicresponses', 'datetime', 'timezone', 'defaults', 'columns', 'admins', 'groups']);
 
-
 			if (this.identifier) {
 				console.error("Updating an existing Foodle")
 				return Foodle.api.updateFoodle(this.identifier, obj);
@@ -35,15 +34,13 @@ define(function(require, exports, module) {
 				return Foodle.api.saveFoodle(obj);
 			}
 
-
-
 		},
 
 		"getMyResponse": function() {
-
+			return FoodleResponse.getFoodleMyResponse(this);
 		},
 		"getAllResponses": function() {
-
+			return FoodleResponse.getFoodleAllResponses(this);
 		},
 
 
@@ -301,67 +298,6 @@ define(function(require, exports, module) {
 				endfuture: endfuture,
 				duration: duration
 			};
-
-
-
-			// var dt = this.foodle.datetime;
-			// var ct = $('#sectTime').empty();
-			// var mf, mt;
-
-
-			// var doTimezone = false;
-			// if (this.foodle.timezone && toTimezone) doTimezone = true;
-
-
-			// // console.log("Set time", dt);
-
-			// // Date range, full days
-			// if (dt.datefrom && dt.dateto && !dt.timefrom && !dt.timeto) {
-			// 	// console.log("Set time (1)", dt);
-			// 	mf = moment(dt.datefrom, 'YYYY-MM-DD');
-			// 	mt = moment(dt.dateto,   'YYYY-MM-DD');
-			// 	ct.append('<p>' + mf.format('ddd Do MMM') + ' to ' + mt.format('ddd Do MMM, YYYY')  + '</p>');
-			// } else if (dt.datefrom && dt.dateto && dt.timefrom && dt.timeto) {
-			// 	// console.log("Set time (2)", dt);
-
-			// 	if (doTimezone) {
-			// 		mf = moment.tz(dt.datefrom + ' ' + dt.timefrom, this.foodle.timezone).tz(toTimezone);
-			// 		mt = moment.tz(dt.dateto   + ' ' + dt.timeto,   this.foodle.timezone).tz(toTimezone);
-			// 	} else {
-			// 		mf = moment(dt.datefrom + ' ' + dt.timefrom, 'YYYY-MM-DD HH:mm');
-			// 		mt = moment(dt.dateto   + ' ' + dt.timeto,   'YYYY-MM-DD HH:mm');
-			// 	}
-
-
-			// 	ct.append('<p>' + mf.format('ddd Do MMM, YYYY, HH:mm') + '</p>');
-			// 	ct.append('<p>to</p>');
-			// 	ct.append('<p>' + mt.format('ddd Do MMM, YYYY, HH:mm') + '</p>');
-			// } else if (dt.datefrom && !dt.dateto && dt.timefrom && dt.timeto) {
-			// 	// console.log("Set time (3)", dt);
-
-			// 	if (doTimezone) {
-			// 		mf = moment.tz(dt.datefrom + ' ' + dt.timefrom, this.foodle.timezone).tz(toTimezone);
-			// 		mt = moment.tz(dt.datefrom + ' ' + dt.timeto,   this.foodle.timezone).tz(toTimezone);
-			// 	} else {
-			// 		mf = moment(dt.datefrom + ' ' + dt.timefrom, 'YYYY-MM-DD HH:mm');
-			// 		mt = moment(dt.datefrom + ' ' + dt.timeto,   'YYYY-MM-DD HH:mm');
-			// 	}
-
-
-			// 	ct.append('<p class="s-lg">' + mf.format('ddd Do MMM, YYYY') + '</p>');
-			// 	ct.append('<p class="s-lg">' + mf.format('HH:mm') + ' – ' + mt.format('HH:mm') + '</p>');
-			// } else if (dt.datefrom && !dt.dateto && !dt.timefrom && !dt.timeto) {
-			// 	// console.log("Set time (4)", dt);
-			// 	mf = moment(dt.datefrom, 'YYYY-MM-DD');
-			// 	ct.append('<p>' + mf.format('ddd Do MMM, YYYY') + '</p>');
-			// }
-
-			// if (mf) {
-			// 	ct.append('<p class="time-fromnow">Event starts in ' + mf.fromNow() + '</p>');
-			// }
-			// if (mf && mt) {
-			// 	ct.append('<p class="time-duration">Event last for ' + mt.from(mf, true) + '</p>');	
-			// }
 
 		},
 

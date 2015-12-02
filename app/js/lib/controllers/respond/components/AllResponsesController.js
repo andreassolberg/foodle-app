@@ -19,9 +19,20 @@ define(function(require, exports, module) {
 			this.initLoad();
 		},
 
-		"setData": function(foodle) {
+		"setData": function(foodle, responses) {
 			this.foodle = foodle;
+			this.responses = responses;
 			return this.draw();
+		},
+
+		"getResponsesView": function() {
+			var data = [];
+			for(var i = 0; i < this.responses.length; i++) {
+				var v = this.responses[i].getView();
+				// console.log(JSON.stringify(v, undefined, 2));
+				data.push(v);
+			}
+			return data;
 		},
 
 		"draw": function() {
@@ -32,10 +43,12 @@ define(function(require, exports, module) {
 			var view = {
 				"_": this.app.dict.get(),
 				"coldef": this.foodle.getViewColDefGeneric(),
-				"profilephotoBase": profilephotoBase
+				"profilephotoBase": profilephotoBase,
+				"responses": this.getResponsesView()
 			};
 			this.el.children().detach();
-			console.error("About to render AllResponsesController", view);
+			// console.error("About to render AllResponsesController");
+			// console.error(JSON.stringify(view, undefined, 2));
 			return this.template.render(this.el, view);
 		}
 

@@ -47,17 +47,29 @@ define(function(require) {
 
 
 		"initLoad": function() {
-
 			return Promise.resolve()
 				.then(this.proxy("_initLoaded"));
-
 		},
 
+		"loadFoodleResponsesMy": function() {
+			var that = this;
+			return this.foodle.getMyResponse()
+				.then(function(data) {
+					that.myresponse = data;
+				});
+		},
+		"loadFoodleResponsesAll": function() {
+			var that = this;
+			return this.foodle.getAllResponses()
+				.then(function(data) {
+					that.allresponses = data;
+				});
+		},
 		"loadFoodleResponses": function() {
-
-			this.foodle.getMyResponse();
-			this.foodle.getAllResponses();
-
+			var that = this;
+			return Promise.all([
+				this.loadFoodleResponsesMy(), this.loadFoodleResponsesAll()
+			]);
 		},
 
 		"open": function(foodle) {
@@ -74,6 +86,7 @@ define(function(require) {
 			]);
 
 			return this.onLoaded()
+				.then(this.proxy("loadFoodleResponses"))
 				.then(function() {
 					return that.usercontext.onLoaded();
 				})
@@ -84,9 +97,9 @@ define(function(require) {
 		},
 
 		"updateResponses": function() {
-			console.error("MyResponseController", this.myresponsecontroller);
-			this.myresponsecontroller.setData(this.foodle);
-			this.allresponsescontroller.setData(this.foodle);
+			// console.error("MyResponseController", this.myresponsecontroller);
+			this.myresponsecontroller.setData(this.foodle, this.myresponse);
+			this.allresponsescontroller.setData(this.foodle, this.allresponses);
 		},
 
 		"draw": function(act) {
@@ -117,7 +130,7 @@ define(function(require) {
 
 			that.timezoneselector.updateView(this.foodle);
 
-			console.error("Responder view", JSON.stringify(view.user, undefined, 4));
+			// console.error("Responder view", JSON.stringify(view.user, undefined, 4));
 			that.el.children().detach();
 			return this.template.render(that.el, view)
 				.then(function() {

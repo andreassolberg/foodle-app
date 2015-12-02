@@ -28,12 +28,12 @@ define(function(require, exports, module) {
 		"getGroupSelection": function(groupselection) {
 			if (!groupselection) { return null; }
 			var data = [];
-			console.error("groupselection", groupselection);
+			// console.error("groupselection", groupselection);
 			var gindex = groupselection.reduce(function(previousValue, currentValue) {
 				previousValue[currentValue] = true;
 				return previousValue;
 			}, {});
-			console.error("INDEX IS", gindex);
+			// console.error("INDEX IS", gindex);
 			for(var i = 0; i < this.groups.length; i++) {
 				if (gindex.hasOwnProperty(this.groups[i].id)) {
 					data.push(this.groups[i]);
@@ -42,6 +42,21 @@ define(function(require, exports, module) {
 			return data;
 		},
 
+
+		"getPublic": function() {
+
+			var obj = {};
+			if (this.user.name) {
+				obj.name = this.user.name;
+			}
+			if (this.user.email) {
+				obj.email = this.user.email;
+			}
+			if (this.user.profilephoto) {
+				obj.profilephoto = this.user.profilephoto;
+			}
+			return obj;
+		},
 
 
 		"loadGroups": function() {

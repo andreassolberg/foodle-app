@@ -16,6 +16,7 @@ define(function(require, exports, module) {
 		utils = require('bower/feideconnectjs/src/utils'),
 
 		Foodle = require('./models/Foodle'),
+		FoodleResponse = require('./models/FoodleResponse'),
 		Pool = require('./models/Pool'),
 		MainListing = require('./controllers/mainpage/MainListing'),
 		FoodleEditor = require('./controllers/editor/FoodleEditor'),
@@ -57,6 +58,7 @@ define(function(require, exports, module) {
 			this.api = new API(this.feideconnect, this.config);
 
 			Foodle.api = this.api;
+			FoodleResponse.api = this.api;
 
 			this.dict = new Dictionary();
 
