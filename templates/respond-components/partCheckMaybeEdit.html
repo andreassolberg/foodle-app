@@ -1,0 +1,20 @@
+<td class="responsebox center nopadding nomargin" data-colid="{idx}" >
+  <div class="radio bg-yes radiobox">
+    <label>
+      <input type="radio" name="opts-{idx}" id="opts-{idx}-yes" {?yes}checked="checked"{/yes} value="yes" checked>
+  		<i class="fa fa-check fa-fw"></i>
+    </label>
+  </div>
+  <div class="radio bg-maybe radiobox">
+    <label>
+      <input type="radio" name="opts-{idx}" id="opts-{idx}-maybe" {?maybe}checked="checked"{/maybe} value="maybe">
+  		<i class="fa fa-question fa-fw"></i>
+    </label>
+  </div>
+  <div class="radio bg-no radiobox">
+    <label>
+      <input type="radio" name="opts-{idx}" id="opts-{idx}-no" {?no}checked="checked"{/no} value="no">
+  		<i class="fa fa-times fa-fw"></i>
+    </label>
+  </div>
+</td>

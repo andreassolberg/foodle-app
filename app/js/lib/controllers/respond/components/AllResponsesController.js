@@ -7,13 +7,24 @@ define(function(require, exports, module) {
 		Controller = require('bower/feideconnectjs/src/controllers/Controller'),
 		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine');
 
-	var template = require('text!templates/respond-components/MyResponse.html');
+	var template = require('text!templates/respond-components/AllResponses.html');
+	var partCheck = require('text!templates/respond-components/partCheck.html');
+	var partCheckMaybe = require('text!templates/respond-components/partCheckMaybe.html');
+	var partNumber = require('text!templates/respond-components/partNumber.html');
+	var partText = require('text!templates/respond-components/partText.html');
+
+
 
 
 	var AllResponsesController = Controller.extend({
 		"init": function(app) {
 			this.app = app;
 			this.template = new TemplateEngine(template);
+			this.template.loadPartial("partCheck", partCheck);
+			this.template.loadPartial("partCheckMaybe", partCheckMaybe);
+			this.template.loadPartial("partNumber", partNumber);
+			this.template.loadPartial("partText", partText);
+			
 			var el = $('<tbody></tbody>')
 			this._super(el);
 			this.initLoad();
@@ -35,6 +46,7 @@ define(function(require, exports, module) {
 			return data;
 		},
 
+
 		"draw": function() {
 			var that = this;
 			var _config = that.app.feideconnect.getConfig();
@@ -48,7 +60,7 @@ define(function(require, exports, module) {
 			};
 			this.el.children().detach();
 			// console.error("About to render AllResponsesController");
-			// console.error(JSON.stringify(view, undefined, 2));
+			// console.error(JSON.stringify(view.responses, undefined, 2));
 			return this.template.render(this.el, view);
 		}
 

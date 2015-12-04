@@ -46,6 +46,9 @@ define(function(require, exports, module) {
 		"getFoodleMyResponse": function(foodle) {
 			return this.feideconnect._customRequest(this.getURL('/api/foodles/' + foodle.identifier + '/myresponse'))
 				.then(function(data) {
+					if (data === null) {
+						return null;
+					}
 					return new FoodleResponse(data, foodle);
 				});
 		},

@@ -12,6 +12,7 @@ define(function(require) {
 		MyResponseController = require('./components/MyResponseController'),
 		AllResponsesController = require('./components/AllResponsesController'),
 		Foodle = require('../../models/Foodle'),
+		FoodleResponse = require('../../models/FoodleResponse'),
 		Waiter = require('../../Waiter'),
 		$ = require('jquery');
 
@@ -55,6 +56,11 @@ define(function(require) {
 			var that = this;
 			return this.foodle.getMyResponse()
 				.then(function(data) {
+					if (data === null) {
+						data = new FoodleResponse({}, that.foodle);
+						data.identifier = that.foodle.identifier;
+						data.userinfo = that.usercontext.getPublic();
+					}
 					that.myresponse = data;
 				});
 		},
@@ -109,7 +115,6 @@ define(function(require) {
 			var _config = that.feideconnect.getConfig();
 			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
 
-
 			var view = {
 				"_": this.app.dict.get(),
 				"user": this.usercontext.user,
@@ -121,12 +126,9 @@ define(function(require) {
 				"profilephotoBase": profilephotoBase
 			};
 
-
-
 			if (this.foodle.location) {
 				this.locationdisplay.draw(this.foodle);
 			}
-
 
 			that.timezoneselector.updateView(this.foodle);
 
@@ -136,10 +138,10 @@ define(function(require) {
 				.then(function() {
 					if (that.foodle.location) {
 						that.el.find('.locationdisplay').append(that.locationdisplay.el);
-						that.el.find('#timezoneselector').append(that.timezoneselector.el);
-						that.el.find('#myresponse').replaceWith(that.myresponsecontroller.el);
-						that.el.find('#allresponses').replaceWith(that.allresponsescontroller.el);
 					}
+					that.el.find('#timezoneselector').append(that.timezoneselector.el);
+					that.el.find('#myresponse').replaceWith(that.myresponsecontroller.el);
+					that.el.find('#allresponses').replaceWith(that.allresponsescontroller.el);
 					that.activate();
 				});
 		}

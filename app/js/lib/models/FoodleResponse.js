@@ -19,6 +19,31 @@ define(function(require, exports, module) {
 			}
 		},
 
+		/*
+		 * Set a reponse column value.
+		 */
+		"setValue": function(idx, val) {
+			var existingResponse = this.getResponseByIdx(idx);
+			if (existingResponse !== null) {
+				existingResponse.val = val;
+			} else {
+				this.columns.push({
+					"idx": idx,
+					"val": val
+				});
+			}
+		},
+
+		"getResponseByIdx": function(idx) {
+			for (var i = 0; i < this.columns.length; i++) {
+				if (this.columns[i].idx === idx) {
+					return this.columns[i];
+				}
+			}
+			return null;
+		},
+
+
 		"save": function(fc) {
 
 			if (!this.foodle || !this.foodle.identifier) {
@@ -38,14 +63,31 @@ define(function(require, exports, module) {
 
 		},
 
-		"getResponseByIdx": function(idx) {
 
-			for (var i = 0; i < this.columns.length; i++) {
-				if (this.columns[i].idx === idx) {
-					return this.columns[i];
+
+		"getColumnResponseItemView": function(colitemdef) {
+
+			var view = {};
+			var resp = this.getResponseByIdx(colitemdef.idx);
+			var type = colitemdef.datatype;
+
+			view.idx = colitemdef.idx;
+			view.empty = (resp === null);
+
+
+			if (view.empty) {
+				view[type] = true;
+			} else {
+				if (type === 'check' || type === 'checkmaybe' || type === 'radio') {
+					view[type] = {};
+					view[type][resp.val] = true;
+				} else {
+					view[type] = {
+						value: resp.val
+					};
 				}
 			}
-			return null;
+			return view;
 		},
 
 
@@ -53,13 +95,13 @@ define(function(require, exports, module) {
 
 			var responseData = [];
 
-			var x;
+			var x, resp;
 			var coldef = this.foodle.getViewColDefGeneric();
 			for(var i = 0; i < coldef.cols.length; i++) {
 
-				x = {};
-				x.resp = this.getResponseByIdx(coldef.cols[i].idx);
-				x.def = coldef.cols[i];
+				x = this.getColumnResponseItemView(coldef.cols[i]);
+
+				
 
 				responseData.push(x);
 			}
@@ -103,6 +145,7 @@ define(function(require, exports, module) {
 			}
 
 			res.colresponses = this.getColumnResponseView();
+			delete res.foodle;
 
 
 			res.isStored = !!this.identifier;

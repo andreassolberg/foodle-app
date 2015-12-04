@@ -23,6 +23,40 @@
 }
 
 
+
+.bg-empty {
+	background-color: #ccc;
+}
+.bg-yes {
+	background-color: #70AD67;
+}
+.bg-no {
+	background-color: #FF7161;
+}
+.bg-maybe {
+	background-color: #FFA841;
+}
+
+.fullwidth {
+	width: 100%;
+} 
+.nopadding {
+	padding: 0px!important;	
+}
+.nomargin {
+	margin: 0px !important;	
+}
+.center {
+	text-align: center;
+	vertical-align: middle !important;
+}
+.radiobox {
+	margin: 0px !important;	
+	padding: 5px 0px;	
+	width: 100%;
+}
+
+
 #inputDescr {
 	height: 8em;	
 }

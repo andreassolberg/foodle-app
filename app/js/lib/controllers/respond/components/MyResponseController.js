@@ -10,18 +10,33 @@ define(function(require, exports, module) {
 		FoodleResponse = require('../../../models/FoodleResponse');
 
 	var template = require('text!templates/respond-components/MyResponse.html');
+	var partCheck = require('text!templates/respond-components/partCheck.html');
+	var partCheckMaybe = require('text!templates/respond-components/partCheckMaybe.html');
+	var partCheckEdit = require('text!templates/respond-components/partCheckEdit.html');
+	var partCheckMaybeEdit = require('text!templates/respond-components/partCheckMaybeEdit.html');
+	var partNumber = require('text!templates/respond-components/partNumber.html');
+	var partNumberEdit = require('text!templates/respond-components/partNumberEdit.html');
+	var partText = require('text!templates/respond-components/partText.html');
+	var partTextEdit = require('text!templates/respond-components/partTextEdit.html');
 
 
 	var MyResponseController = Controller.extend({
 		"init": function(app) {
 			this.app = app;
 			this.template = new TemplateEngine(template);
+			this.template.loadPartial("partCheck", partCheck);
+			this.template.loadPartial("partCheckMaybe", partCheckMaybe);
+			this.template.loadPartial("partCheckEdit", partCheckEdit);
+			this.template.loadPartial("partCheckMaybeEdit", partCheckMaybeEdit);
+			this.template.loadPartial("partNumber", partNumber);
+			this.template.loadPartial("partNumberEdit", partNumberEdit);
+			this.template.loadPartial("partText", partText);
+			this.template.loadPartial("partTextEdit", partTextEdit);
 
-			var el = $('<tbody></tbody>')
+			var el = $('<tbody><tr><td>Booo</td></tr></tbody>')
 			this._super(el);
 
 			this.ebind("click", ".submitResponse", "actSubmit");
-
 			this.initLoad();
 		},
 
@@ -31,26 +46,34 @@ define(function(require, exports, module) {
 				e.preventDefault();
 				e.stopPropagation();
 			}
+			var that = this;
+			var value, idx, colitemdef;
 
-			// var r = new FoodleResponse({}, this.foodle);
-			// r.identifier = this.foodle.identifier;
-			// r.userinfo = this.app.usercontext.getPublic();
-			// r.columns = [
-			// 	{
-			// 		"idx": "2373465",
-			// 		"val": "yes"
-			// 	}
-			// ];
-			// // console.error("FoodleResponse", JSON.stringify(r, undefined, 2));
-			// r.save();
+			this.el.find('.responsebox').each(function(i, item) {
 
+				idx = $(item).attr('data-colid');
+				colitemdef = that.foodle.coldefGetById(idx);
+				if (colitemdef === null) {
+					return;
+				}
+
+				if (colitemdef.datatype === 'check') {
+					value = ($(item).find('.responseoption').eq(0).prop('checked') ? 'yes' : 'no');
+				} else if (colitemdef.datatype === 'checkmaybe') {
+					value = $(item).find('input[type="radio"]:checked').val()
+				} else {
+					value = $(item).find('.responseoption').eq(0).val();
+				}
+				that.response.setValue(idx, value);
+
+			});
+			this.response.save();
 		},
 
 
 		"setData": function(foodle, response) {
 			this.foodle = foodle;
 			this.response = response;
-			this.actSubmit();
 			return this.draw();
 		},
 
@@ -66,9 +89,11 @@ define(function(require, exports, module) {
 				"profilephotoBase": profilephotoBase,
 				"response": this.response.getView()
 			};
-			console.error("My response view", JSON.stringify(view, undefined, 3));
+			// console.error("My response view", JSON.stringify(view, undefined, 3));
+			// console.error(this.el);
+
 			this.el.children().detach();
-			return this.template.render(this.el, view);
+			return that.template.render(that.el, view);
 		}
 
 	});

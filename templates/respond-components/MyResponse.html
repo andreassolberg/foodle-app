@@ -1,4 +1,3 @@
-
 {#response}
 <tr>
 	<td>
@@ -9,13 +8,21 @@
 
 
 	{#colresponses}
-		<td class="responsebox" colspan="{colspan}" style="text-align: center">
-			{def.datatype}
-			{@eq key="def.datatype" value="check"}
-				CHECKBOX
-			{/eq}
-			<input class="responseoption" type="checkbox" />
-		</td>
+		{#check}
+			{>"partCheckEdit"/}
+		{/check}
+		{#checkmaybe}
+			{>"partCheckMaybeEdit"/}
+		{/checkmaybe}
+		{#number}
+			{>"partNumberEdit"/}
+		{/number}
+		{#text}
+			{>"partTextEdit"/}
+		{/text}
 	{/colresponses}
+	<td class="center">
+		<input class="btn btn-sm submitResponse" type="submit" value="Submit" />
+	</td>
 </tr>
 {/response}

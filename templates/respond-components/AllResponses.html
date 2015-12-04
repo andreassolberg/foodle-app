@@ -1,15 +1,37 @@
-{#coldef}
+{#responses}
 <tr>
 	<td>
-		<img src="{profilephotoBase}{user.profilephoto}" class="" style="max-width: 48px; float: left; margin: 0px 5px; padding: 1px; border-radius: 3px; border: 1px solid #aaa"> 
-		<p style="margin: 0px; font-size: 100%">{user.name}</p>
-		<p style="margin: 0px; font-size: 80%">{user.email}</p>
+		<img src="{profilephotoBase}{userinfo.profilephoto}" class="" style="max-width: 48px; float: left; margin: 0px 5px; padding: 1px; border-radius: 3px; border: 1px solid #aaa"> 
+		<p style="margin: 0px; font-size: 100%">{userinfo.name}</p>
+		<p style="margin: 0px; font-size: 80%">{userinfo.email}</p>
 	</td>
 
-	{#cols}
-		<td class="responsebox" colspan="{colspan}" style="text-align: center">
-			<input class="responseoption" type="checkbox" />
-		</td>
-	{/cols}
+
+	{#colresponses}
+
+		{?empty}
+			<td class="responsebox bg-empty" data-colid="{idx}" style="text-align: center; padding: 0px">
+
+			</td>
+		{:else}
+			{#check}
+				{>"partCheck"/}
+			{/check}
+			{#checkmaybe}
+				{>"partCheckMaybe"/}
+			{/checkmaybe}
+			{#number}
+				{>"partNumber"/}
+			{/number}
+			{#text}
+				{>"partText"/}
+			{/text}
+		{/empty}
+
+	{/colresponses}
+	<td class="center">
+		<!-- <i class="fa fa-refresh"></i> -->
+		{updatedAgo}
+	</td>
 </tr>
-{/coldef}
+{/responses}
