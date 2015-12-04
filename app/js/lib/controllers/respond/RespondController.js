@@ -33,7 +33,7 @@ define(function(require) {
 			this._super(app, feideconnect);
 
 			this.locationdisplay = new LocationDisplay(app);
-			this.myresponsecontroller = new MyResponseController(app);
+			this.myresponsecontroller = new MyResponseController(app, this);
 			this.allresponsescontroller = new AllResponsesController(app);
 			this.timezoneselector = new TimeZoneSelector(this.app);
 
@@ -41,10 +41,6 @@ define(function(require) {
 
 
 			this.ebind("click", "ul#responsenav > li", "actTab");
-
-			// this.template.loadPartial("apilisting", apilistingTemplate);
-			// this.template.loadPartial("apilistingpublic", publicAPIListingTemplate);
-			// this.ebind("click", ".actSaveChanges", "actSaveChanges");
 
 			this.initLoad();
 		},
@@ -104,6 +100,16 @@ define(function(require) {
 			return Promise.all([
 				this.loadFoodleResponsesMy(), this.loadFoodleResponsesAll()
 			]);
+		},
+
+		"reloadResponses": function() {
+			var that = this;
+			return this.onLoaded()
+				.then(function() {
+					return that.usercontext.onLoaded();
+				})
+				.then(this.proxy("loadFoodleResponses"))
+				.then(this.proxy("updateResponses"));
 		},
 
 		"open": function(foodle) {

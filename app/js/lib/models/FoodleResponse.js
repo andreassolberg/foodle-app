@@ -45,22 +45,11 @@ define(function(require, exports, module) {
 
 
 		"save": function(fc) {
-
 			if (!this.foodle || !this.foodle.identifier) {
 				throw new Error("cannot save foodleresponse with reference to a specific Foodle");
 			}
-
 			var obj = this.getProperties(['columns', 'comment', 'userinfo', 'admin']);
-			FoodleResponse.api.saveFoodleResponse(this.foodle.identifier, obj);
-
-			// if (this.identifier) {
-			// 	console.error("Updating an existing Foodle")
-			// 	return Foodle.api.updateFoodle(this.identifier, obj);
-			// } else {
-			// 	console.error("Createing a new Foodle");
-			// 	return Foodle.api.saveFoodle(obj);
-			// }
-
+			return FoodleResponse.api.saveFoodleResponse(this.foodle.identifier, obj);
 		},
 
 
@@ -97,11 +86,11 @@ define(function(require, exports, module) {
 
 			var x, resp;
 			var coldef = this.foodle.getViewColDefGeneric();
-			for(var i = 0; i < coldef.cols.length; i++) {
+			for (var i = 0; i < coldef.cols.length; i++) {
 
 				x = this.getColumnResponseItemView(coldef.cols[i]);
 
-				
+
 
 				responseData.push(x);
 			}

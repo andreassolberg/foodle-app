@@ -21,8 +21,9 @@ define(function(require, exports, module) {
 
 
 	var MyResponseController = Controller.extend({
-		"init": function(app) {
+		"init": function(app, responsecontroller) {
 			this.app = app;
+			this.responsecontroller = responsecontroller;
 			this.template = new TemplateEngine(template);
 			this.template.loadPartial("partCheck", partCheck);
 			this.template.loadPartial("partCheckMaybe", partCheckMaybe);
@@ -33,7 +34,7 @@ define(function(require, exports, module) {
 			this.template.loadPartial("partText", partText);
 			this.template.loadPartial("partTextEdit", partTextEdit);
 
-			var el = $('<tbody><tr><td>Booo</td></tr></tbody>')
+			var el = $('<tbody></tbody>');
 			this._super(el);
 
 			this.ebind("click", ".submitResponse", "actSubmit");
@@ -67,7 +68,10 @@ define(function(require, exports, module) {
 				that.response.setValue(idx, value);
 
 			});
-			this.response.save();
+			return this.response.save()
+				.then(function() {
+					return that.responsecontroller.reloadResponses();
+				});
 		},
 
 
