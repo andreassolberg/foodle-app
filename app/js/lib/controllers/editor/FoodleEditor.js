@@ -33,7 +33,7 @@ define(function(require) {
 			this.feideconnect = feideconnect;
 			this.app = app;
 			this.usercontext = usercontext;
-			
+
 			this.foodle = null;
 
 			this._super();
@@ -81,8 +81,7 @@ define(function(require) {
 			var foodletitle = (this.foodle.title ? this.foodle.title : '(without name)');
 			var title = (this.foodle.identifier ? 'Edit Foodle ' + foodletitle : 'Create new Foodle');
 			this.app.bccontroller.draw([
-				this.app.getBCItem(),
-				{
+				this.app.getBCItem(), {
 					"title": title,
 					"active": true
 				}
@@ -191,9 +190,7 @@ define(function(require) {
 			} catch (err) {
 				this.app.setErrorMessage("Error in user input", "danger", err);
 				console.error(err);
-				return;
 			}
-			$("#debug").append(JSON.stringify(this.foodle, undefined, 2));
 		},
 
 

@@ -39,11 +39,39 @@ define(function(require) {
 
 			this.template = new TemplateEngine(responseTemplate);
 
+
+			this.ebind("click", "ul#responsenav > li", "actTab");
+
 			// this.template.loadPartial("apilisting", apilistingTemplate);
 			// this.template.loadPartial("apilistingpublic", publicAPIListingTemplate);
 			// this.ebind("click", ".actSaveChanges", "actSaveChanges");
 
 			this.initLoad();
+		},
+
+		"actTab": function(e) {
+
+			e.preventDefault();
+			e.stopPropagation();
+			var id = $(e.currentTarget).data('tabtarget');
+			this.setTab(id);
+		},
+
+		"setTab": function(id) {
+
+			var that = this;
+			this.el.find('ul#responsenav > li').each(function(i, item) {
+				var x = $(item);
+				if (x.data('tabtarget') === id) {
+					x.addClass('active');
+				} else {
+					x.removeClass('active');
+				}
+			});
+
+			this.el.find('#responseTable > *').hide();
+			this.el.find('#responseTable > #' + id).show();
+
 		},
 
 
@@ -92,10 +120,10 @@ define(function(require) {
 			]);
 
 			return this.onLoaded()
-				.then(this.proxy("loadFoodleResponses"))
 				.then(function() {
 					return that.usercontext.onLoaded();
 				})
+				.then(this.proxy("loadFoodleResponses"))
 				.then(function() {
 					that.updateResponses();
 					return that.draw();
@@ -142,6 +170,7 @@ define(function(require) {
 					that.el.find('#timezoneselector').append(that.timezoneselector.el);
 					that.el.find('#myresponse').replaceWith(that.myresponsecontroller.el);
 					that.el.find('#allresponses').replaceWith(that.allresponsescontroller.el);
+					that.setTab('tmyresponse');
 					that.activate();
 				});
 		}
