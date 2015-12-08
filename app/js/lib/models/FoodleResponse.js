@@ -11,6 +11,9 @@ define(function(require, exports, module) {
 
 	var FoodleResponse = Model.extend({
 		"init": function(props, foodle) {
+
+			this.isStored = false;
+
 			this._super(props);
 			this.foodle = foodle;
 
@@ -44,7 +47,7 @@ define(function(require, exports, module) {
 		},
 
 
-		"save": function(fc) {
+		"save": function() {
 			if (!this.foodle || !this.foodle.identifier) {
 				throw new Error("cannot save foodleresponse with reference to a specific Foodle");
 			}
@@ -52,7 +55,13 @@ define(function(require, exports, module) {
 			return FoodleResponse.api.saveFoodleResponse(this.foodle.identifier, obj);
 		},
 
-
+		"remove": function() {
+			if (!this.foodle || !this.foodle.identifier) {
+				throw new Error("cannot remove foodleresponse with reference to a specific Foodle");
+			}
+			var id = this.foodle.identifier;
+			return FoodleResponse.api.removeFoodleResponse(this.foodle.identifier);
+		},
 
 		"getColumnResponseItemView": function(colitemdef) {
 
@@ -136,9 +145,6 @@ define(function(require, exports, module) {
 			res.colresponses = this.getColumnResponseView();
 			delete res.foodle;
 
-
-			res.isStored = !!this.identifier;
-
 			return res;
 		}
 	});
@@ -155,6 +161,7 @@ define(function(require, exports, module) {
 	FoodleResponse.getFoodleAllResponses = function(foodle) {
 		return FoodleResponse.api.getFoodleAllResponses(foodle);
 	};
+
 
 
 	return FoodleResponse;

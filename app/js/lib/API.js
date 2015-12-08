@@ -43,12 +43,17 @@ define(function(require, exports, module) {
 			return this.feideconnect._customRequestAdv('POST', this.getURL('/api/foodles/' + identifier + '/myresponse'), null, null, obj);
 		},
 
+		"removeFoodleResponse": function(identifier) {
+			return this.feideconnect._customRequestAdv('DELETE', this.getURL('/api/foodles/' + identifier + '/myresponse'), null, null);
+		},
+
 		"getFoodleMyResponse": function(foodle) {
 			return this.feideconnect._customRequest(this.getURL('/api/foodles/' + foodle.identifier + '/myresponse'))
 				.then(function(data) {
 					if (data === null) {
 						return null;
 					}
+					data.isStored = true;
 					return new FoodleResponse(data, foodle);
 				});
 		},
@@ -57,7 +62,7 @@ define(function(require, exports, module) {
 				.then(function(data) {
 					var list = [];
 					if (data && data.length) {
-						for(var i = 0; i < data.length; i++) {
+						for (var i = 0; i < data.length; i++) {
 							list.push(new FoodleResponse(data[i], foodle));
 						}
 					}

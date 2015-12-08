@@ -1,9 +1,21 @@
 {#response}
-<tr>
-	<td>
-		<img src="{profilephotoBase}{user.profilephoto}" class="" style="max-width: 48px; float: left; margin: 0px 5px; padding: 1px; border-radius: 3px; border: 1px solid #aaa"> 
-		<p style="margin: 0px; font-size: 100%">{user.name}</p>
-		<p style="margin: 0px; font-size: 80%">{user.email}</p>
+<tr class="updateResponseRow">
+	
+
+		{?isStored}
+			<td class="center">
+				Update my response
+			</td>
+		{:else}
+			<td>
+			<img src="{profilephotoBase}{user.profilephoto}" class="" style="max-width: 48px; float: left; margin: 0px 5px; padding: 1px; border-radius: 3px; border: 1px solid #aaa"> 
+			<p style="margin: 0px; font-size: 100%">{user.name}</p>
+			<p style="margin: 0px; font-size: 80%">{user.email}</p>
+			</td>
+		{/isStored}
+
+
+
 	</td>
 
 
@@ -22,7 +34,53 @@
 		{/text}
 	{/colresponses}
 	<td class="center">
-		<input class="btn btn-sm submitResponse" type="submit" value="Submit" />
+		{?isStored}
+			<a href="#" class="btn btn-primary btn-sm submitResponse"><i class="fa fa-pencil"></i> Update my response</a>&nbsp;
+			<a href="#" class="btn btn-danger btn-sm actDeleteResponse"><i class="fa fa-trash"></i> Delete response</a>
+		{:else}
+		<input class="btn btn-sm submitResponse" type="submit" value="Submit response" />
+		{/isStored}
 	</td>
 </tr>
+
+{! OUTPUT ALREADY EXISTING ENTRY !}
+{?isStored}
+<tr>
+	<td>
+		<img src="{profilephotoBase}{userinfo.profilephoto}" class="" style="max-width: 48px; float: left; margin: 0px 5px; padding: 1px; border-radius: 3px; border: 1px solid #aaa"> 
+		<p style="margin: 0px; font-size: 100%">{user.name}</p>
+		<p style="margin: 0px; font-size: 80%">{user.email}</p>
+	</td>
+
+
+	{#colresponses}
+
+		{?empty}
+			<td class="responsebox bg-empty" data-colid="{idx}" style="text-align: center; padding: 0px">
+
+			</td>
+		{:else}
+			{#check}
+				{>"partCheck"/}
+			{/check}
+			{#checkmaybe}
+				{>"partCheckMaybe"/}
+			{/checkmaybe}
+			{#number}
+				{>"partNumber"/}
+			{/number}
+			{#text}
+				{>"partText"/}
+			{/text}
+		{/empty}
+
+	{/colresponses}
+	<td class="center">
+		<!-- <i class="fa fa-refresh"></i> -->
+		{updatedAgo}
+	</td>
+</tr>
+{/isStored}
+
+
 {/response}

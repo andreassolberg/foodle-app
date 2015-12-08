@@ -1,342 +1,266 @@
 	define(function(require, exports, module) {
-	"use strict";	
+		"use strict";
 
-	var 
-		$ = require('jquery'),
+		var
+			$ = require('jquery'),
+			moment = require('moment-timezone'),
 
-		Controller = require('bower/feideconnectjs/src/Controllers/Controller'),
-		Dictionary = require('bower/feideconnectjs/src/Dictionary'),
-		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine'),
-		ColumnEditor = require('./ColumnEditor')
-		;
+			Controller = require('bower/feideconnectjs/src/Controllers/Controller'),
+			Dictionary = require('bower/feideconnectjs/src/Dictionary'),
+			TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine'),
+			ColumnEditor = require('./ColumnEditor'),
+			TimeslotsController = require('./TimeslotsController');
 
-	var template = require('text!templates/components/ColumnDateEditor.html');
+		require('bootstrap-datepicker');
+
+		var template = require('text!templates/components/ColumnDateEditor.html');
+
+		var showOnlyFuture = function(date) {
+			var todaysDate = new Date();
+			todaysDate.setHours(0, 0, 0, 0);
+			// console.log("CHECK DATE OLD", date, todaysDate);
+			if (date < todaysDate) {
+				return false;
+			}
+			return true;
+		};
+
+		var datesDatepickerConfig = {
+			"format": "yyyy-mm-dd",
+			"todayBtn": true,
+			"todayHighlight": true,
+			"weekStart": 1,
+			"autoclose": false,
+			"beforeShowDay": showOnlyFuture,
+			"multidate": true
+		};
 
 
-	var ColumnDateEditor = ColumnEditor.extend({
-		"init": function(app) {
-			var that = this;
+		var msort = function(a, b) {
+			if (a.isBefore(b)) {
+				return -1;
+			}
+			if (b.isBefore(a)) {
+				return 1;
+			}
+			return 0;
+		}
 
-			this.template = new TemplateEngine(template);
 
-			this._super(app);
+		var ColumnDateEditor = ColumnEditor.extend({
+			"init": function(app) {
+				var that = this;
+
+				this.template = new TemplateEngine(template);
+				this.timeslotcontroller = new TimeslotsController(app);
+
+				this._super(app);
 
 
-			this.initLoad();
-		},
+				this.initLoad();
+			},
 
-		"initLoad": function() {
-			var that = this;
-			return Promise.resolve()
-				// .then(this.proxy("setup"))
-				.then(this.proxy("_initLoaded"))
-				.catch(function(err) {
-					that.app.setErrorMessage("Error loading column editor", "danger", err);
+			"initLoad": function() {
+				var that = this;
+				return Promise.resolve()
+					// .then(this.proxy("setup"))
+					.then(this.proxy("_initLoaded"))
+					.catch(function(err) {
+						that.app.setErrorMessage("Error loading column editor", "danger", err);
+					});
+			},
+
+			"setup": function() {
+
+				var that = this;
+				return new Promise(function(resolve, reject) {
+					that.dpdeadline = that.el.find('.dateSelector').datepicker(datesDatepickerConfig);
+					that.dpdeadline.on('changeDate', function(data) {
+						// console.error("Dates", data.dates);
+						var dates = [];
+						for (var i = 0; i < data.dates.length; i++) {
+							console.error("Processing [", data.dates[i], "]")
+							dates.push(moment(data.dates[i]));
+						}
+						that.updateDates(dates);
+					});
 				});
-		},
+			},
 
-		"setFoodle": function(foodle) {
-			this.foodle = foodle;
-		},
-
-		"draw": function() {
-			var view = {
-				"_": this.app.dict.get(),
-				"foodle": this.foodle.getView()
-			};
-			this.el.children().detach();
-			return this.template.render(this.el, view);
-		},
-
-		"modifyNumberOfColumns": function(adjtop, adjcolno, adjcol) {
-			var obj = {
-				"topcolumns": this.topcolumns,
-				"subcolumns": this.subcolumns.slice(0)
-			};
-			if (adjtop !== 0) {
-				obj.topcolumns += adjtop;
-			}
-			console.log("CHEKING ", obj.topcolumns, obj.subcolumns.length);
-			if (obj.topcolumns > obj.subcolumns.length ) {
-				obj.subcolumns.push(2);
-			}
-			if ((typeof adjcolno === 'number') && (typeof adjcol === 'number')) {
-				obj.subcolumns[adjcolno] += adjcol;
-			}
-			return obj;
-		},
+			"updateDates": function(dates) {
+				var sdates = dates.sort(msort);
+				this.timeslotcontroller.setDates(sdates);
+			},
 
 
-		"on": function(evnt, callback) {
-			this.callbacks[evnt] = callback;
-		},
-		"trigger": function(evnt) {
-			var args = Array.prototype.slice.call(arguments, 1);
-			if (this.callbacks && this.callbacks[evnt] && typeof this.callbacks[evnt] === 'function') {
-				this.callbacks[evnt].apply(this, args);
-			}
-		},
+			"setFoodle": function(foodle) {
+				this.foodle = foodle;
+			},
 
-		"validate": function() {
-			var x = this.getColDef();
-			this.el.find('.colerrors').empty();
+			"draw": function() {
+				var that = this;
+				var view = {
+					"_": this.app.dict.get(),
+					"foodle": this.foodle.getView()
+				};
+				this.el.children().detach();
+				return this.template.render(this.el, view)
+					.then(function() {
 
-			var hasError = false;
-			if (x.length === 0) {
+						that.el.find('.timeslotcontroller').append(that.timeslotcontroller.el)
+						that.timeslotcontroller.setDates([]);
+					})
+					.then(this.proxy("setup"))
+			},
 
-				this.el.find('.colerrors').append('<div class="alert alert-danger"><strong>At least a single column header</strong> is required. Please provide one before saving.</div>');
-				hasError = true;
-			} else {
-				$('.coldef-header').removeClass('has-error')
-			}
-
-			return !hasError;
-		},
+			"redraw": function(setColdef, modifyNumberOfColumns) {
 
 
+				var coldef = setColdef;
+				if (setColdef) {
+					this.setColDef(setColdef);
+					this.includeOptions = this.hasTwoLevels(setColdef);
+					// console.log("Perform a check for two levels", setColdef, this.includeOptions);
+				}
+				if (!setColdef) {
+					coldef = this.getColDef();
+					console.log("Obtinaing coldef", coldef);
+				}
+
+				if (modifyNumberOfColumns) {
+					console.log("About to adjust colnumbers...");
+					console.log(this.topcolumns, this.subcolumns);
+					console.log(modifyNumberOfColumns.topcolumns, modifyNumberOfColumns.subcolumns);
+					this.topcolumns = modifyNumberOfColumns.topcolumns;
+					this.subcolumns = modifyNumberOfColumns.subcolumns;
+				}
 
 
+				// this.el.empty().append(template({"_": _d}));
 
-		"getColDef": function() {
+
+				this.el.find('#includeOptions').prop('checked', this.includeOptions);
+
+				this.addTable();
 
 
-			var coldef = [];
+				if (this.topcolumns < 2) {
+					$("#removeTopColumn").attr('disabled', 'disabled');
+					$("#addTopColumn").removeAttr('disabled');
+				} else if (this.topcolumns > 11) {
+					$("#removeTopColumn").removeAttr('disabled');
+					$("#addTopColumn").attr('disabled', 'disabled');
+				}
 
-			var defTable = $('#columnEditorTable');
 
-			for(var i = 0; i < this.topcolumns; i++) {
+				var colNo;
+				var defTable = $('#columnEditorTable');
+				// console.log("Completed redraw, now filling.");
+				for (var i = 0; i < coldef.length; i++) {
 
-				var item = {};
-				var title = defTable.find('.coldef-header').eq(i).val();
-				item.title = title;
-				// console.log('Title is ', title);
+					defTable.find('.coldef-header').eq(i).attr('value', coldef[i].title);
+					// console.log("Fill header ", defTable.find('.coldef-header').eq(i), coldef[i].title);
 
-				if (this.includeOptions) {
+					if (coldef[i].hasOwnProperty('children')) {
 
-					item.children = [];
+						for (var j = 0; j < coldef[i].children.length; j++) {
 
-					for(var j = 0; j < this.subcolumns[i]; j++) {
-						var si = {};
-						var st = defTable.find('.coldef-option').eq(this.getColNo(i, j)).val();
-						si.title = st;
-						// si.debug = [i, j, this.getColNo(i, j)];
+							colNo = this.getColNo(i, j);
+							console.log("Col no (" + i + "," + j + ")", colNo);
 
-						if (si.title !== '') {
-							item.children.push(si);							
+							defTable.find('.coldef-option').eq(colNo).attr('value', coldef[i].children[j].title);
+
 						}
 
 					}
 
-					if (item.children.length === 0) {
-						delete item.children;
-					}
-
 				}
+				console.log("Summary", this.topcolumns, this.subcolumns)
+				console.log("-----");
 
-				if (title !== '' || item.hasOwnProperty('children')) {
-					coldef.push(item);	
-				}
-				
-
-			}
-			return coldef;
+			},
 
 
+			"addTable": function() {
+				var containerTable = $('<table id="columnEditorTable" class="row"></table>').appendTo(this.el.find('#columneditorMain'));
 
-		},
+				var headerRow = this.getHeaderRow();
+				containerTable.append(headerRow);
 
-		"hasTwoLevels": function(coldef) {
+				if (this.includeOptions) {
 
-			for(var i = 0; i < coldef.length; i++) {
-				// console.log("Checking", coldef[i], )
-				if (coldef[i].hasOwnProperty('children')) return true;
-			}
-			return false;
+					var optionsRow = this.getSuboptionsRow();
+					containerTable.append(optionsRow);
 
-		},
+					var subc = this.getSuboptionsControllers();
+					containerTable.append(subc);
 
-		"setColDef": function(coldef) {
-			this.topcolumns = coldef.length;
-			this.subcolumns = [];
-			for(var i = 0; i < coldef.length; i++) {
+					$("#includeOptions").prop('checked', true);
 
-				if (coldef[i].hasOwnProperty('children')) {
-					this.subcolumns[i] = coldef[i].children.length;
 				} else {
-					this.subcolumns[i] = 0;
+
+					$("#includeOptions").prop('checked', false);
+
 				}
 
-			}
-
-			// this.redraw(coldef);
-
-		},
+			},
 
 
-		/*
-		 * For top column number 'top' and number 'sub' of sub options, then find the number
-		 * of suboption counting from the first. This will skip empty sub boxes when added.!
-		 */
-		"getColNo": function(top, sub) {
-			var count = 0;
-			if (top > 0) {
-				for (var i = 0; i < top; i++) {
-					count += this.subcolumns[i];
-				}				
-			}
-			count += sub;
-			return count;
-		},
+			"getHeaderRow": function() {
+				var row = $('<tr></tr>');
 
-
-		"redraw": function(setColdef, modifyNumberOfColumns) {
-
-
-			var coldef = setColdef;
-			if (setColdef) {
-				this.setColDef(setColdef);
-				this.includeOptions = this.hasTwoLevels(setColdef);
-				// console.log("Perform a check for two levels", setColdef, this.includeOptions);
-			}
-			if (!setColdef) {
-				coldef = this.getColDef();
-				console.log("Obtinaing coldef", coldef);
-			}
-
-			if (modifyNumberOfColumns) {
-				console.log("About to adjust colnumbers...");
-				console.log(this.topcolumns, this.subcolumns);
-				console.log(modifyNumberOfColumns.topcolumns, modifyNumberOfColumns.subcolumns);
-				this.topcolumns = modifyNumberOfColumns.topcolumns;
-				this.subcolumns = modifyNumberOfColumns.subcolumns;
-			}
-
-
-			// this.el.empty().append(template({"_": _d}));
-
-
-			this.el.find('#includeOptions').prop('checked', this.includeOptions);
-
-			this.addTable();
-
-
-			if (this.topcolumns < 2) {
-				$("#removeTopColumn").attr('disabled', 'disabled');
-				$("#addTopColumn").removeAttr('disabled');
-			} else if (this.topcolumns > 11) {
-				$("#removeTopColumn").removeAttr('disabled');
-				$("#addTopColumn").attr('disabled', 'disabled');
-			}
-
-
-			var colNo;
-			var defTable = $('#columnEditorTable');
-			// console.log("Completed redraw, now filling.");
-			for(var i = 0; i < coldef.length; i++) {
-
-				defTable.find('.coldef-header').eq(i).attr('value', coldef[i].title);
-				// console.log("Fill header ", defTable.find('.coldef-header').eq(i), coldef[i].title);
-
-				if (coldef[i].hasOwnProperty('children')) {
-
-					for(var j = 0; j < coldef[i].children.length; j++) {
-
-						colNo = this.getColNo(i, j);
-						console.log("Col no (" + i + "," + j + ")", colNo);
-
-						defTable.find('.coldef-option').eq(colNo).attr('value', coldef[i].children[j].title);
-
+				var t;
+				for (var i = 0; i < this.topcolumns; i++) {
+					var rowspan = 1;
+					if (this.subcolumns[i] === 0) {
+						rowspan = 2;
 					}
-
-				} 
-
-			}	
-			console.log("Summary", this.topcolumns, this.subcolumns)
-			console.log("-----");
-
-		},
-
-
-		"addTable": function() {
-			var containerTable = $('<table id="columnEditorTable" class="row"></table>').appendTo(this.el.find('#columneditorMain'));
-
-			var headerRow = this.getHeaderRow();
-			containerTable.append(headerRow);
-
-			if (this.includeOptions) {
-
-				var optionsRow = this.getSuboptionsRow();
-				containerTable.append(optionsRow);
-
-				var subc = this.getSuboptionsControllers();
-				containerTable.append(subc);
-
-				$("#includeOptions").prop('checked', true);
-
-			} else {
-
-				$("#includeOptions").prop('checked', false);
-
-			}
-
-		},
-
-
-		"getHeaderRow": function() {
-			var row = $('<tr></tr>');
-
-			var t;
-			for(var i = 0; i < this.topcolumns; i++) {
-				var rowspan = 1;
-				if (this.subcolumns[i] === 0) {
-					rowspan = 2;
-				}
-				t = '<td rowspan="' + rowspan + '" colspan="' + this.subcolumns[i] + '"><input style="width: 100%" class="coldef-header form-control" type="text" placeholder="' + _d.header+ '" /></td>';
-				row.append(t);	
-			}
-			return row;
-		},
-
-		"getSuboptionsRow": function() {
-			var row = $('<tr></tr>');
-
-			var t;
-			for(var i = 0; i < this.topcolumns; i++) {
-				for(var j = 0; j < this.subcolumns[i]; j++) {
-					t = '<td><input style="width: 100%" class="coldef-option form-control" type="text" placeholder="' + _d.opt + '" /></td>';
+					t = '<td rowspan="' + rowspan + '" colspan="' + this.subcolumns[i] + '"><input style="width: 100%" class="coldef-header form-control" type="text" placeholder="' + _d.header + '" /></td>';
 					row.append(t);
 				}
-			}
-			return row;
-		},
+				return row;
+			},
 
-		"getSuboptionsControllers": function() {
-			var row = $('<tr></tr>');
+			"getSuboptionsRow": function() {
+				var row = $('<tr></tr>');
 
-			var t;
-			for(var i = 0; i < this.topcolumns; i++) {
-
-				t = '<td style="text-align: left" colspan="' + this.subcolumns[i] + '" data-col-l1="' + i + '">' + 
-						'<button class="removeSubOpt" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></button>' + 
-						'<button class="addSubOpt" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></button>' +
-					'</td>';
-				var td = $(t);
-				row.append(td);
-
-				if (this.subcolumns[i] < 1 ) {
-					td.find('.removeSubOpt').attr('disabled', 'disabled');
-					// td.find('.removeSubOpt').removeAttr('disabled');
-				} else if (this.subcolumns[i] > 4 ) {
-					// td.find('.addSubOpt').removeAttr('disabled');
-					td.find('.addSubOpt').attr('disabled', 'disabled');
+				var t;
+				for (var i = 0; i < this.topcolumns; i++) {
+					for (var j = 0; j < this.subcolumns[i]; j++) {
+						t = '<td><input style="width: 100%" class="coldef-option form-control" type="text" placeholder="' + _d.opt + '" /></td>';
+						row.append(t);
+					}
 				}
+				return row;
+			},
+
+			"getSuboptionsControllers": function() {
+				var row = $('<tr></tr>');
+
+				var t;
+				for (var i = 0; i < this.topcolumns; i++) {
+
+					t = '<td style="text-align: left" colspan="' + this.subcolumns[i] + '" data-col-l1="' + i + '">' +
+						'<button class="removeSubOpt" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></button>' +
+						'<button class="addSubOpt" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></button>' +
+						'</td>';
+					var td = $(t);
+					row.append(td);
+
+					if (this.subcolumns[i] < 1) {
+						td.find('.removeSubOpt').attr('disabled', 'disabled');
+						// td.find('.removeSubOpt').removeAttr('disabled');
+					} else if (this.subcolumns[i] > 4) {
+						// td.find('.addSubOpt').removeAttr('disabled');
+						td.find('.addSubOpt').attr('disabled', 'disabled');
+					}
+				}
+
+				return row;
 			}
-			
-			return row;
-		}
 
 
+		});
+
+		return ColumnDateEditor;
 	});
-
-	return ColumnDateEditor;
-});

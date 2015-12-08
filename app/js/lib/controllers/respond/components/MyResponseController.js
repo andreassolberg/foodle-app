@@ -38,6 +38,7 @@ define(function(require, exports, module) {
 			this._super(el);
 
 			this.ebind("click", ".submitResponse", "actSubmit");
+			this.ebind("click", ".actDeleteResponse", "actDeleteResponse");
 			this.initLoad();
 		},
 
@@ -50,7 +51,7 @@ define(function(require, exports, module) {
 			var that = this;
 			var value, idx, colitemdef;
 
-			this.el.find('.responsebox').each(function(i, item) {
+			this.el.find('.updateResponseRow  .responsebox').each(function(i, item) {
 
 				idx = $(item).attr('data-colid');
 				colitemdef = that.foodle.coldefGetById(idx);
@@ -69,6 +70,18 @@ define(function(require, exports, module) {
 
 			});
 			return this.response.save()
+				.then(function() {
+					return that.responsecontroller.reloadResponses();
+				});
+		},
+
+		"actDeleteResponse": function(e) {
+			if (e) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+			var that = this;
+			return this.response.remove()
 				.then(function() {
 					return that.responsecontroller.reloadResponses();
 				});
@@ -93,8 +106,8 @@ define(function(require, exports, module) {
 				"profilephotoBase": profilephotoBase,
 				"response": this.response.getView()
 			};
-			// console.error("My response view", JSON.stringify(view, undefined, 3));
-			// console.error(this.el);
+			console.error("My response view", JSON.stringify(view.response, undefined, 3));
+			console.error(this.el);
 
 			this.el.children().detach();
 			return that.template.render(that.el, view);

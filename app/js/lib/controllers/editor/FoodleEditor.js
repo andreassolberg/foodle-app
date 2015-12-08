@@ -69,6 +69,7 @@ define(function(require) {
 
 		"detectEditorType": function() {
 			this.columneditor = this.columneditors.generic;
+			this.columneditor = this.columneditors.dates;
 		},
 
 		"edit": function(foodle) {

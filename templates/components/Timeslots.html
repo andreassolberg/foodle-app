@@ -1,0 +1,52 @@
+
+{#dates}
+
+<div class="dateContainer" data-datevalue="{value}">
+
+    <h4 style="margin: 1em .1em .1em .1em">{txt}</h4>
+
+    <!-- <p>Timeslots</p> -->
+
+    <div class="row slotcontainer">
+        {#timeslots}
+        <div class="col-sm-4" style="margin-bottom: .2em">
+            <div class="input-group timeslotGroup">
+                <span class="input-group-addon">Time</span><input type="time"  value="{.}" class="timeslot timeslotFrom form-control">
+                <!-- <span class="input-group-addon">to</span><input type="text"  placeholder="12:00" value="{to}" class="timeslot timeslotTo form-control"> -->
+            </div>
+        </div>
+        {/timeslots}
+    </div>
+
+    <div class="col-md-12" style="text-align: center; margin-top:5px">
+        <button class="btn btn-default btn-sm actSlotDecr">
+            <span class="fa fa-minus"></span>
+            &nbsp; Less timeslots
+        </button>
+        <button class="btn btn-default btn-sm actSlotIncr">
+            More timeslots &nbsp; 
+            <span class="fa fa-plus"></span>
+        </button>
+
+        {?showCopy}
+        <!-- <div class="col-md-12" style="text-align: center; margin-top:5px"> -->
+            <button class="btn btn-default btn-sm actSlotDuplicate">
+                <span class="fa fa-clipboard"></span>
+                &nbsp; Duplicate to other days
+            </button>
+        <!-- </div> -->
+        {/showCopy}
+    </div>
+
+
+
+
+</div>
+
+{/dates}
+
+
+{?anyDates}
+<p>All timeslots has to be in this format: <tt>09:00</tt>.</p>
+{/anyDates}
+

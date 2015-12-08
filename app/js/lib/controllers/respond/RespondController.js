@@ -16,11 +16,7 @@ define(function(require) {
 		Waiter = require('../../Waiter'),
 		$ = require('jquery');
 
-
 	var responseTemplate = require('text!templates/FoodleResponse.html');
-	// var apilistingTemplate = require('text!templates/partials/APIListing.html');
-	// var publicAPIListingTemplate = require('text!templates/partials/APIListingPublic.html');
-	// var ownAPIListingTemplate = require('text!templates/partials/APIListingOwn.html');
 
 	var RespondController = Pane.extend({
 		"init": function(feideconnect, app, pool, usercontext) {
