@@ -26,6 +26,8 @@ define(function(require, exports, module) {
 			this.ebind("click", ".actSlotIncr", "actSlotIncr");
 			this.ebind("click", ".actSlotDuplicate", "actSlotDuplicate");
 
+			this.timeMatch = new RegExp(/^(\d{1,2}):(\d{2})$/);
+
 			this.initLoad();
 		},
 
@@ -46,11 +48,73 @@ define(function(require, exports, module) {
 			});
 		},
 
-		"foo": function() {
-			console.error("Foo");
+
+		"parseTime": function(str) {
+			var res = this.timeMatch.exec(str)
+			if (res === null) {
+				return null;
+			}
+			return {
+				"hours": parseInt(res[1], 10),
+				"minutes": parseInt(res[2], 10),
+			}
+		},
+		"addTime": function(ts, str) {
+
+			// console.error("ABout to parse", str, ts);
+			var parsed = this.parseTime(str);
+			if (parsed === null) {
+				return null;
+			}
+			// console.error(" --- parsed", parsed);
+			return ts.clone()
+				.set('hours', parsed.hours)
+				.set('minute', parsed.minutes);
 		},
 
+		"setTimestamps": function(ts) {
+			var datevalue;
+			this.dates = [];
+			this.slots = {};
 
+			for (var i = 0; i < ts.length; i++) {
+				datevalue = ts[i].format('YYYY-MM-DD');
+				if (!this.slots.hasOwnProperty(datevalue)) {
+					this.slots[datevalue] = [];
+					this.dates.push(ts[i].clone().startOf('day'));
+				}
+				this.slots[datevalue].push(ts[i].format('HH:mm'));
+			}
+
+		},
+
+		"getTimestamps": function() {
+
+			var ts = [];
+			var datevalue;
+
+			if (!this.dates) {
+				return ts;
+			}
+
+			for (var i = 0; i < this.dates.length; i++) {
+				datevalue = this.dates[i].format('YYYY-MM-DD');
+
+				console.error("LOOOKING FOR DATEVALUE", datevalue);
+				if (!this.slots.hasOwnProperty(datevalue)) {
+					continue;
+				}
+
+				for (var j = 0; j < this.slots[datevalue].length; j++) {
+					var newts = this.addTime(this.dates[i], this.slots[datevalue][j]);
+					if (newts !== null) {
+						ts.push(newts)
+					}
+				}
+			}
+			return ts;
+
+		},
 		"slotIncr": function(date) {
 			this.updateFromUI();
 			if (!this.slots.hasOwnProperty(date)) {
@@ -142,12 +206,12 @@ define(function(require, exports, module) {
 			var view = {
 				dates: []
 			};
-			console.error("Before", this.dates);
+			// console.error("Before", this.dates);
 			if (!this.dates) {
 				return null;
 			}
 			for (var i = 0; i < this.dates.length; i++) {
-				console.error("About to process ", this.dates[i]);
+				// console.error("About to process ", this.dates[i]);
 				var datevalue = this.dates[i].format("YYYY-MM-DD");
 				var d = {
 					"txt": this.dates[i].format("ddd, Do MMMM YYYY"),
@@ -180,7 +244,7 @@ define(function(require, exports, module) {
 
 		"setDates": function(dates) {
 			this.dates = dates;
-			console.error("Dates", dates);
+			// console.error("Dates", dates);
 			for (var i = 0; i < this.dates.length; i++) {
 				var datevalue = this.dates[i].format('YYYY-MM-DD');
 				if (!this.slots.hasOwnProperty(datevalue)) {
@@ -193,7 +257,7 @@ define(function(require, exports, module) {
 		"draw": function() {
 			var view = this.getView();
 			this.el.children().detach();
-			console.error("Timeslots view", JSON.stringify(view, undefined, 2));
+			// console.error("Timeslots view", JSON.stringify(view, undefined, 2));
 			return this.template.render(this.el, view);
 		}
 

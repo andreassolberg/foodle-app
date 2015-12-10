@@ -106,8 +106,8 @@ define(function(require, exports, module) {
 				"profilephotoBase": profilephotoBase,
 				"response": this.response.getView()
 			};
-			console.error("My response view", JSON.stringify(view.response, undefined, 3));
-			console.error(this.el);
+			// console.error("My response view", JSON.stringify(view.response, undefined, 3));
+			// console.error(this.el);
 
 			this.el.children().detach();
 			return that.template.render(that.el, view);

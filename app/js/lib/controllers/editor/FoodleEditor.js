@@ -68,8 +68,15 @@ define(function(require) {
 		},
 
 		"detectEditorType": function() {
+
+			// console.error("Detecting", this.foodle.columns);
 			this.columneditor = this.columneditors.generic;
-			this.columneditor = this.columneditors.dates;
+			if (this.foodle.editor && this.foodle.editor === 'dates') {
+				this.columneditor = this.columneditors.dates;
+			} else if (this.foodle.columns && this.foodle.columns.length > 0 && this.foodle.columns[0].coltype === 'datetime') {
+				this.columneditor = this.columneditors.dates;
+			}
+
 		},
 
 		"edit": function(foodle) {
@@ -144,6 +151,7 @@ define(function(require) {
 
 			this.validate();
 			this.updateFromUI();
+
 			return this.foodle.save()
 				.then(function() {
 					that.app.setErrorMessage("Successfully saved Foodle", "success");
@@ -165,7 +173,8 @@ define(function(require) {
 			this.validate();
 			this.updateFromUI();
 
-			$("#debug").empty().append(JSON.stringify(this.foodle, undefined, 2));
+			var debugEl = $('<pre id="debug" style="padding: 1em"></pre>').appendTo($('body'));
+			debugEl.append(JSON.stringify(this.foodle, undefined, 2));
 		},
 
 

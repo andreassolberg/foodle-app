@@ -60,7 +60,7 @@ define(function(require, exports, module) {
 			e.stopPropagation();
 
 			var that = this;
-			var f = Foodle.getNew();
+			var f = Foodle.getNewDates();
 			this.app.editor.edit(f)
 				.then(function() {
 					that.app.setHash('/create');
@@ -74,7 +74,7 @@ define(function(require, exports, module) {
 			e.stopPropagation();
 
 			var that = this;
-			var f = Foodle.getNew();
+			var f = Foodle.getNewGeneric();
 			this.app.editor.edit(f)
 				.then(function() {
 					that.app.setHash('/create');

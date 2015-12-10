@@ -62,6 +62,26 @@ define(function(require, exports, module) {
 
 		},
 
+		"coldefGetTimeStamps": function() {
+			var ts = [];
+			for (var i = 0; i < this.columns.length; i++) {
+
+				if (this.columns[i].coltype === 'datetime') {
+					ts.push(moment(this.columns[i].title));
+				}
+
+				if (!this.columns[i].hasOwnProperty("items")) {
+					continue;
+				}
+				for (var j = 0; j < this.columns[i].items.length; j++) {
+					if (this.columns[i].items[j].coltype === 'datetime') {
+						ts.push(moment(this.columns[i].items[j].title));
+					}
+				}
+			}
+			return ts;
+		},
+
 		"coldefSetTitle": function(colid, title) {
 			var item = this.coldefGetById(colid);
 			if (item === null) {
@@ -409,8 +429,7 @@ define(function(require, exports, module) {
 			"datatype": "check"
 		};
 	}
-
-	Foodle.getNew = function() {
+	Foodle.getNewGeneric = function() {
 		var nf = new Foodle();
 		nf.columns = [
 
@@ -462,6 +481,14 @@ define(function(require, exports, module) {
 			}
 
 		];
+		nf.coldefDetectTRH();
+		return nf;
+	}
+
+	Foodle.getNewDates = function() {
+		var nf = new Foodle();
+		nf.editor = 'dates';
+		nf.columns = [];
 		nf.coldefDetectTRH();
 		return nf;
 	}

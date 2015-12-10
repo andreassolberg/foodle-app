@@ -56,6 +56,8 @@
 
 				this._super(app);
 
+				this.initalDates = [];
+
 
 				this.initLoad();
 			},
@@ -74,16 +76,20 @@
 
 				var that = this;
 				return new Promise(function(resolve, reject) {
-					that.dpdeadline = that.el.find('.dateSelector').datepicker(datesDatepickerConfig);
-					that.dpdeadline.on('changeDate', function(data) {
+					that.dateselector = that.el.find('.dateSelector').datepicker(datesDatepickerConfig);
+
+					that.dateselector.on('changeDate', function(data) {
 						// console.error("Dates", data.dates);
 						var dates = [];
 						for (var i = 0; i < data.dates.length; i++) {
-							console.error("Processing [", data.dates[i], "]")
+							// console.error("Processing [", data.dates[i], "]")
 							dates.push(moment(data.dates[i]));
 						}
 						that.updateDates(dates);
 					});
+					console.error("setUTCDates ----- setUTCDates ", that.initialDates);
+					// that.dateselector.datepicker("clearDates");
+					that.dateselector.datepicker("setDates", that.initialDates);
 				});
 			},
 
@@ -95,6 +101,46 @@
 
 			"setFoodle": function(foodle) {
 				this.foodle = foodle;
+
+				this.timeslotcontroller.dates = [];
+				this.timeslotcontroller.slots = {};
+
+
+				var timestamps = this.foodle.coldefGetTimeStamps();
+				this.timeslotcontroller.setTimestamps(timestamps);
+
+				this.initialDates = this.timeslotcontroller.dates.map(function(item) {
+					return item.clone().toDate();
+				});
+
+
+
+			},
+
+			"updateFromUI": function() {
+
+				this.timeslotcontroller.updateFromUI();
+				var timestamps = this.timeslotcontroller.getTimestamps();
+
+				console.error("----- updateFromUI ----- ");
+				console.log("Dates", this.timeslotcontroller.dates);
+				console.log("slots", this.timeslotcontroller.slots);
+				console.error("timestamps", timestamps);
+
+				var columnitems = [];
+
+				for (var i = 0; i < timestamps.length; i++) {
+					columnitems.push({
+						idx: timestamps[i].utc().format('YYYY-MM-DD HH:mm'),
+						coltype: "datetime",
+						datatype: "check",
+						title: timestamps[i]
+					});
+				}
+
+
+				this.foodle.columns = columnitems;
+
 			},
 
 			"draw": function() {
@@ -111,152 +157,10 @@
 						that.timeslotcontroller.setDates([]);
 					})
 					.then(this.proxy("setup"))
-			},
+					.catch(function(err) {
+						console.error("Error drawing coumn date editor", err);
 
-			"redraw": function(setColdef, modifyNumberOfColumns) {
-
-
-				var coldef = setColdef;
-				if (setColdef) {
-					this.setColDef(setColdef);
-					this.includeOptions = this.hasTwoLevels(setColdef);
-					// console.log("Perform a check for two levels", setColdef, this.includeOptions);
-				}
-				if (!setColdef) {
-					coldef = this.getColDef();
-					console.log("Obtinaing coldef", coldef);
-				}
-
-				if (modifyNumberOfColumns) {
-					console.log("About to adjust colnumbers...");
-					console.log(this.topcolumns, this.subcolumns);
-					console.log(modifyNumberOfColumns.topcolumns, modifyNumberOfColumns.subcolumns);
-					this.topcolumns = modifyNumberOfColumns.topcolumns;
-					this.subcolumns = modifyNumberOfColumns.subcolumns;
-				}
-
-
-				// this.el.empty().append(template({"_": _d}));
-
-
-				this.el.find('#includeOptions').prop('checked', this.includeOptions);
-
-				this.addTable();
-
-
-				if (this.topcolumns < 2) {
-					$("#removeTopColumn").attr('disabled', 'disabled');
-					$("#addTopColumn").removeAttr('disabled');
-				} else if (this.topcolumns > 11) {
-					$("#removeTopColumn").removeAttr('disabled');
-					$("#addTopColumn").attr('disabled', 'disabled');
-				}
-
-
-				var colNo;
-				var defTable = $('#columnEditorTable');
-				// console.log("Completed redraw, now filling.");
-				for (var i = 0; i < coldef.length; i++) {
-
-					defTable.find('.coldef-header').eq(i).attr('value', coldef[i].title);
-					// console.log("Fill header ", defTable.find('.coldef-header').eq(i), coldef[i].title);
-
-					if (coldef[i].hasOwnProperty('children')) {
-
-						for (var j = 0; j < coldef[i].children.length; j++) {
-
-							colNo = this.getColNo(i, j);
-							console.log("Col no (" + i + "," + j + ")", colNo);
-
-							defTable.find('.coldef-option').eq(colNo).attr('value', coldef[i].children[j].title);
-
-						}
-
-					}
-
-				}
-				console.log("Summary", this.topcolumns, this.subcolumns)
-				console.log("-----");
-
-			},
-
-
-			"addTable": function() {
-				var containerTable = $('<table id="columnEditorTable" class="row"></table>').appendTo(this.el.find('#columneditorMain'));
-
-				var headerRow = this.getHeaderRow();
-				containerTable.append(headerRow);
-
-				if (this.includeOptions) {
-
-					var optionsRow = this.getSuboptionsRow();
-					containerTable.append(optionsRow);
-
-					var subc = this.getSuboptionsControllers();
-					containerTable.append(subc);
-
-					$("#includeOptions").prop('checked', true);
-
-				} else {
-
-					$("#includeOptions").prop('checked', false);
-
-				}
-
-			},
-
-
-			"getHeaderRow": function() {
-				var row = $('<tr></tr>');
-
-				var t;
-				for (var i = 0; i < this.topcolumns; i++) {
-					var rowspan = 1;
-					if (this.subcolumns[i] === 0) {
-						rowspan = 2;
-					}
-					t = '<td rowspan="' + rowspan + '" colspan="' + this.subcolumns[i] + '"><input style="width: 100%" class="coldef-header form-control" type="text" placeholder="' + _d.header + '" /></td>';
-					row.append(t);
-				}
-				return row;
-			},
-
-			"getSuboptionsRow": function() {
-				var row = $('<tr></tr>');
-
-				var t;
-				for (var i = 0; i < this.topcolumns; i++) {
-					for (var j = 0; j < this.subcolumns[i]; j++) {
-						t = '<td><input style="width: 100%" class="coldef-option form-control" type="text" placeholder="' + _d.opt + '" /></td>';
-						row.append(t);
-					}
-				}
-				return row;
-			},
-
-			"getSuboptionsControllers": function() {
-				var row = $('<tr></tr>');
-
-				var t;
-				for (var i = 0; i < this.topcolumns; i++) {
-
-					t = '<td style="text-align: left" colspan="' + this.subcolumns[i] + '" data-col-l1="' + i + '">' +
-						'<button class="removeSubOpt" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span></button>' +
-						'<button class="addSubOpt" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span></button>' +
-						'</td>';
-					var td = $(t);
-					row.append(td);
-
-					if (this.subcolumns[i] < 1) {
-						td.find('.removeSubOpt').attr('disabled', 'disabled');
-						// td.find('.removeSubOpt').removeAttr('disabled');
-					} else if (this.subcolumns[i] > 4) {
-						// td.find('.addSubOpt').removeAttr('disabled');
-						td.find('.addSubOpt').attr('disabled', 'disabled');
-					}
-				}
-
-				return row;
+					})
 			}
 
 
