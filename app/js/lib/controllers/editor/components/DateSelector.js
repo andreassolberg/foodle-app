@@ -186,14 +186,15 @@ define(function(require, exports, module) {
 		},
 
 
-		"getData": function() {
+		"getData": function(tz) {
 
 			if (!this.isActive()) {
 				return null;
 			}
 
-			var start = this.getDateStart();
-			var end = this.getDateEnd();
+			var start = this.getDateStart(tz);
+			var end = this.getDateEnd(tz);
+
 
 			return {
 				start: start,
@@ -203,7 +204,7 @@ define(function(require, exports, module) {
 			};
 		},
 
-		"getDateStart": function() {
+		"getDateStart": function(tz) {
 			var startDateStr = this.el.find("#inputDateStart").val();
 			var startTimeStr = this.el.find("#inputTimeStart").val();
 
@@ -224,10 +225,14 @@ define(function(require, exports, module) {
 			}
 
 			var fullstr = startDateStr + ' ' + startTimeStr;
+			if (tz !== null) {
+				return moment.tz(fullstr, "YYYY-MM-DD HH:mm", tz);
+			}
 			return moment(fullstr, "YYYY-MM-DD HH:mm");
+			
 		},
 
-		"getDateEnd": function() {
+		"getDateEnd": function(tz) {
 			var startDateStr = this.el.find("#inputDateStart").val();
 			var endDateStr = this.el.find("#inputDateEnd").val();
 			var endTimeStr = this.el.find("#inputTimeEnd").val();
@@ -260,7 +265,13 @@ define(function(require, exports, module) {
 
 			var fullstr = endDateStr + ' ' + endTimeStr;
 
-			var x = moment(fullstr, "YYYY-MM-DD HH:mm");
+			var x;
+			if (tz === null) {
+				x = moment(fullstr, "YYYY-MM-DD HH:mm");
+			} else {
+				x = moment.tz(fullstr, "YYYY-MM-DD HH:mm", tz);
+			}
+
 			if (this.uiAllDay()) {
 				x.add(1, 'days');
 			}

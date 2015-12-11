@@ -4,11 +4,13 @@
 	<div class="row ">
 		<div class="col-lg-12 " style=""> 
 
+			{?isAdmin}
 			<div id="ownerbar" class="btn-group pull-right">
 				<a class="btn btn-warning" href="#!/edit/{foodle.identifier}"><span class="glyphicon glyphicon-edit"></span> {_.bc_edit}</a>
 				<a class="btn btn-info" href="#!/create/{foodle.identifier}"><span class="glyphicon glyphicon-new-window"></span> {_.duplicate2}</a>
-				<a class="btn btn-danger" id="actDelete" ><span class="glyphicon glyphicon-remove"></span> {_.delete}</a>
+				<a class="btn btn-danger actDelete" ><span class="glyphicon glyphicon-remove"></span> {_.delete}</a>
 			</div>
+			{/isAdmin}
 
 			<div id="otherbar" class="btn-group pull-right">
 				<!-- <div class="btn-group"> -->
@@ -35,7 +37,6 @@
 		<div id="foodleDescription" class="col-md-5">
 
 			<p>
-
 			{#groups}
 				<span data-groupid="{id}" class="label label-warning">{displayName}</span> &nbsp; 
 			{/groups}
@@ -49,7 +50,7 @@
 		<div id="colTime" class="col-md-3">
 
 
-			{?foodle.dtinfo}
+			{?dtinfo}
 			<div id="panelTime" class="panel panel-default">
 				<div class="uninett-color-lightBlue panel-heading">
 					<h3 class="panel-title"><span class="glyphicon glyphicon-calendar"></span> {_.datetime}</h3>
@@ -78,7 +79,7 @@
 					{/dtinfo.duration}
 				</div>
 			</div>
-			{/foodle.dtinfo}
+			{/dtinfo}
 
 			{?foodle.deadline}
 			<div id="panelDeadline" class="panel panel-default">
@@ -96,6 +97,8 @@
 			</div>
 			{/foodle.deadline}
 
+
+			{?enableTZ}
 			<div id="panelTimezone" class="panel panel-default hidden-print">
 				<div class="uninett-color-lightBlue panel-heading">
 					<h3 class="panel-title"><span class="glyphicon glyphicon-globe"></span> {_.timezone}</h3>
@@ -106,6 +109,7 @@
 					<div  id="timezoneselector"></div>
 				</div>
 			</div>
+			{/enableTZ}
 
 
 

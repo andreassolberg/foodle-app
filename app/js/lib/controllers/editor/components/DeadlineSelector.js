@@ -68,7 +68,7 @@ define(function(require, exports, module) {
 			});
 		},
 
-		"getData": function() {
+		"getData": function(tz) {
 
 			if (!this.isActive()) {
 				return null;
@@ -88,21 +88,22 @@ define(function(require, exports, module) {
 				throw new Error("Invalid time format. Correct format is 12:00");
 			}
 
-			var parsed = moment(date + ' ' + time, "YYYY-MM-DD HH:mm");
-			// console.error("PArsed", parsed);
-			return parsed;
+
+			if (tz !== null) {
+				return moment.tz(date + ' ' + time, "YYYY-MM-DD HH:mm", tz);
+			}
+			return moment(date + ' ' + time, "YYYY-MM-DD HH:mm");
 		},
 
 		"updateView": function(foodle) {
 			var dt;
 			if (foodle.deadline) {
-				dt = moment(foodle.deadline)
 
-				// console.error("dp", dt, typeof dt._d);
-				this.dpdeadline.datepicker('setUTCDate', dt.toDate());
+				dt = moment(foodle.deadline);
+				this.dpdeadline.datepicker('setUTCDate', dt.tz(foodle.timezone).toDate());
 
 				// this.el.find('#inputDeadlineDate').val(dt.format('YYYY-MM-DD'));
-				this.el.find('#inputDeadlineTime').val(dt.format('HH:mm'));
+				this.el.find('#inputDeadlineTime').val(dt.tz(foodle.timezone).format('HH:mm'));
 			}
 		},
 

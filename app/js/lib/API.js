@@ -31,6 +31,10 @@ define(function(require, exports, module) {
 			return this.feideconnect._customRequestAdv('PATCH', this.getURL('/api/foodles/' + id), null, null, obj);
 		},
 
+		"deleteFoodle": function(id) {
+			return this.feideconnect._customRequestAdv('DELETE', this.getURL('/api/foodles/' + id));	
+		},
+
 		"getFoodleById": function(identifier) {
 			return this.feideconnect._customRequest(this.getURL('/api/foodles/' + identifier))
 				.then(function(foodledata) {

@@ -62,13 +62,13 @@ define(function(require, exports, module) {
 		},
 
 
-		"updateView": function(foodle) {
+		"setTZ": function(tz) {
 			var that = this;
 			return this.onLoaded()
 				.then(function() {
-					if (foodle.timezone && that.timezoneOK(foodle.timezone)) {
+					if (tz && that.timezoneOK(tz)) {
 						that.active = false;
-						that.selector.selectize.setValue(foodle.timezone);
+						that.selector.selectize.setValue(tz);
 						that.active = true;
 					}
 				});

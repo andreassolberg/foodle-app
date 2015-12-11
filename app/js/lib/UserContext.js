@@ -12,16 +12,23 @@ define(function(require, exports, module) {
 		"init": function(feideconnect) {
 			var that = this;
 			this.feideconnect = feideconnect;
+
+
+			this.timezone = 'Europe/Amsterdam';
 			this.groups = {};
 			this._super(undefined, true);
 		},
 
 		"initLoad": function() {
 			var that = this;
-			return this.loadGroups()
-				.then(function() {
-					that.user = that.feideconnect.getUser();
-				})
+
+			return Promise.all([
+					this.loadGeoIP(),
+					this.loadGroups()
+					.then(function() {
+						that.user = that.feideconnect.getUser();
+					})
+				]) 
 				.then(this.proxy("_initLoaded"));
 		},
 
@@ -40,6 +47,26 @@ define(function(require, exports, module) {
 				}
 			}
 			return data;
+		},
+
+		"loadGeoIP": function() {
+			var that = this;
+			return new Promise(function(resolve, reject) {
+				var url = 'http://freegeoip.net/json/';
+				$.ajax({
+					dataType: "json",
+					url: url,
+					success: function(data) {
+						if (data && data.time_zone) {
+							that.timezone = data.time_zone;
+						}
+						resolve();
+					},
+					error: function(err) {
+						reject(err);
+					}
+				})
+			});
 		},
 
 

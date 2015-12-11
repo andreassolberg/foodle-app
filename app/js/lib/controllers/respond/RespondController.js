@@ -41,11 +41,36 @@ define(function(require) {
 
 			this.template = new TemplateEngine(responseTemplate);
 
-
+			this.ebind('click', '.actDelete', 'actDelete');
 			this.ebind("click", "ul#responsenav > li", "actTab");
 
 			this.initLoad();
 		},
+
+
+		"actDelete": function(e) {
+
+			e.preventDefault();
+			e.stopPropagation();
+
+			var that = this;
+			var r = confirm("Are you really sure you want to DELETE this Foodle and all the responses?");
+			if (r === true) {
+				this.foodle.delete()
+					.then(function() {
+						that.app.pool.load();
+						that.app.routeMainlisting();
+					});
+
+			} else {
+			    console.error("You pressed CANCEL!");
+			}
+
+
+			var id = $(e.currentTarget).data('tabtarget');
+			this.setTab(id);
+		},
+
 
 		"actTab": function(e) {
 
@@ -131,6 +156,9 @@ define(function(require) {
 				.then(function() {
 					return that.usercontext.onLoaded();
 				})
+				.then(function() {
+					that.timezoneselector.setTZ(that.usercontext.timezone);
+				})
 				.then(this.proxy("loadFoodleResponses"))
 				.then(function() {
 					that.updateResponses();
@@ -146,40 +174,38 @@ define(function(require) {
 
 		"draw": function(act) {
 			var that = this;
-			var foodleview = this.foodle.getView();
-
 			var _config = that.feideconnect.getConfig();
 			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
+			var timezone = this.timezoneselector.getData();
+			var foodleview = this.foodle.getView(timezone);
 
 			var view = {
 				"_": this.app.dict.get(),
 				"user": this.usercontext.user,
-				"foodle": this.foodle.getView(),
-				"coldef": this.foodle.getViewColDefGeneric(),
+				"foodle": foodleview,
 				"groups": this.usercontext.getGroupSelection(this.foodle.groups),
-				"dtinfo": this.foodle.getDateTimeView(),
+				"dtinfo": this.foodle.getDateTimeView(timezone),
 				"seealso": this.pool.getSeeAlso(this.foodle),
-				"profilephotoBase": profilephotoBase
+				"profilephotoBase": profilephotoBase,
+				"isAdmin": this.foodle.isAdmin(this.usercontext),
+				"enableTZ": this.foodle.enableTZview()
 			};
-
 			var editor = this.foodle.detectEditor();
-
-			console.error("Responder view GENERIC", JSON.stringify(view.coldef, undefined, 4));
-
-			var timezone = this.timezoneselector.getData();
+			
 
 			if (editor === 'dates') {
 				view.coldef = this.foodle.getViewColDefDates(timezone);
+			} else {
+				view.coldef = this.foodle.getViewColDefGeneric();
 			}
-			console.error("Responder view DATES", JSON.stringify(view.coldef.rows, undefined, 4));
-
+			// console.error("Responder view DATES", JSON.stringify(view.coldef.rows, undefined, 4));
+			// console.error("Responder view GENERIC", JSON.stringify(view.coldef, undefined, 4));
 
 			if (this.foodle.location) {
 				this.locationdisplay.draw(this.foodle);
 			}
 
-			that.timezoneselector.updateView(this.foodle);
-
+			console.error("Responder view ", JSON.stringify(view.dtinfo, undefined, 4));
 
 			that.el.children().detach();
 			return this.template.render(that.el, view)

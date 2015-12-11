@@ -36,11 +36,19 @@ define(function(require, exports, module) {
 
 		},
 
+		"delete": function() {
+			return Foodle.api.deleteFoodle(this.identifier);
+		},
+
 		"getMyResponse": function() {
 			return FoodleResponse.getFoodleMyResponse(this);
 		},
 		"getAllResponses": function() {
 			return FoodleResponse.getFoodleAllResponses(this);
+		},
+
+		"isAdmin": function(usercontext) {
+			return (usercontext.user.userid === this.owner);
 		},
 
 
@@ -251,7 +259,7 @@ define(function(require, exports, module) {
 			return obj;
 		},
 
-		"getView": function() {
+		"getView": function(tz) {
 			var res = this._super();
 
 			var now = moment();
@@ -270,6 +278,11 @@ define(function(require, exports, module) {
 
 			if (this.deadline) {
 				res.deadline = moment(this.deadline);
+
+				if (tz) {
+					res.deadline.tz(tz);
+				}
+
 				res.deadlineAgo = res.deadline.fromNow();
 				res.deadlineH = res.deadline.format('ddd Do MMM YYYY HH:mm');
 				res.deadlineFuture = res.deadline.isAfter(now);
@@ -280,7 +293,21 @@ define(function(require, exports, module) {
 			return res;
 		},
 
-		"getDateTimeView": function() {
+		"enableTZview": function() {
+
+			if (this.detectEditor() === 'dates') {
+				return true;
+			}
+			if (this.deadline) {
+				return true;
+			}
+			if (this.datetime) {
+				return true;
+			}
+			return false;
+		},
+
+		"getDateTimeView": function(timezone) {
 
 
 			if (!this.datetime) {
@@ -297,8 +324,8 @@ define(function(require, exports, module) {
 			}
 
 
-			var start = moment(dt.start);
-			var end = moment(dt.end);
+			var start = moment(dt.start).tz(timezone);
+			var end = moment(dt.end).tz(timezone);
 
 			var display1 = null;
 			var display2 = null;

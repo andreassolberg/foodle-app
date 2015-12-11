@@ -28,14 +28,14 @@ define(function(require, exports, module) {
 
 		"load": function() {
 			var that = this;
-			that.apigks = {};
+			that.foodles = {};
 			return that.feideconnect._customRequest('https://foodle.gk.feideconnect.no/api/foodles/')
 				.then(function(foodles) {
 					var i;
 					for (i = 0; i < foodles.length; i++) {
 						that.foodles[foodles[i].identifier] = new Foodle(foodles[i]);
 					}
-					that.emit('listChange', that.apigks);
+					that.emit('listChange');
 				});
 		},
 
@@ -74,7 +74,7 @@ define(function(require, exports, module) {
 				x.id = key;
 				items.push(x.getView());
 			}
-			return items;
+			return items.reverse();
 		},
 
 

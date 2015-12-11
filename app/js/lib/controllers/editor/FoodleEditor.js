@@ -85,20 +85,32 @@ define(function(require) {
 		"edit": function(foodle) {
 			var that = this;
 			console.error("About to edit foodle", foodle);
-			this.foodle = foodle;
-			this.detectEditorType();
+
+			return this.onLoaded()
+				.then(function() {
+
+					that.foodle = foodle;
+					that.detectEditorType();
+
+					var foodletitle = (that.foodle.title ? that.foodle.title : '(without name)');
+					var title = (that.foodle.identifier ? 'Edit Foodle ' + foodletitle : 'Create new Foodle');
+					that.app.bccontroller.draw([
+						that.app.getBCItem(), {
+							"title": title,
+							"active": true
+						}
+					]);
+
+					if (!that.foodle.timezone) {
+						that.foodle.timezone = that.usercontext.timezone;
+					}
+
+					return that.draw();
+
+				});
 
 
-			var foodletitle = (this.foodle.title ? this.foodle.title : '(without name)');
-			var title = (this.foodle.identifier ? 'Edit Foodle ' + foodletitle : 'Create new Foodle');
-			this.app.bccontroller.draw([
-				this.app.getBCItem(), {
-					"title": title,
-					"active": true
-				}
-			]);
 
-			return this.draw();
 		},
 
 
@@ -125,7 +137,7 @@ define(function(require) {
 
 					that.dateselector.updateView(that.foodle);
 					that.deadlineselector.updateView(that.foodle);
-					that.timezoneselector.updateView(that.foodle);
+					that.timezoneselector.setTZ(that.foodle.timezone);
 					that.locationinput.updateView(that.foodle);
 					that.groupselector.updateView(that.foodle);
 
@@ -157,6 +169,8 @@ define(function(require) {
 
 			return this.foodle.save()
 				.then(function() {
+					that.app.pool.load();
+					// that.app.routeMainlisting();
 					that.app.setErrorMessage("Successfully saved Foodle", "success");
 				})
 				.catch(function(err) {
@@ -192,11 +206,14 @@ define(function(require) {
 				// Missing parameters to process:
 				// foodle.parent, 'publicresponses', '', 'defaults', '', 'admins'
 
-				this.foodle.location = this.locationinput.getData();
 				this.foodle.timezone = this.timezoneselector.getData();
-				this.foodle.datetime = this.dateselector.getData();
-				this.foodle.deadline = this.deadlineselector.getData();
+
+				this.foodle.datetime = this.dateselector.getData(this.foodle.timezone);
+				this.foodle.deadline = this.deadlineselector.getData(this.foodle.timezone);
+
+				this.foodle.location = this.locationinput.getData();
 				this.foodle.groups = this.groupselector.getGroups();
+
 
 				this.columneditor.updateFromUI();
 

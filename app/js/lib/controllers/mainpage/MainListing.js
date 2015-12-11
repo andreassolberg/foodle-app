@@ -32,6 +32,7 @@ define(function(require, exports, module) {
 
 			this.pool = pool;
 			this.pool.on('listChange', function(list) {
+				console.error("LISTCHANGE DETECTED");
 				that.updateList(list);
 			});
 
