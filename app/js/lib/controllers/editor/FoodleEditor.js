@@ -71,6 +71,9 @@ define(function(require) {
 
 			// console.error("Detecting", this.foodle.columns);
 			this.columneditor = this.columneditors.generic;
+
+			var editor = this.foodle.detectEditor();
+
 			if (this.foodle.editor && this.foodle.editor === 'dates') {
 				this.columneditor = this.columneditors.dates;
 			} else if (this.foodle.columns && this.foodle.columns.length > 0 && this.foodle.columns[0].coltype === 'datetime') {

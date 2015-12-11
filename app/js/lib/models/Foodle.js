@@ -44,6 +44,17 @@ define(function(require, exports, module) {
 		},
 
 
+		"detectEditor": function() {
+
+			if (this.editor) {
+				return this.editor;
+			} else if (this.columns && this.columns.length > 0 && this.columns[0].coltype === 'datetime') {
+				return "dates";
+			}
+			return "generic";
+		},
+
+
 
 		// Detect two row header
 		"coldefDetectTRH": function() {
@@ -417,9 +428,159 @@ define(function(require, exports, module) {
 
 			}
 			return view;
+		},
+
+		"getViewCommonDatatypes": function() {
+			var selectedDatatype = 'checkmaybe'
+
+			for (var i = 0; i < this.columns.length; i++) {
+
+				if (this.columns[i].coltype !== 'datetime') {
+					continue;
+				}
+
+				if (this.columns[i].datatype) {
+					selectedDatatype = this.columns[i].datatype;
+				}
+			}
+			return this.getColDataTypes(selectedDatatype);
+		},
+
+
+		/**
+		 * Get a view object for the columndefinition prepared for the Generic Editor.
+		 * @return {[type]} [description]
+		 */
+		"getViewColDefDates": function(tz) {
+
+			var view = {};
+			view.rows = [
+				[],
+				[]
+			];
+			view.cols = [];
+			view.rowopts = [];
+			view.tworowheaders = true;
+
+
+			var i, j, x, x2, x3, y, z;
+			var dateSorted = {};
+
+
+
+			for (i = 0; i < this.columns.length; i++) {
+
+				if (this.columns[i].coltype !== 'datetime') {
+					continue;
+				}
+
+				var ts = moment(this.columns[i].title);
+				if (tz !== null) {
+					ts.tz(tz);
+				}
+
+				var item = $.extend({}, this.columns[i]);
+				item.ts = ts;
+				item.title = ts.format('HH:mm');
+				item.colspan = 1;
+				item.rowspan = 1;
+
+				var dateKey = ts.format('YYYY-MM-DD');
+
+				if (!dateSorted.hasOwnProperty(dateKey)) {
+					var dayts = ts.clone().startOf('day');
+					dateSorted[dateKey] = {
+						header: {
+							ts: dayts,
+							title: dayts.format('ddd D. MMM, YYYY'),
+							idx: 'na'
+						},
+						items: []
+					};
+				}
+				dateSorted[dateKey].items.push(item);
+
+			}
+
+			var dk;
+			for (dk in dateSorted) {
+				dateSorted[dk].header.colspan = dateSorted[dk].items.length;
+				dateSorted[dk].header.rowspan = 1;
+			}
+
+			for (dk in dateSorted) {
+
+				view.rows[0].push(dateSorted[dk].header);
+
+				for (i = 0; i < dateSorted[dk].items.length; i++) {
+					view.rows[1].push(dateSorted[dk].items[i]);
+				}
+			}
+
+
+
+			// console.error(" ====== DATESORTED  ======");
+			// console.error(JSON.stringify(dateSorted, undefined, 2));
+			return view;
+
+
+
+			for (i = 0; i < this.columns.length; i++) {
+
+				x = $.extend(true, {}, this.columns[i]);
+				x2 = $.extend(true, {}, this.columns[i]);
+				x3 = {}
+
+				x3.itemcount = 0;
+				x3.idx = x.idx;
+
+
+				if (this.columns[i].hasOwnProperty("items") && this.columns[i].items.length > 0) {
+					delete x.items;
+
+					x3.itemcount = this.columns[i].items.length;
+					for (j = 0; j < this.columns[i].items.length; j++) {
+
+						y = $.extend(true, {}, this.columns[i].items[j]);
+						y.datatypes = this.getColDataTypes(y.datatype);
+						view.cols.push(y);
+
+						z = $.extend(true, {}, this.columns[i].items[j]);
+						z.colspan = 1;
+						z.rowspan = 1;
+						view.rows[1].push(z);
+
+					}
+					x.colspan = this.columns[i].items.length;
+					x.rowspan = 1;
+
+
+				} else {
+					x.colspan = 1;
+					x.rowspan = 2;
+
+					x2.datatypes = this.getColDataTypes(x2.datatype);
+					view.cols.push(x2);
+				}
+				x3.colspan = x.colspan;
+				x3.itemMayIncrease = true;
+				x3.itemMayDecrease = true;
+				if (x3.itemcount < 1) {
+					x3.itemMayDecrease = false;
+				}
+				if (x3.itemcount > 8) {
+					x3.itemMayIncrease = false;
+				}
+				view.rowopts.push(x3);
+
+				view.rows[0].push(x);
+
+			}
+			return view;
 		}
 
 	});
+
 
 
 	Foodle.getEmptyColDefItem = function() {

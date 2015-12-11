@@ -21,6 +21,7 @@ define(function(require) {
 	var RespondController = Pane.extend({
 		"init": function(feideconnect, app, pool, usercontext) {
 
+			var that = this;
 			this.feideconnect = feideconnect;
 			this.app = app;
 			this.pool = pool;
@@ -32,6 +33,11 @@ define(function(require) {
 			this.myresponsecontroller = new MyResponseController(app, this);
 			this.allresponsescontroller = new AllResponsesController(app);
 			this.timezoneselector = new TimeZoneSelector(this.app);
+
+			this.timezoneselector.on('tz', function(tz) {
+				console.error("About to update drwa");
+				that.draw();
+			});
 
 			this.template = new TemplateEngine(responseTemplate);
 
@@ -156,13 +162,25 @@ define(function(require) {
 				"profilephotoBase": profilephotoBase
 			};
 
+			var editor = this.foodle.detectEditor();
+
+			console.error("Responder view GENERIC", JSON.stringify(view.coldef, undefined, 4));
+
+			var timezone = this.timezoneselector.getData();
+
+			if (editor === 'dates') {
+				view.coldef = this.foodle.getViewColDefDates(timezone);
+			}
+			console.error("Responder view DATES", JSON.stringify(view.coldef.rows, undefined, 4));
+
+
 			if (this.foodle.location) {
 				this.locationdisplay.draw(this.foodle);
 			}
 
 			that.timezoneselector.updateView(this.foodle);
 
-			// console.error("Responder view", JSON.stringify(view.user, undefined, 4));
+
 			that.el.children().detach();
 			return this.template.render(that.el, view)
 				.then(function() {

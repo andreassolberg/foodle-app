@@ -127,17 +127,18 @@
 				console.log("slots", this.timeslotcontroller.slots);
 				console.error("timestamps", timestamps);
 
+				var datatype = this.el.find('.coldefdatatype').val();
+
 				var columnitems = [];
 
 				for (var i = 0; i < timestamps.length; i++) {
 					columnitems.push({
 						idx: timestamps[i].utc().format('YYYY-MM-DD HH:mm'),
 						coltype: "datetime",
-						datatype: "check",
+						datatype: datatype,
 						title: timestamps[i]
 					});
 				}
-
 
 				this.foodle.columns = columnitems;
 
@@ -147,8 +148,10 @@
 				var that = this;
 				var view = {
 					"_": this.app.dict.get(),
-					"foodle": this.foodle.getView()
+					"foodle": this.foodle.getView(),
+					"datatypes": this.foodle.getViewCommonDatatypes()
 				};
+				console.error("column date editor VIEW", JSON.stringify(view, undefined, 3));
 				this.el.children().detach();
 				return this.template.render(this.el, view)
 					.then(function() {

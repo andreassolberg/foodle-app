@@ -9,59 +9,24 @@
 
         <div id="datelistingC" class="col-md-4">
 
-            <!-- <h3>Dates</h3> -->
-
-        <!-- </div>
-
-        <div id="columneditorMain" class="col-md-4"> -->
             <p><b>{_.dates}</b> </p>
             <div style="" class="dateSelector"></div>
 
+            <div style="margin-top: 2em">
+
+                <p style="margin:0px">Select response type:</p>
+                <select class="coldefdatatype">
+                    {#datatypes}
+                        <option value="{id}" {?selected}selected="selected"{/selected}>{title}</option>
+                    {/datatypes}
+                </select>
+            </div>
+
         </div>
 
 
-        <div class="col-md-8 timeslotcontroller">
-<!--
-            <p><b>Timeslots (2)</b> </p>
-
-            <div class="row">
-                <div id="sectioninputTimeStart" class="form-group col-sm-5">
-                    From
-                </div>
-                <div id="sectioninputTimeStart" class="form-group col-sm-5">
-                    To
-                </div>      
-
-                <div class="col-sm-2"></div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-sm-2 col-sm-offset-10"><button class="actAddTimeslot btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span></button></div>
-            </div>
--->
-
-        </div>
+        <div class="col-md-8 timeslotcontroller"></div>
 
     </div>
 
-<!--
-    <div class="row">
-
-        <table id="timeslotTable" class="table table-striped">
-            <thead><th>{_.date}</th><th>{_.time}</th></thead>
-            <tbody id="timeslotTableBody"></tbody>
-        </table>
-
-
-        <div id="timeslotrowcontainer">
-            
-
-        </div>
-
-        <div style="" id="datelisting" ></div>
-        
-    </div>
--->
 </div>

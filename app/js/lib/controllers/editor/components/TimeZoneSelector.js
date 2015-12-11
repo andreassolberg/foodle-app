@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 		// $ = require('jquery'),
 		$ = require('jquery'),
 
+		EventEmitter = require('bower/feideconnectjs/src/EventEmitter'),
 		ComponentController = require('./ComponentController');
 
 	require('selectize');
@@ -15,6 +16,10 @@ define(function(require, exports, module) {
 			var that = this;
 			this._super(app);
 			this.initLoad();
+
+			this.active = false;
+
+			// this.ebind('change', "#timezoneselect", "actSetTZ");
 		},
 
 		"initLoad": function() {
@@ -24,6 +29,17 @@ define(function(require, exports, module) {
 				.catch(function(err) {
 					that.app.setErrorMessage("Error loading TimeZoneSelector", "danger", err);
 				});
+		},
+
+		"actSetTZ": function(value) {
+			// e.preventDefault();
+			// e.stopPropagation();
+			// var value = $(e.currentTarget).val();
+			if (this.active) {
+				this.emit('tz', value);
+				console.error("SET TZ", value);
+			}
+			// console.error("SET TZ", value);
 		},
 
 		"getData": function() {
@@ -51,7 +67,9 @@ define(function(require, exports, module) {
 			return this.onLoaded()
 				.then(function() {
 					if (foodle.timezone && that.timezoneOK(foodle.timezone)) {
+						that.active = false;
 						that.selector.selectize.setValue(foodle.timezone);
+						that.active = true;
 					}
 				});
 		},
@@ -68,14 +86,20 @@ define(function(require, exports, module) {
 				for (var i = 0; i < zones.length; i++) {
 					s.append('<option value="' + zones[i] + '">' + zones[i] + '</option>');
 				}
-				var sres = s.selectize();
+				var sres = s.selectize({
+					onChange: function(value) {
+						that.actSetTZ(value);
+					}
+				});
 				that.selector = sres[0];
+
+				that.active = true;
 				resolve();
 			});
 
 
 		}
-	});
+	}).extend(EventEmitter);
 
 	return TimeZoneSelector;
 });
