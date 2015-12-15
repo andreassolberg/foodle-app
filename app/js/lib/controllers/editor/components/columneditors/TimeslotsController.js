@@ -5,7 +5,7 @@ define(function(require, exports, module) {
 		moment = require('moment-timezone'),
 		$ = require('jquery'),
 
-		Controller = require('bower/feideconnectjs/src/Controllers/Controller'),
+		Controller = require('bower/feideconnectjs/src/controllers/Controller'),
 		Dictionary = require('bower/feideconnectjs/src/Dictionary'),
 		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine');
 
