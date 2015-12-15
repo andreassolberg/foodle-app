@@ -26,7 +26,6 @@ define(function(require, exports, module) {
 		"save": function(usercontext) {
 			var obj = this.getProperties(['title', 'descr', 'parent', 'deadline', 'location', 'publicresponses', 'datetime', 'timezone', 'defaults', 'columns', 'admins', 'groups']);
 			
-			obj.ownerinfo = usercontext.getPublic();
 			if (this.identifier) {
 				// console.error("Updating an existing Foodle")
 				return Foodle.api.updateFoodle(this.identifier, obj);
