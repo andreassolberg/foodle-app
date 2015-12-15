@@ -28,8 +28,7 @@
       "text": "~2.0.13",
       "feideconnectjs": "~2.2",
       "selectize": "~0.12",
-      "dustjs-linkedin": "~2.7",
-      "dustjs-helpers": "~1.7",
+      "dustjs-linkedin": "~2.5",
       "momentjs": "~2.10",
       "moment-timezone": "~0.4",
       "almond": "~0.3.0",
@@ -287,283 +286,45 @@
         "latest": "1.5.0"
       }
     },
-    "dustjs-helpers": {
-      "endpoint": {
-        "name": "dustjs-helpers",
-        "source": "dustjs-helpers",
-        "target": "~1.7"
-      },
-      "canonicalDir": "/Users/andreas/wc/foodle/foodleapp/bower_components/dustjs-helpers",
-      "pkgMeta": {
-        "name": "dustjs-helpers",
-        "version": "1.7.3",
-        "homepage": "https://github.com/linkedin/dustjs-helpers",
-        "authors": [
-          "Veena Basavaraj <vybs@users.noreply.github.com>",
-          "Yevgeniy Brikman <brikis98@users.noreply.github.com>",
-          "Sarah Clatterbuck <sclatter@linkedin.com>",
-          "Jimmy Chan <jchan@linkedin.com>",
-          "Steven Foote <sfoote@linkedin.com>",
-          "Johnathan Leppert <jleppert@users.noreply.github.com>",
-          "Prayrit Prash Jain <prjain@linkedin.com>",
-          "Seth Kinast <skinast@linkedin.com>",
-          "Jairo de Morais <jairodemorais@users.noreply.github.com>",
-          "Kate Odnous <kodnous@linkedin.com>",
-          "Richard Ragan <rragan@ebay.com>",
-          "Aleksander Williams (http://akdubya.github.com/dustjs)"
-        ],
-        "description": "core helpers for Dust.js",
-        "main": "dist/dust-helpers.min.js",
-        "moduleType": [
-          "amd",
-          "globals",
-          "node"
-        ],
-        "dependencies": {
-          "dustjs-linkedin": "2.7 - 2.8"
-        },
-        "keywords": [
-          "templates",
-          "views",
-          "helpers",
-          "dust",
-          "dustjs",
-          "dust.js",
-          "linkedin"
-        ],
-        "license": "MIT",
-        "ignore": [
-          "**/.*",
-          "node_modules",
-          "bower_components",
-          "test",
-          "tmp",
-          "lib",
-          "gruntfile.js",
-          "package.json"
-        ],
-        "_release": "1.7.3",
-        "_resolution": {
-          "type": "version",
-          "tag": "v1.7.3",
-          "commit": "553525b647205785e5de447c1ccca4ec3e18e7b9"
-        },
-        "_source": "git://github.com/linkedin/dustjs-helpers.git",
-        "_target": "~1.7",
-        "_originalSource": "dustjs-helpers"
-      },
-      "dependencies": {
-        "dustjs-linkedin": {
-          "endpoint": {
-            "name": "dustjs-linkedin",
-            "source": "dustjs-linkedin",
-            "target": "2.7 - 2.8"
-          },
-          "canonicalDir": "/Users/andreas/wc/foodle/foodleapp/bower_components/dustjs-linkedin",
-          "pkgMeta": {
-            "name": "dustjs-linkedin",
-            "version": "2.7.2",
-            "homepage": "https://github.com/linkedin/dustjs",
-            "authors": [
-              "Veena Basavaraj <vybs@users.noreply.github.com>",
-              "Tom Carchrae",
-              "Jimmy Chan <jchan@linkedin.com>",
-              "Steven Foote <sfoote@linkedin.com>",
-              "Prayrit Prash Jain <prjain@linkedin.com>",
-              "Seth Kinast <skinast@linkedin.com>",
-              "Jairo de Morais <jairodemorais@users.noreply.github.com>",
-              "Kate Odnous <kodnous@linkedin.com>",
-              "Richard Ragan <rragan@ebay.com>",
-              "Aleksander Williams (http://akdubya.github.com/dustjs)"
-            ],
-            "description": "asynchronous Javascript templating for the browser and server",
-            "main": "dist/dust-full.min.js",
-            "moduleType": [
-              "amd",
-              "globals",
-              "node"
-            ],
-            "keywords": [
-              "templates",
-              "views",
-              "dust",
-              "dustjs",
-              "dust.js",
-              "linkedin"
-            ],
-            "devDependencies": {
-              "pegjs": "0.8.0"
-            },
-            "license": "MIT",
-            "ignore": [
-              "**/.*",
-              "bin",
-              "examples",
-              "index.js",
-              "index.html",
-              "lib",
-              "node_modules",
-              "src",
-              "test",
-              "tmp",
-              "Gruntfile.js",
-              "package.json"
-            ],
-            "_release": "2.7.2",
-            "_resolution": {
-              "type": "version",
-              "tag": "v2.7.2",
-              "commit": "ac6f905643e1ce486988f66eb2e05af00af0fb45"
-            },
-            "_source": "git://github.com/linkedin/dustjs.git",
-            "_target": "~2.7",
-            "_originalSource": "dustjs-linkedin"
-          },
-          "dependencies": {},
-          "nrDependants": 1,
-          "versions": [
-            "2.7.2",
-            "2.7.1",
-            "2.7.0",
-            "2.6.2",
-            "2.6.1",
-            "2.6.0",
-            "2.5.1",
-            "2.5.0",
-            "2.4.2",
-            "2.4.1",
-            "2.4.0",
-            "2.3.6",
-            "2.3.5",
-            "2.3.4",
-            "2.3.3",
-            "2.3.2",
-            "2.3.1",
-            "2.3.0",
-            "2.2.10",
-            "2.2.9",
-            "2.2.8",
-            "2.2.7",
-            "2.2.6",
-            "2.2.5",
-            "2.2.4",
-            "2.2.3",
-            "2.2.2",
-            "2.2.0",
-            "2.1.5",
-            "2.1.4",
-            "2.1.3",
-            "2.1.2",
-            "2.1.1",
-            "2.1.0",
-            "2.0.3",
-            "2.0.2",
-            "2.0.1",
-            "2.0.0",
-            "1.2.6",
-            "1.2.5",
-            "1.2.4",
-            "1.2.3",
-            "1.2.2",
-            "1.2.1",
-            "1.2.0",
-            "1.1.1",
-            "1.1.0",
-            "1.0.0"
-          ],
-          "update": {
-            "target": "2.7.2",
-            "latest": "2.7.2"
-          }
-        }
-      },
-      "nrDependants": 1,
-      "versions": [
-        "1.7.3",
-        "1.7.2",
-        "1.7.1",
-        "1.7.0",
-        "1.6.3",
-        "1.6.2",
-        "1.6.1",
-        "1.6.0",
-        "1.5.0",
-        "1.4.0",
-        "1.3.0",
-        "1.2.0",
-        "1.1.2",
-        "1.1.1",
-        "1.0.1"
-      ],
-      "update": {
-        "target": "1.7.3",
-        "latest": "1.7.3"
-      }
-    },
     "dustjs-linkedin": {
       "endpoint": {
         "name": "dustjs-linkedin",
         "source": "dustjs-linkedin",
-        "target": "~2.7"
+        "target": "~2.5"
       },
       "canonicalDir": "/Users/andreas/wc/foodle/foodleapp/bower_components/dustjs-linkedin",
       "pkgMeta": {
         "name": "dustjs-linkedin",
-        "version": "2.7.2",
-        "homepage": "https://github.com/linkedin/dustjs",
-        "authors": [
-          "Veena Basavaraj <vybs@users.noreply.github.com>",
-          "Tom Carchrae",
-          "Jimmy Chan <jchan@linkedin.com>",
-          "Steven Foote <sfoote@linkedin.com>",
-          "Prayrit Prash Jain <prjain@linkedin.com>",
-          "Seth Kinast <skinast@linkedin.com>",
-          "Jairo de Morais <jairodemorais@users.noreply.github.com>",
-          "Kate Odnous <kodnous@linkedin.com>",
-          "Richard Ragan <rragan@ebay.com>",
-          "Aleksander Williams (http://akdubya.github.com/dustjs)"
-        ],
-        "description": "asynchronous Javascript templating for the browser and server",
+        "version": "2.5.1",
         "main": "dist/dust-full.min.js",
-        "moduleType": [
-          "amd",
-          "globals",
-          "node"
-        ],
-        "keywords": [
-          "templates",
-          "views",
-          "dust",
-          "dustjs",
-          "dust.js",
-          "linkedin"
-        ],
         "devDependencies": {
           "pegjs": "0.8.0"
         },
-        "license": "MIT",
         "ignore": [
           "**/.*",
-          "bin",
-          "examples",
-          "index.js",
-          "index.html",
-          "lib",
-          "node_modules",
-          "src",
-          "test",
           "tmp",
+          "docs",
+          "test",
+          "src",
+          "benchmark",
+          "archive",
+          "node_modules",
+          ".grunt",
+          "_SpecRunner.html",
+          ".travis.yml",
           "Gruntfile.js",
-          "package.json"
+          "package.json",
+          "bower.json"
         ],
-        "_release": "2.7.2",
+        "homepage": "https://github.com/linkedin/dustjs",
+        "_release": "2.5.1",
         "_resolution": {
           "type": "version",
-          "tag": "v2.7.2",
-          "commit": "ac6f905643e1ce486988f66eb2e05af00af0fb45"
+          "tag": "v2.5.1",
+          "commit": "73b1763e0b80b45685c9f689c4dc6df2a5627e80"
         },
         "_source": "git://github.com/linkedin/dustjs.git",
-        "_target": "~2.7",
+        "_target": "~2.5",
         "_originalSource": "dustjs-linkedin"
       },
       "dependencies": {},
@@ -619,7 +380,7 @@
         "1.0.0"
       ],
       "update": {
-        "target": "2.7.2",
+        "target": "2.5.1",
         "latest": "2.7.2"
       }
     },

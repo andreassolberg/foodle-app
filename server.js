@@ -12,7 +12,20 @@ var developer = false;
 var env = process.argv[2] || process.env.NODE_ENV || 'production';
 
 
-var config = JSON.parse(fs.readFileSync('app/etc/config.js', 'utf8'));
+var config = JSON.parse(fs.readFileSync('app/etc/config.defaults.js', 'utf8'));
+
+if (process.env.FC_CLIENT_ID) {
+	config.client_id = process.env.FC_CLIENT_ID;
+}
+if (process.env.FC_REDIRECT_URI) {
+	config.redirect_uri = process.env.FC_REDIRECT_URI;
+}
+if (process.env.COOKIEDOMAIN) {
+	config.cookiedomain = process.env.COOKIEDOMAIN;
+}
+
+
+
 var languages = new LangNeg.Lang(config);
 
 

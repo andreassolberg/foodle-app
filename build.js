@@ -27,9 +27,9 @@
 		"google-maps": "../../bower_components/google-maps/lib/Google",
 	},
 	shim: {
-		// "dust": {
-		// 	"exports": "dust"
-		// },
+		"dust": {
+			"exports": "dust"
+		},
 		"moment-timezone": {
 			"deps": ["moment"]
 		},
