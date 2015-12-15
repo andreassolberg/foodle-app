@@ -43,11 +43,11 @@ module.exports = function(grunt) {
 			tasks: ['jshint']
 		},
 		transifex: {
-			"feide-connect": {
+			"foodle": {
 				options: {
 					targetDir: "./dictionaries/transifex", // download specified resources / langs only
-					resources: ["developer-dashboard"],
-					languages: ["en_US", "fr"],
+					resources: ["foodle"],
+					// languages: ["en_US", "fr", "nb", "nl", "it", "pt_BR", "sv", "zh_CN", "de", "da", "et", "ja", "pl", "sl", "cs", "nn", "es"],
 					filename: "dictionary._lang_.json"
 						// templateFn: function(strings) { return strings; }  // customize the output file format (see below)
 				}
@@ -120,7 +120,7 @@ module.exports = function(grunt) {
 	grunt.config("shell", shell);
 
 	var transifex = grunt.config.get("transifex");
-	transifex["feide-connect"].options.languages = cfg.languages;
+	transifex.foodle.options.languages = cfg.languages;
 	grunt.config.set("transifex", transifex);
 	// ---- Section on building locale based app builds.
 

@@ -23,6 +23,7 @@ requirejs.config({
 		"bootstrap-datepicker": "../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker",
 		"selectize": "../bower_components/selectize/dist/js/standalone/selectize",
 		"google-maps": "../bower_components/google-maps/lib/Google",
+		
 	},
 	shim: {
 		// "jquery": ["selectize"],
