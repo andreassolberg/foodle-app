@@ -208,7 +208,6 @@ define(function(require) {
 				// Missing parameters to process:
 				// foodle.parent, 'publicresponses', '', 'defaults', '', 'admins'
 
-				console.error("Timezone", this.foodle);
 
 				this.foodle.timezone = this.timezoneselector.getData();
 

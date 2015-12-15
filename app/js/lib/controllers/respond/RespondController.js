@@ -205,7 +205,7 @@ define(function(require) {
 				this.locationdisplay.draw(this.foodle);
 			}
 
-			console.error("Responder view ", JSON.stringify(view.dtinfo, undefined, 4));
+			// console.error("Responder view ", JSON.stringify(view.dtinfo, undefined, 4));
 
 			that.el.children().detach();
 			return this.template.render(that.el, view)
