@@ -86,7 +86,7 @@ define(function(require, exports, module) {
 			for (var i = 0; i < this.columns.length; i++) {
 
 				if (this.columns[i].coltype === 'datetime') {
-					ts.push(moment(this.columns[i].title));
+					ts.push(moment.tz(this.columns[i].title, this.timezone));
 				}
 
 				if (!this.columns[i].hasOwnProperty("items")) {
@@ -94,7 +94,7 @@ define(function(require, exports, module) {
 				}
 				for (var j = 0; j < this.columns[i].items.length; j++) {
 					if (this.columns[i].items[j].coltype === 'datetime') {
-						ts.push(moment(this.columns[i].items[j].title));
+						ts.push(moment.tz(this.columns[i].items[j].title, this.timezone));
 					}
 				}
 			}

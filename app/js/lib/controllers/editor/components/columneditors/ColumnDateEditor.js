@@ -47,6 +47,20 @@
 		}
 
 
+
+		/*
+		 * Handling of dates.
+		 *
+		 * The this.initialDates array is a list of Date objects 00:00 at UTC.
+		 *
+		 * When we load the editor with an existing foodle, the controllers is
+		 *  loaded, then setFoodle(foodle)
+		 *  setFoodle updates this.initialDates to UTC dates.
+		 *  timeslotcontroller is updated with timestamps from Foodle.
+		 *  
+		 * 
+		 */
+
 		var ColumnDateEditor = ColumnEditor.extend({
 			"init": function(app) {
 				var that = this;
@@ -79,24 +93,15 @@
 					that.dateselector = that.el.find('.dateSelector').datepicker(datesDatepickerConfig);
 
 					that.dateselector.on('changeDate', function(data) {
-						// console.error("Dates", data.dates);
-						var dates = [];
-						for (var i = 0; i < data.dates.length; i++) {
-							// console.error("Processing [", data.dates[i], "]")
-							dates.push(moment(data.dates[i]));
-						}
-						that.updateDates(dates);
+						that.updateDateValuesBasedUponTimezone();
 					});
-					console.error("setUTCDates ----- setUTCDates ", that.initialDates);
+					// console.error("---- NOW", moment().utc().startOf('day').toDate().UTC() );
+					// console.error("setUTCDates ----- setUTCDates ", that.initialDates);
 					// that.dateselector.datepicker("clearDates");
-					that.dateselector.datepicker("setDates", that.initialDates);
+					that.dateselector.datepicker("setUTCDates", that.initialDates);
 				});
 			},
 
-			"updateDates": function(dates) {
-				var sdates = dates.sort(msort);
-				this.timeslotcontroller.setDates(sdates);
-			},
 
 
 			"setFoodle": function(foodle) {
@@ -105,27 +110,41 @@
 				this.timeslotcontroller.dates = [];
 				this.timeslotcontroller.slots = {};
 
-
 				var timestamps = this.foodle.coldefGetTimeStamps();
 				this.timeslotcontroller.setTimestamps(timestamps);
 
 				this.initialDates = this.timeslotcontroller.dates.map(function(item) {
-					return item.clone().toDate();
+					return new Date(Date.UTC(item.format('YYYY'), item.format('MM')-1, item.format('DD') ));
+					// return item.clone().utc().hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
 				});
 
 
 
 			},
 
+			"updateDateValuesBasedUponTimezone": function() {
+				var utcdates = this.dateselector.datepicker("getUTCDates");
+				var dates = [];
+				for (var i = 0; i < utcdates.length; i++) {
+					// console.error("Processing [", data.dates[i], "]")
+					// console.error("Process date ", utcdates[i], "in timezone", that.foodle.timezone);
+					dates.push(moment.tz(moment(utcdates[i]).format('YYYY-MM-DD'), this.foodle.timezone));
+				}
+				dates.sort(msort);
+				this.timeslotcontroller.setDates(dates, this.foodle.timezone);
+			},
+
 			"updateFromUI": function() {
 
+				
 				this.timeslotcontroller.updateFromUI();
+				this.updateDateValuesBasedUponTimezone();
 				var timestamps = this.timeslotcontroller.getTimestamps();
 
-				console.error("----- updateFromUI ----- ");
-				console.log("Dates", this.timeslotcontroller.dates);
-				console.log("slots", this.timeslotcontroller.slots);
-				console.error("timestamps", timestamps);
+				// console.error("----- updateFromUI ----- ");
+				// console.log("Dates", this.timeslotcontroller.dates);
+				// console.log("slots", this.timeslotcontroller.slots);
+				// console.error("timestamps", timestamps);
 
 				var datatype = this.el.find('.coldefdatatype').val();
 
@@ -151,13 +170,13 @@
 					"foodle": this.foodle.getView(),
 					"datatypes": this.foodle.getViewCommonDatatypes()
 				};
-				console.error("column date editor VIEW", JSON.stringify(view, undefined, 3));
+				// console.error("column date editor VIEW", JSON.stringify(view, undefined, 3));
 				this.el.children().detach();
 				return this.template.render(this.el, view)
 					.then(function() {
 
 						that.el.find('.timeslotcontroller').append(that.timeslotcontroller.el)
-						that.timeslotcontroller.setDates([]);
+						that.timeslotcontroller.setDates([], that.foodle.timezone);
 					})
 					.then(this.proxy("setup"))
 					.catch(function(err) {

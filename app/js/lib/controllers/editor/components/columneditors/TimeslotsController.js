@@ -86,6 +86,10 @@ define(function(require, exports, module) {
 				this.slots[datevalue].push(ts[i].format('HH:mm'));
 			}
 
+			// console.error(" TimeslotsController is UPDATED FROM Foodle setTimestamps() ");
+			// console.log(this.dates);
+			// console.log(this.slots);
+
 		},
 
 		"getTimestamps": function() {
@@ -97,21 +101,25 @@ define(function(require, exports, module) {
 				return ts;
 			}
 
+			// console.error("ABOUT TO GET TIMESTAMPE!!", this.foodle.timezone);
+
 			for (var i = 0; i < this.dates.length; i++) {
 				datevalue = this.dates[i].format('YYYY-MM-DD');
 
-				console.error("LOOOKING FOR DATEVALUE", datevalue);
+				// console.error("LOOOKING FOR DATEVALUE", datevalue);
 				if (!this.slots.hasOwnProperty(datevalue)) {
 					continue;
 				}
 
 				for (var j = 0; j < this.slots[datevalue].length; j++) {
 					var newts = this.addTime(this.dates[i], this.slots[datevalue][j]);
+					// console.error("ABOUT TO GET timestamps!!", this.dates[i], this.slots[datevalue][j], newts);
 					if (newts !== null) {
 						ts.push(newts)
 					}
 				}
 			}
+
 			return ts;
 
 		},
@@ -242,15 +250,24 @@ define(function(require, exports, module) {
 			return view;
 		},
 
-		"setDates": function(dates) {
+		"setDates": function(dates, tz) {
 			this.dates = dates;
 			// console.error("Dates", dates);
 			for (var i = 0; i < this.dates.length; i++) {
-				var datevalue = this.dates[i].format('YYYY-MM-DD');
+				// var datevalue = this.dates[i].tz(tz).format('YYYY-MM-DD HH:mm');
+				var datevalue = this.dates[i].tz(tz).format('YYYY-MM-DD');
+
+				// console.error("Looking up datevalue (" + tz + ")", datevalue, this.dates[i], JSON.stringify(this.slots, undefined, 3));
+
 				if (!this.slots.hasOwnProperty(datevalue)) {
 					this.slots[datevalue] = ["08:00", "13:00"];
 				}
 			}
+
+			// console.error(" TimeslotsController is UPDATED FROM UI setDates()", tz);
+			// console.log(this.dates);
+			// console.log(this.slots);
+
 			return this.draw();
 		},
 

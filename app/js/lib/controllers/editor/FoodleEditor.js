@@ -84,7 +84,7 @@ define(function(require) {
 
 		"edit": function(foodle) {
 			var that = this;
-			console.error("About to edit foodle", foodle);
+			// console.error("About to edit foodle", foodle);
 
 			return this.onLoaded()
 				.then(function() {
@@ -126,7 +126,7 @@ define(function(require) {
 			this.columneditor.setFoodle(this.foodle);
 			this.columneditor.draw();
 
-			console.error("About to edit draw, view is..", view);
+			// console.error("About to edit draw, view is..", view);
 			this.el.children().detach();
 
 			return this.template.render(this.el, view)
@@ -137,7 +137,9 @@ define(function(require) {
 
 					that.dateselector.updateView(that.foodle);
 					that.deadlineselector.updateView(that.foodle);
+
 					that.timezoneselector.setTZ(that.foodle.timezone);
+
 					that.locationinput.updateView(that.foodle);
 					that.groupselector.updateView(that.foodle);
 
@@ -206,6 +208,8 @@ define(function(require) {
 				// Missing parameters to process:
 				// foodle.parent, 'publicresponses', '', 'defaults', '', 'admins'
 
+				console.error("Timezone", this.foodle);
+
 				this.foodle.timezone = this.timezoneselector.getData();
 
 				this.foodle.datetime = this.dateselector.getData(this.foodle.timezone);
@@ -219,7 +223,7 @@ define(function(require) {
 
 			} catch (err) {
 				this.app.setErrorMessage("Error in user input", "danger", err);
-				console.error(err);
+				console.error(err.stack);
 			}
 		},
 

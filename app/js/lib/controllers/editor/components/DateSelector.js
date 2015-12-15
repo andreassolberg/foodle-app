@@ -107,14 +107,14 @@ define(function(require, exports, module) {
 
 				if (foodle.datetime.start) {
 					dtstart = moment(foodle.datetime.start);
-					this.dptimeStart.datepicker('setUTCDate', dtstart.toDate());
-					this.el.find('#inputTimeStart').val(dtstart.format('HH:mm'));
+					this.dptimeStart.datepicker('setUTCDate', dtstart.tz(foodle.timezone).toDate());
+					this.el.find('#inputTimeStart').val(dtstart.tz(foodle.timezone).format('HH:mm'));
 
 				}
 				if (foodle.datetime.end) {
 					dtend = moment(foodle.datetime.end);
-					this.dptimeEnd.datepicker('setUTCDate', dtend.toDate());
-					this.el.find('#inputTimeEnd').val(dtend.format('HH:mm'));
+					this.dptimeEnd.datepicker('setUTCDate', dtend.tz(foodle.timezone).toDate());
+					this.el.find('#inputTimeEnd').val(dtend.tz(foodle.timezone).format('HH:mm'));
 				}
 
 				this.updateDynamics();
