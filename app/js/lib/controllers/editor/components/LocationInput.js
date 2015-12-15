@@ -149,7 +149,7 @@
 
 					browserSupportFlag = true;
 					navigator.geolocation.getCurrentPosition(function(position) {
-						var initialLocation = new this.google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+						var initialLocation = new that.google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 						that.map.setCenter(initialLocation);
 					}, function() {
 						// handleNoGeolocation(browserSupportFlag);
