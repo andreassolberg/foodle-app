@@ -66,13 +66,13 @@ define(function(require, exports, module) {
 
 		},
 
-		"getView": function() {
+		"getView": function(usercontext) {
 
 			var items = [];
 			for(var key in this.foodles) {
 				var x = this.foodles[key];
 				x.id = key;
-				items.push(x.getView());
+				items.push(x.getView(usercontext));
 			}
 			return items.reverse();
 		},

@@ -23,13 +23,15 @@ define(function(require, exports, module) {
 			this.coldefDetectTRH();
 		},
 
-		"save": function(fc) {
+		"save": function(usercontext) {
 			var obj = this.getProperties(['title', 'descr', 'parent', 'deadline', 'location', 'publicresponses', 'datetime', 'timezone', 'defaults', 'columns', 'admins', 'groups']);
-
+			
+			obj.ownerinfo = usercontext.getPublic();
 			if (this.identifier) {
 				// console.error("Updating an existing Foodle")
 				return Foodle.api.updateFoodle(this.identifier, obj);
 			} else {
+				obj.ownerinfo = usercontext.getPublic()
 				// console.error("Createing a new Foodle");
 				return Foodle.api.saveFoodle(obj);
 			}
@@ -259,8 +261,12 @@ define(function(require, exports, module) {
 			return obj;
 		},
 
-		"getView": function(tz) {
+		"getView": function(usercontext) {
 			var res = this._super();
+
+
+			// console.error("GETVBIEW", usercontext);
+
 
 			var now = moment();
 
@@ -276,11 +282,18 @@ define(function(require, exports, module) {
 				res.updatedH = res.updated.format('D. MMM YYYY');
 			}
 
+			res.isUpdated = (res.updatedAgo !== res.createdAgo);
+
+			if (usercontext) {
+				res.grouplist = usercontext.getGroupSelection(this.groups);
+			}
+
+
 			if (this.deadline) {
 				res.deadline = moment(this.deadline);
 
-				if (tz) {
-					res.deadline.tz(tz);
+				if (this.timezone) {
+					res.deadline.tz(this.timezone);
 				}
 
 				res.deadlineAgo = res.deadline.fromNow();

@@ -1,11 +1,29 @@
 {#items}
 	<a href="#!/respond/{identifier}" data-clientid="{identifier}" class="list-group-item media clientEntry">
 
+		<p class="pull-right" style="color: #666; font-size: 82%; margin-bottom: 5px">
+			Created {createdAgo}
+			{?isUpdated}, updated {updatedAgo}{/isUpdated}
+		</p>
 
-			<p class="pull-right" style="color: #666; font-size: 82%">Created {createdAgo}, updated {updatedAgo}</p>
-			<h4 class="list-group-item-heading">{title}</h4>
-			<!-- <p class="list-group-item-text" style="font-size: 80%" ><i class="glyphicon glyphicon-chevron-right"></i> {identifier}</p> -->
-			<p class="list-group-item-text">{descr}</p>
+		{#ownerinfo}
+			<div style="float: right; clear: right; width: 40%; text-align: right">
+				<img src="{profilephotoBase}{profilephoto}" class="pull-right" style="max-width: 40px; float: left; margin: 0px 3px; padding: 0px; border-radius: 3px; border: 0.5px solid #999"> 
+				<p style="margin: 0px; font-size: 100%">{name}</p>
+				<p style="margin: 0px; font-size: 80%">{email}</p>
+			</div>
+		{/ownerinfo}
+
+		<h4 class="list-group-item-heading">{title}</h4>
+		<!-- <p class="list-group-item-text" style="font-size: 80%" ><i class="glyphicon glyphicon-chevron-right"></i> {identifier}</p> -->
+		<p class="list-group-item-text">{descr}</p>
+
+		<p>
+		{#grouplist}
+			<span data-groupid="{id}" class="label label-warning">{displayName}</span> &nbsp; 
+		{/grouplist}
+		</p>
+
 
 
 	</a>

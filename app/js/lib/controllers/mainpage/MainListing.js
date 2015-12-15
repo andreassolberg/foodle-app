@@ -48,10 +48,17 @@ define(function(require, exports, module) {
 		},
 
 		"updateList": function(foodles) {
-			var items = this.pool.getView();
+			console.error("FOO", this.app.usercontext);
+			var _config = this.feideconnect.getConfig();
+			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
+			var items = this.pool.getView(this.app.usercontext);
 			var view = {
-				"items": items
+				"items": items,
+				"profilephotoBase": profilephotoBase
 			};
+			console.error("FOO", this.app.usercontext);
+
+			console.error("DRAW", JSON.stringify(view.items, undefined, 2));
 			this.tmpL.render(this.elList.empty(), view);
 		},
 
@@ -100,6 +107,8 @@ define(function(require, exports, module) {
 				"showHeader": false
 			};
 			that.el.children().detach();
+
+
 
 			return this.tmp.render(that.el, view)
 				.then(function() {
