@@ -177,7 +177,7 @@ define(function(require) {
 			var _config = that.feideconnect.getConfig();
 			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
 			var timezone = this.timezoneselector.getData();
-			var foodleview = this.foodle.getView(timezone);
+			var foodleview = this.foodle.getView();
 
 			var view = {
 				"_": this.app.dict.get(),
