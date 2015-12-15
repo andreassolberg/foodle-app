@@ -27,10 +27,10 @@ define(function(require, exports, module) {
 			var obj = this.getProperties(['title', 'descr', 'parent', 'deadline', 'location', 'publicresponses', 'datetime', 'timezone', 'defaults', 'columns', 'admins', 'groups']);
 
 			if (this.identifier) {
-				console.error("Updating an existing Foodle")
+				// console.error("Updating an existing Foodle")
 				return Foodle.api.updateFoodle(this.identifier, obj);
 			} else {
-				console.error("Createing a new Foodle");
+				// console.error("Createing a new Foodle");
 				return Foodle.api.saveFoodle(obj);
 			}
 
@@ -622,51 +622,41 @@ define(function(require, exports, module) {
 		nf.columns = [
 
 			{
-				"title": "Blank",
-				"idx": "2373465",
-				"items": [{
-					"idx": "123",
-					"title": "Jeg deltar",
-					"coltype": "text",
-					"datatype": "checkmaybe",
-					"restrictions": {
-						"enabled": true,
-						"maxcheck": 5
-					}
-				}],
+				"idx": "attend",
+				"title": "Jeg deltar",
 				"coltype": "text",
-				"datatype": "none"
-			},
-
-			{
-				"title": "Kjører selv",
-				"idx": "237fgh65",
-				"coltype": "text",
-				"datatype": "check"
-			},
-
-			{
-				"title": "Hvilken type bil",
-				"idx": "23734hjk5",
-				"coltype": "text",
-				"datatype": "none",
-
-				"items": [{
-					"title": "Toyota",
-					"idx": "18237",
-					"coltype": "text",
-					"datatype": "check",
-				}, {
-					"title": "Ford",
-					"idx": "144",
-					"coltype": "text",
-					"datatype": "number",
-					"restrictions": {
-						"enabled": true,
-						"maxnum": 500
-					}
-				}]
+				"datatype": "checkmaybe"
 			}
+
+			// {
+			// 	"title": "Kjører selv",
+			// 	"idx": "237fgh65",
+			// 	"coltype": "text",
+			// 	"datatype": "check"
+			// },
+
+			// {
+			// 	"title": "Hvilken type bil",
+			// 	"idx": "23734hjk5",
+			// 	"coltype": "text",
+			// 	"datatype": "none",
+
+			// 	"items": [{
+			// 		"title": "Toyota",
+			// 		"idx": "18237",
+			// 		"coltype": "text",
+			// 		"datatype": "check",
+			// 	}, {
+			// 		"title": "Ford",
+			// 		"idx": "144",
+			// 		"coltype": "text",
+			// 		"datatype": "number",
+			// 		"restrictions": {
+			// 			"enabled": true,
+			// 			"maxnum": 500
+			// 		}
+			// 	}]
+			// }
 
 		];
 		nf.coldefDetectTRH();
