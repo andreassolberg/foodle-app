@@ -34,13 +34,19 @@ then
 else
     first='y'
 fi
+
+cf routes
+
 cf push "${app}" -k 384M -m 128M -i 2
 cf map-route "${app}" "${domain}" -n "${hostnameapp}"
 
+
 if [ "${first}" = 'n' ]
 then
-    cf unmap-route "${oldapp}" "${domain}"
+    cf unmap-route "${oldapp}" "${domain}" -n "${hostnameapp}"
     cf stop "${oldapp}"
 fi
+
+cf routes
 
 echo "Done."
