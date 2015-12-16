@@ -30,7 +30,10 @@ module.exports = function(grunt) {
 				command: "" // Will be overridden below, depending on languages config.
 			},
 			bower: {
-				command: "node_modules/bower/bin/bower --allow-root install"
+				command: [
+					"node_modules/bower/bin/bower --allow-root prune",
+					"node_modules/bower/bin/bower --allow-root update"
+				].join(' && ')
 			},
 			version: {
 				command: ["git rev-parse --verify HEAD > app/etc/version-git.txt",
