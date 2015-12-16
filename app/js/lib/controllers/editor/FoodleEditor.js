@@ -174,12 +174,12 @@ define(function(require) {
 			this.updateFromUI();
 
 			return this.foodle.save(this.app.usercontext)
-				.then(function() {
+				.then(function(savedFoodle) {
 					that.app.pool.load();
 					// that.app.routeMainlisting();
 					that.app.setErrorMessage("Successfully saved Foodle", "success");
 
-					return that.saveDialog.open(that.foodle);
+					return that.saveDialog.open(savedFoodle);
 				})
 				.catch(function(err) {
 					that.app.setErrorMessage("Error saving foodle", "danger", err);

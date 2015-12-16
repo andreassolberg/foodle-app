@@ -95,7 +95,10 @@ define(function(require, exports, module) {
 
 			this.setupRoute(/^\/?$/, "routeMainlisting");
 			this.setupRoute(/^\/respond\/([a-zA-Z0-9_\-:.]+)?$/, "routeResponse");
-			this.setupRoute(/^\/create$/, "routeCreate");
+			this.setupRoute(/^\/create$/, "routeCreatePoll");
+			this.setupRoute(/^\/create-poll$/, "routeCreatePoll");
+			this.setupRoute(/^\/create-dates$/, "routeCreateDates");
+			this.setupRoute(/^\/create\/([a-zA-Z0-9_\-:.]+)?$/, "routeDuplicate");
 			this.setupRoute(/^\/edit\/([a-zA-Z0-9_\-:.]+)?$/, "routeEdit");
 
 
@@ -255,13 +258,31 @@ define(function(require, exports, module) {
 				});
 		},
 
-		"routeCreate": function() {
+		"routeCreatePoll": function() {
 			// console.error("route create");
 			// this.setHash('/');
-			var f = Foodle.getNew();
+			var f = Foodle.getNewGeneric();
 			this.bccontroller.hide();
-			this.editor.edit(f);
+			return this.editor.edit(f);
+		},
+		"routeCreateDates": function() {
+			// console.error("route create");
+			// this.setHash('/');
+			var f = Foodle.getNewDates();
+			this.bccontroller.hide();
+			return this.editor.edit(f);
+		},
 
+		"routeDuplicate": function(identifier) {
+			var that = this;
+			Foodle.getById(identifier)
+				.then(function(f) {
+					var dup = f.getDuplicate();
+					return that.editor.edit(dup)
+				})
+				.catch(function(err) {
+					that.setErrorMessage("Error opening Foodle editor", "danger", err);
+				});
 		},
 
 		"routeEdit": function(identifier) {

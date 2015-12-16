@@ -37,6 +37,16 @@ define(function(require, exports, module) {
 
 		},
 
+
+		"getDuplicate": function() {
+			var dup = new Foodle(this);
+			// dup.isStored = false;
+			delete dup.identifier;
+			dup.title += ' (copy)';
+			return dup;
+		},
+
+
 		"delete": function() {
 			return Foodle.api.deleteFoodle(this.identifier);
 		},

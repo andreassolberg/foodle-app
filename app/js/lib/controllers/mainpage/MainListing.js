@@ -70,7 +70,7 @@ define(function(require, exports, module) {
 			var f = Foodle.getNewDates();
 			this.app.editor.edit(f)
 				.then(function() {
-					that.app.setHash('/create');
+					that.app.setHash('/create-dates');
 				})
 				.catch(function(err) {
 					that.app.setErrorMessage("Error opening Foodle editor", "danger", err);
@@ -84,7 +84,7 @@ define(function(require, exports, module) {
 			var f = Foodle.getNewGeneric();
 			this.app.editor.edit(f)
 				.then(function() {
-					that.app.setHash('/create');
+					that.app.setHash('/create-poll');
 				})
 				.catch(function(err) {
 					that.app.setErrorMessage("Error opening Foodle editor", "danger", err);

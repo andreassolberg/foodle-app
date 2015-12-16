@@ -24,11 +24,17 @@ define(function(require, exports, module) {
 		},
 
 		"saveFoodle": function(obj) {
-			return this.feideconnect._customRequestAdv('POST', this.getURL('/api/foodles/'), null, null, obj);
+			return this.feideconnect._customRequestAdv('POST', this.getURL('/api/foodles/'), null, null, obj)
+				.then(function(data) {
+					return new Foodle(data);
+				});
 		},
 
 		"updateFoodle": function(id, obj) {
-			return this.feideconnect._customRequestAdv('PATCH', this.getURL('/api/foodles/' + id), null, null, obj);
+			return this.feideconnect._customRequestAdv('PATCH', this.getURL('/api/foodles/' + id), null, null, obj)
+				.then(function(data) {
+					return new Foodle(data);
+				});
 		},
 
 		"deleteFoodle": function(id) {
