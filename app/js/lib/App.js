@@ -218,7 +218,7 @@ define(function(require, exports, module) {
 				that.tmpHeader.render(that.el.find("#header"), view),
 				that.tmpFooter.render(that.el.find("#footer"), view)
 			]).then(function() {
-				// that.el.find("#navcontainer").append(that.languageselector.el);
+				that.el.find("#navcontainer").append(that.languageselector.el);
 				// that.el.find('#orgSelector').append(that.elOrgSelector);
 			});
 
