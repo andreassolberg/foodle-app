@@ -74,13 +74,21 @@ module.exports = function(grunt) {
 			"nn": "nb"
 		};
 
+
 		// Iterate over all languages...
 		for (var i = 0; i < cfg.languages.length; i++) {
 			lang = cfg.languages[i];
 			if (lang === mainlang) {
 				continue;
 			}
+			
+			if (cfg["language-aliases"].hasOwnProperty(lang)) {
+				continue;
+
+			}
+
 			langdict = grunt.file.readJSON("dictionaries/transifex/dictionary." + lang + ".json");
+			
 
 			for (key in maindict) {
 				if (!langdict.hasOwnProperty(key)) {
@@ -107,6 +115,18 @@ module.exports = function(grunt) {
 	shell.rjs.command = [];
 	for (var i = 0; i < cfg.languages.length; i++) {
 		lang = cfg.languages[i];
+
+		if (cfg["language-aliases"].hasOwnProperty(lang)) {
+			continue;
+		}
+
+				// var fromFile = "dictionaries/transifex/dictionary." + langAlias[lang] + ".json";
+				// var toFile = "dictionaries/transifex/dictionary." + lang + ".json";
+				// grunt.log.writeln('Copying alias files from ' + );
+				// grunt.file.copy(fromFile, toFile);
+
+
+
 		shell.rjs.command.push("node_modules/requirejs/bin/r.js -o build.js paths.dict=../../dictionaries/build/dictionary." + lang + ".json out=app/dist/app.min.js." + lang + "");
 	}
 	// We comment out this, because it overrides the langauge negotiation 
@@ -116,7 +136,8 @@ module.exports = function(grunt) {
 	for (var to in cfg["language-aliases"]) {
 		var tofile = "app/dist/app.min.js." + to;
 		var fromfile = "app/dist/app.min.js." + cfg["language-aliases"][to];
-		shell.rjs.command.push("cp " + fromfile + " " + tofile);
+		// shell.rjs.command.push("cp " + fromfile + " " + tofile);
+		grunt.file.copy(fromfile, tofile);
 	}
 
 	shell.rjs.command = shell.rjs.command.join(" && ");
