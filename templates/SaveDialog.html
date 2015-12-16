@@ -1,0 +1,26 @@
+<div class="modal fade" id="clientCreateModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{_.savesuccess}</h4>
+      </div>
+      <div class="modal-body">
+
+		<p>{_.saveinfo}</p>
+
+		<pre>
+			{url}
+		</pre>
+
+
+      </div>
+      <div class="modal-footer">
+		<p>
+			<a class="btn btn-danger actClose" href="#"><i class="fa fa-pencil"></i>  {_.editfoodle}</a> &nbsp;
+			<a class="btn btn-primary actGo" href="{url}"><i class="fa fa-chevron-right"></i> {_.continuefoodle}</a>
+		</p>
+      </div>
+    </div>
+  </div>
+</div>

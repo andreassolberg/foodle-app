@@ -14,6 +14,7 @@ define(function(require) {
 
 		Foodle = require('../../models/Foodle'),
 
+		SaveDialog = require('./components/SaveDialog'),
 		DateSelector = require('./components/DateSelector'),
 		DeadlineSelector = require('./components/DeadlineSelector'),
 		TimeZoneSelector = require('./components/TimeZoneSelector'),
@@ -35,6 +36,8 @@ define(function(require) {
 			this.usercontext = usercontext;
 
 			this.foodle = null;
+
+			this.saveDialog = new SaveDialog(this.app);
 
 			this._super();
 
@@ -107,6 +110,7 @@ define(function(require) {
 
 					return that.draw();
 
+
 				});
 
 
@@ -174,6 +178,8 @@ define(function(require) {
 					that.app.pool.load();
 					// that.app.routeMainlisting();
 					that.app.setErrorMessage("Successfully saved Foodle", "success");
+
+					return that.saveDialog.open(that.foodle);
 				})
 				.catch(function(err) {
 					that.app.setErrorMessage("Error saving foodle", "danger", err);

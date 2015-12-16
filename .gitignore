@@ -7,3 +7,4 @@ app/dist
 dictionaries/transifex
 .transifexrc
 app/etc/version-git.txt
+newrelic_agent.log

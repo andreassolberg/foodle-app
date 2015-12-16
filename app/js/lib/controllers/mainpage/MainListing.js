@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 		},
 
 		"updateList": function(foodles) {
-			console.error("FOO", this.app.usercontext);
+			// console.error("FOO", this.app.usercontext);
 			var _config = this.feideconnect.getConfig();
 			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
 			var items = this.pool.getView(this.app.usercontext);
@@ -56,9 +56,9 @@ define(function(require, exports, module) {
 				"items": items,
 				"profilephotoBase": profilephotoBase
 			};
-			console.error("FOO", this.app.usercontext);
+			// console.error("FOO", this.app.usercontext);
 
-			console.error("DRAW", JSON.stringify(view.items, undefined, 2));
+			// console.error("DRAW", JSON.stringify(view.items, undefined, 2));
 			this.tmpL.render(this.elList.empty(), view);
 		},
 
