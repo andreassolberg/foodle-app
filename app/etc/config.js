@@ -6,8 +6,8 @@
 	"onLoad": "active",
 
 	"cookiedomain": null,
-	"_languages": ["en", "fr", "nb", "nl", "it", "pt_BR", "sv", "zh_CN", "de", "da", "et", "ja", "pl", "sl", "cs", "nn", "es"],
-	"languages": ["en"],
+	"_languages": ["en", "nb", "fr", "nl", "it", "pt_BR", "sv", "zh_CN", "de", "da", "et", "ja", "pl", "sl", "cs", "nn", "es"],
+	"languages": ["en", "nb", "no", "de"],
 	"language-aliases": {
 		"no": "nb"
 	},
