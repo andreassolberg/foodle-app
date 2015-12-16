@@ -1,11 +1,14 @@
 "use strict";
 
+var nr = require('newrelic');
 var
 	fs = require('fs'),
 	express = require('express'),
 	cookieParser = require('cookie-parser'),
 
 	LangNeg = require('./lib/LangNeg');
+
+
 
 var app = express();
 var developer = false;

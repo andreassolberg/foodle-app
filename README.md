@@ -32,7 +32,6 @@ Thats all.
 
 
 
-
 # Publishing to PaaS / Jenkins
 
 See `deploy_jenkins.sh`
