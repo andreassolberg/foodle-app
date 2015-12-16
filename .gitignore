@@ -6,3 +6,4 @@ app/dist
 .DS_Store
 dictionaries/transifex
 .transifexrc
+app/etc/version-git.txt
