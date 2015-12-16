@@ -72,6 +72,10 @@ define(function(require, exports, module) {
 			return this.response.save()
 				.then(function() {
 					return that.responsecontroller.reloadResponses();
+				})
+				.catch(function(err){
+					console.error("Error", err);
+					that.app.setErrorMessage(err.name, "danger", err.message);
 				});
 		},
 
