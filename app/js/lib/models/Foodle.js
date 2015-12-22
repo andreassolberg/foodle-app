@@ -696,6 +696,7 @@ define(function(require, exports, module) {
 
 		];
 		nf.coldefDetectTRH();
+		nf.publicresponses = true;
 		return nf;
 	}
 
@@ -704,6 +705,7 @@ define(function(require, exports, module) {
 		nf.editor = 'dates';
 		nf.columns = [];
 		nf.coldefDetectTRH();
+		nf.publicresponses = true;
 		return nf;
 	}
 

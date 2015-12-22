@@ -150,7 +150,7 @@
 
 	<ul id="responsenav" class="nav nav-tabs" style="margin-left: -15px; margin-right: -15px">
 		<li data-tabtarget="tmyresponse"><a href="#">{_.myresponse}</a></li>
-		<li data-tabtarget="tallresponses"><a href="#">{_.allresponses}</a></li>
+		<li class="catAllResponses" data-tabtarget="tallresponses"><a href="#">{_.allresponses}</a></li>
 		<li data-tabtarget="tdiscussion"><a href="#">{_.discussion} <span id="discussionCount" style="display: none" class="badge badge-primary">_</span></a></li>
 	</ul>
 
@@ -193,7 +193,7 @@
 		{! ALL RESPONSES !}
 
 		{#coldef}
-		<table id="tallresponses" class="table table-responsive table-condensed table-striped table-bordered" style="display: none">
+		<table id="tallresponses" class="table table-responsive table-condensed table-striped table-bordered catAllResponses" style="display: none">
 			<thead>
 
 				<tr class="info">

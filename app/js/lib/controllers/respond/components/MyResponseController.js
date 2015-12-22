@@ -113,7 +113,7 @@ define(function(require, exports, module) {
 				"response": this.response.getView(this.summary),
 				"summary": this.summary
 			};
-			console.error("My response view", JSON.stringify(view.response.colresponses, undefined, 3));
+			// console.error("My response view", JSON.stringify(view.response.colresponses, undefined, 3));
 			// console.error(this.el);
 
 			this.el.children().detach();

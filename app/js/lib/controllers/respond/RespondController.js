@@ -162,8 +162,19 @@ define(function(require) {
 					// console.error("Foodle", this.foodle);
 					// console.error("allresponses", this.allresponses);
 					// console.error("myresponse, ", this.myresponse);
+
+			this.showOtherResponses(this.allresponses !== null);
+			// console.error("showOtherResponses", this.allresponses)
+
 			this.myresponsecontroller.setData(this.foodle, this.myresponse, this.summary);
 			this.allresponsescontroller.setData(this.foodle, this.allresponses, this.summary);
+		},
+
+		"showOtherResponses": function(showOther) {
+			// console.error("showOtherResponses", showOther);
+			if (!showOther) {
+				this.el.find('.catAllResponses').hide();
+			}
 		},
 
 		"draw": function(act) {

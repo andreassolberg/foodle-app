@@ -34,6 +34,11 @@ define(function(require, exports, module) {
 			this.foodle = foodle;
 			this.responses = responses;
 			this.summary = summary;
+
+			if (responses === null) {
+				return;
+			}
+
 			return this.draw();
 		},
 

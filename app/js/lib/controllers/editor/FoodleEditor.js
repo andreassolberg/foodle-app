@@ -215,6 +215,10 @@ define(function(require) {
 				// foodle.parent, 'publicresponses', '', 'defaults', '', 'admins'
 
 
+				this.foodle.publicresponses = this.el.find('#publicresponses').prop('checked');
+
+				// console.error("---- ----- ---- ----- ---- ----- ---- ----- ---- ----- updateFromUI", this.foodle.publicresponses);
+
 				this.foodle.timezone = this.timezoneselector.getData();
 
 				this.foodle.datetime = this.dateselector.getData(this.foodle.timezone);
@@ -222,7 +226,6 @@ define(function(require) {
 
 				this.foodle.location = this.locationinput.getData();
 				this.foodle.groups = this.groupselector.getGroups();
-
 
 				this.columneditor.updateFromUI();
 

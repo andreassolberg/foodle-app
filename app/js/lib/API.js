@@ -53,9 +53,13 @@ define(function(require, exports, module) {
 			return this.feideconnect._customRequest(this.getURL('/api/foodles/' + identifier + '/full'))
 				.then(function(data) {
 					var f = new Foodle(data.foodle);
+					var rs = null;
+					if (data.responses !== null) {
+						rs = new FoodleResponseSet(data.responses, f);
+					}
 					var x = {
 						foodle: f,
-						responses: new FoodleResponseSet(data.responses, f),
+						responses: rs,
 						myresponse: null,
 						summary: data.summary
 					};

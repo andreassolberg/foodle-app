@@ -27,6 +27,10 @@
   "address": "Address",
   "localadr": "Local reference: i.e. Meetingroom X-101",
 
+  "showresponses": "Show responses",
+  "allowresponses": "Allow responders to view each other responses",
+
+
   "videomeeting": "Video meeting",
   "ac": "Create an Adobe Connect Meeting room for this event",
 
