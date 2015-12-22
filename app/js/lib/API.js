@@ -59,6 +59,7 @@ define(function(require, exports, module) {
 						myresponse: null
 					};
 					if (data.myresponse !== null) {
+						data.myresponse.isStored = true;
 						x.myresponse = new FoodleResponse(data.myresponse, f);
 					}
 					return x;
