@@ -1,3 +1,6 @@
 <td class="responsebox nopadding center" data-colid="{idx}">
-	<input class="responseoption" type="checkbox" {?yes}checked="checked"{/yes} />
+	{?isLocked}
+		<div><i class="fa fa-lock"></i> Max reached</div>
+	{/isLocked}
+	<input class="responseoption" {?isLocked}disabled="disabled"{/isLocked} type="checkbox" {?yes}checked="checked"{/yes} />
 </td>

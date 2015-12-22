@@ -1,3 +1,14 @@
 <td class="responsebox nopadding center" data-colid="{idx}">
-	<input class="form-control responseoption" type="number" value="{value}" />
+
+
+
+	{#remaining}
+		{?isLocked}
+			<div><i class="fa fa-lock"></i> Max reached</div>
+		{:else}
+			<div>{.} remaining spaces</div>
+		{/isLocked}
+	{/remaining}
+	
+	<input class="form-control responseoption" min="0" {#remaining}max="{.}"{/remaining} type="number" value="{value}" />
 </td>

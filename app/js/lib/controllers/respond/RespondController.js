@@ -120,6 +120,7 @@ define(function(require) {
 					that.foodle = x.foodle;
 					that.allresponses = x.responses;
 					that.myresponse = x.myresponse;
+					that.summary = x.summary;
 					if (that.myresponse === null) {
 						var y = new FoodleResponse({}, that.foodle);
 						y.identifier = that.foodle.identifier;
@@ -161,8 +162,8 @@ define(function(require) {
 					// console.error("Foodle", this.foodle);
 					// console.error("allresponses", this.allresponses);
 					// console.error("myresponse, ", this.myresponse);
-			this.myresponsecontroller.setData(this.foodle, this.myresponse);
-			this.allresponsescontroller.setData(this.foodle, this.allresponses);
+			this.myresponsecontroller.setData(this.foodle, this.myresponse, this.summary);
+			this.allresponsescontroller.setData(this.foodle, this.allresponses, this.summary);
 		},
 
 		"draw": function(act) {

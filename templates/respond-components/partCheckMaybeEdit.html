@@ -1,13 +1,18 @@
 <td class="responsebox center nopadding nomargin" data-colid="{idx}" >
+  {?isLocked}
+    <div style="background: #333; color: #eee; padding: 4px">
+      <i class="fa fa-lock"></i> Max reached
+    </div>
+  {/isLocked}
   <div class="radio bg-yes radiobox">
     <label>
-      <input type="radio" name="opts-{idx}" id="opts-{idx}-yes" {?yes}checked="checked"{/yes} value="yes" checked>
+      <input {?isLocked}disabled="disabled"{/isLocked} type="radio" name="opts-{idx}" id="opts-{idx}-yes" {?yes}checked="checked"{/yes} value="yes" checked>
   		<i class="fa fa-check fa-fw"></i>
     </label>
   </div>
   <div class="radio bg-maybe radiobox">
     <label>
-      <input type="radio" name="opts-{idx}" id="opts-{idx}-maybe" {?maybe}checked="checked"{/maybe} value="maybe">
+      <input {?isLocked}disabled="disabled"{/isLocked} type="radio" name="opts-{idx}" id="opts-{idx}-maybe" {?maybe}checked="checked"{/maybe} value="maybe">
   		<i class="fa fa-question fa-fw"></i>
     </label>
   </div>

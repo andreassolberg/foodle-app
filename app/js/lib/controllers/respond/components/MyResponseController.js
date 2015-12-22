@@ -92,9 +92,10 @@ define(function(require, exports, module) {
 		},
 
 
-		"setData": function(foodle, response) {
+		"setData": function(foodle, response, summary) {
 			this.foodle = foodle;
 			this.response = response;
+			this.summary = summary;
 			return this.draw();
 		},
 
@@ -109,9 +110,10 @@ define(function(require, exports, module) {
 				"foodle": this.foodle.getView(),
 				"coldef": this.foodle.getViewColDefGeneric(),
 				"profilephotoBase": profilephotoBase,
-				"response": this.response.getView()
+				"response": this.response.getView(this.summary),
+				"summary": this.summary
 			};
-			console.error("My response view", JSON.stringify(view.coldef, undefined, 3));
+			console.error("My response view", JSON.stringify(view.response.colresponses, undefined, 3));
 			// console.error(this.el);
 
 			this.el.children().detach();

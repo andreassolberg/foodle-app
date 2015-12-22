@@ -30,9 +30,10 @@ define(function(require, exports, module) {
 			this.initLoad();
 		},
 
-		"setData": function(foodle, responses) {
+		"setData": function(foodle, responses, summary) {
 			this.foodle = foodle;
 			this.responses = responses;
+			this.summary = summary;
 			return this.draw();
 		},
 
@@ -56,7 +57,8 @@ define(function(require, exports, module) {
 				"_": this.app.dict.get(),
 				"coldef": this.foodle.getViewColDefGeneric(),
 				"profilephotoBase": profilephotoBase,
-				"responses": this.getResponsesView()
+				"responses": this.getResponsesView(),
+				"summary": this.summary
 			};
 			this.el.children().detach();
 			// console.error("About to render AllResponsesController");

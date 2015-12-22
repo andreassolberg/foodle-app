@@ -35,3 +35,33 @@
 	</td>
 </tr>
 {/responses}
+
+
+{#summary}
+<tr class="summaryRow">
+	
+	<td class="center">
+		Responses summary
+	</td>
+
+	{#col}
+		<td class="center" {?restrictions.isLocked}style="background-color: #fcc" {/restrictions.isLocked}>
+			{summary} 
+			{?restrictions.enabled}
+				{#restrictions.maxcheck}
+					 of {.}
+				{/restrictions.maxcheck}
+				{#restrictions.maxnum}
+					 of {.}
+				{/restrictions.maxnum}
+			{/restrictions.enabled}
+			
+		</td>
+	{/col}
+
+	<td class="center">
+		{total} responses
+	</td>
+
+</tr>
+{/summary}

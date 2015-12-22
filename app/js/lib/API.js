@@ -56,7 +56,8 @@ define(function(require, exports, module) {
 					var x = {
 						foodle: f,
 						responses: new FoodleResponseSet(data.responses, f),
-						myresponse: null
+						myresponse: null,
+						summary: data.summary
 					};
 					if (data.myresponse !== null) {
 						data.myresponse.isStored = true;

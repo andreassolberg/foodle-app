@@ -63,7 +63,7 @@ define(function(require, exports, module) {
 			return FoodleResponse.api.removeFoodleResponse(this.foodle.identifier);
 		},
 
-		"getColumnResponseItemView": function(colitemdef) {
+		"getColumnResponseItemView": function(colitemdef, summary) {
 
 			var view = {};
 			var resp = this.getResponseByIdx(colitemdef.idx);
@@ -72,6 +72,13 @@ define(function(require, exports, module) {
 			view.idx = colitemdef.idx;
 			view.empty = (resp === null);
 
+			if (summary) {
+				for(var i = 0; i < summary.col.length; i++) {
+					if (summary.col[i].idx === colitemdef.idx) {
+						view.summary = summary.col[i];
+					}
+				}
+			}
 
 			if (view.empty) {
 				view[type] = true;
@@ -85,11 +92,30 @@ define(function(require, exports, module) {
 					};
 				}
 			}
+
+
+			if (view.summary && view.summary.restrictions && view.summary.restrictions.isLocked) {
+
+				if (view.empty) {
+					view[type].isLocked = true;
+				} else if ((type === 'check' || type === 'checkmaybe' || type === 'radio') && resp.val !== 'yes') {
+					view[type].isLocked = true;
+				} else if (type === 'number') {
+					view[type].isLocked = true;
+				}
+
+			}
+			if (view.summary && view.summary.restrictions && view.summary.restrictions.hasOwnProperty("remaining")) {
+				var withoutMe = view.summary.restrictions.remaining + parseInt(resp.val, 10);
+				view[type].remaining = withoutMe;
+			}
+
+
 			return view;
 		},
 
 
-		"getColumnResponseView": function() {
+		"getColumnResponseView": function(summary) {
 
 			var responseData = [];
 
@@ -97,7 +123,7 @@ define(function(require, exports, module) {
 			var coldef = this.foodle.getViewColDefGeneric();
 			for (var i = 0; i < coldef.cols.length; i++) {
 
-				x = this.getColumnResponseItemView(coldef.cols[i]);
+				x = this.getColumnResponseItemView(coldef.cols[i], summary);
 
 
 
@@ -118,7 +144,7 @@ define(function(require, exports, module) {
 			return obj;
 		},
 
-		"getView": function() {
+		"getView": function(summary) {
 			var res = this._super();
 
 			var now = moment();
@@ -142,7 +168,7 @@ define(function(require, exports, module) {
 				res.deadlineFuture = res.deadline.isAfter(now);
 			}
 
-			res.colresponses = this.getColumnResponseView();
+			res.colresponses = this.getColumnResponseView(summary);
 			delete res.foodle;
 
 			return res;

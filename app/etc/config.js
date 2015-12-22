@@ -1,7 +1,7 @@
 {
 	"client_id": "610cbba7-3985-45ae-bc9f-0db0e36f71ad",
-	"redirect_uri": "http://foodle.paas.uninett.no/",
-	"_redirect_uri": "http://127.0.0.1:3001/",
+	"_redirect_uri": "http://foodle.paas.uninett.no/",
+	"redirect_uri": "http://127.0.0.1:3001/",
 	"debug": false,
 	"instance": "pilot",
 	"onLoad": "active",
