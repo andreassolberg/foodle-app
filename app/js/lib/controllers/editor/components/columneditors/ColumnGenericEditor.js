@@ -74,12 +74,10 @@
 			"actSubIncr": function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				console.error("BLOB");
 				var colid = $(e.currentTarget).attr('data-colid');
 				this.foodle.coldefSubIncr(colid);
-				console.error("Blub", colid);
 				this.updateFromUI();
-				console.error("BLOB", JSON.stringify(this.foodle.columns[0], undefined, 2));
+				// console.error("BLOB", JSON.stringify(this.foodle.columns[0], undefined, 2));
 				return this.draw();
 			},
 			"actSubDecr": function(e) {
@@ -96,7 +94,7 @@
 			"updateFromUI": function() {
 				var that = this;
 
-				console.error("update ui");
+				// console.error("update ui");
 
 				this.el.find(".coldefheader").each(function(i, item) {
 					var colid = $(item).attr("data-colid");
@@ -119,12 +117,13 @@
 				this.el.find(".inputMaxcheck").each(function(i, item) {
 					var colid = $(item).attr("data-colid");
 					var num = parseInt($(item).val(), 10);
-					console.error("Got maccheck for", colid, $(item).val(), num);
+					// console.error("Got maccheck for", colid, $(item).val(), num);
 					that.foodle.coldefSetRestrictionsMaxcheck(colid, num);
 				});
 				this.el.find(".inputMaxnum").each(function(i, item) {
 					var colid = $(item).attr("data-colid");
 					var num = parseInt($(item).val(), 10);
+					// console.error("Got num for", colid, $(item).val(), num);
 					that.foodle.coldefSetRestrictionsMaxnum(colid, num);
 				});
 
