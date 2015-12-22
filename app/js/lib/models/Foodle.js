@@ -387,7 +387,7 @@ define(function(require, exports, module) {
 			var candidates = {
 				"check": "Yes/No",
 				"checkmaybe": "Yes/Maybe/No",
-				"radio": "Radio (select one of)",
+				// "radio": "Radio (select one of)",
 				"number": "Number",
 				"text": "Text"
 			};
