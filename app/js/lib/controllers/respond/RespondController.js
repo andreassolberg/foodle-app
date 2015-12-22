@@ -35,7 +35,6 @@ define(function(require) {
 			this.timezoneselector = new TimeZoneSelector(this.app);
 
 			this.timezoneselector.on('tz', function(tz) {
-				// console.error("About to update draw");
 				that.draw();
 			});
 
@@ -62,10 +61,7 @@ define(function(require) {
 						that.app.routeMainlisting();
 					});
 
-			} else {
-			    console.error("You pressed CANCEL!");
 			}
-
 
 			var id = $(e.currentTarget).data('tabtarget');
 			this.setTab(id);
@@ -102,32 +98,6 @@ define(function(require) {
 			return Promise.resolve()
 				.then(this.proxy("_initLoaded"));
 		},
-
-		// "loadFoodleResponsesMy": function() {
-		// 	var that = this;
-		// 	return this.foodle.getMyResponse()
-		// 		.then(function(data) {
-		// 			if (data === null) {
-		// 				data = new FoodleResponse({}, that.foodle);
-		// 				data.identifier = that.foodle.identifier;
-		// 				data.userinfo = that.usercontext.getPublic();
-		// 			}
-		// 			that.myresponse = data;
-		// 		});
-		// },
-		// "loadFoodleResponsesAll": function() {
-		// 	var that = this;
-		// 	return this.foodle.getAllResponses()
-		// 		.then(function(data) {
-		// 			that.allresponses = data;
-		// 		});
-		// },
-		// "loadFoodleResponses": function() {
-		// 	var that = this;
-		// 	return Promise.all([
-		// 		this.loadFoodleResponsesMy(), this.loadFoodleResponsesAll()
-		// 	]);
-		// },
 
 		"reloadResponses": function() {
 			var that = this;
@@ -203,8 +173,6 @@ define(function(require) {
 			var timezone = this.timezoneselector.getData();
 			var foodleview = this.foodle.getView();
 
-			// console.error("DRAW FOODLE", this.foodle);
-
 			var view = {
 				"_": this.app.dict.get(),
 				"user": this.usercontext.user,
@@ -222,7 +190,6 @@ define(function(require) {
 			if (editor === 'dates') {
 				view.coldef = this.foodle.getViewColDefDates(timezone);
 			} else {
-				// console.error("XXXXX ABOUT tO GETVUIEW", this.foodle, this.foodle.getViewColDefGeneric());
 				view.coldef = this.foodle.getViewColDefGeneric();
 			}
 			// console.error("Responder view DATES", JSON.stringify(view.coldef.rows, undefined, 4));
