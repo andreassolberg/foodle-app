@@ -12,21 +12,67 @@
             <p><b>{_.dates}</b> </p>
             <div style="" class="dateSelector"></div>
 
-            <div style="margin-top: 2em">
-
-                <p style="margin:0px">Select response type:</p>
-                <select class="coldefdatatype">
-                    {#datatypes}
-                        <option value="{id}" {?selected}selected="selected"{/selected}>{title}</option>
-                    {/datatypes}
-                </select>
-            </div>
-
         </div>
 
 
         <div class="col-md-8 timeslotcontroller"></div>
 
     </div>
+
+
+    <div class="row" style="margin-top: 1em">
+
+        <div class="col-md-6">
+            <p style="margin:0px">Select response type:</p>
+            <select class="coldefdatatype">
+                {#datatypes}
+                    <option value="{id}" {?selected}selected="selected"{/selected}>{title}</option>
+                {/datatypes}
+            </select>
+        </div>
+
+
+        <div class="col-md-6">
+
+
+            <p style="margin:0px"> </p>
+
+
+            <div class="checkbox">
+                <label for="restr-{idx}">
+                    
+                    <input type="checkbox" id="restr-{idx}" data-colid="{idx}" 
+                        class="inputRestrictionsEnable"
+                        {?restrictions.enabled}checked="checked"{/restrictions.enabled} />
+                    &nbsp; Restrict number of yes responses for each timeslot</label>
+            </div>
+
+            {#restrictions}
+
+                {#maxcheck}
+                <div>
+                    <label for="restr-maxcheck-dates" style="font-size: 90%">
+                        <input type="number" id="restr-maxcheck-dates" 
+                            class="form-control inputMaxcheck" value="{maxcheck}" style="width: 4.5em" />
+                        &nbsp; Max. checked resp</label>
+                </div>
+                {/maxcheck}
+
+                {#maxnum}
+                <div>
+                    <label for="restr-maxnum-dates" style="font-size: 90%">
+                        <input type="number" id="restr-maxnum-dates"
+                            class="form-control inputMaxnum" value="{maxnum}" style="width: 5.5em" />
+                        &nbsp; Max. sum</label>
+                </div>
+                {/maxnum}
+
+            {/restrictions}
+
+
+
+        </div>
+    </div>
+
 
 </div>

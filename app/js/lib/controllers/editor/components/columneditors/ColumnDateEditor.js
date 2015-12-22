@@ -72,6 +72,9 @@
 
 				this.initalDates = [];
 
+				this.restrictions = null;
+
+				this.ebind("change", ".inputRestrictionsEnable", "inputRestrictionsEnable");
 
 				this.initLoad();
 			},
@@ -84,6 +87,11 @@
 					.catch(function(err) {
 						that.app.setErrorMessage("Error loading column editor", "danger", err);
 					});
+			},
+
+			"inputRestrictionsEnable": function(e) {
+				this.updateFromUI();
+				return this.draw();
 			},
 
 			"setup": function() {
@@ -118,6 +126,8 @@
 					// return item.clone().utc().hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
 				});
 
+				// this.restrictions = this.foodle.getCommonRestrictions();
+
 
 
 			},
@@ -136,7 +146,8 @@
 
 			"updateFromUI": function() {
 
-				
+				var that = this;
+
 				this.timeslotcontroller.updateFromUI();
 				this.updateDateValuesBasedUponTimezone();
 				var timestamps = this.timeslotcontroller.getTimestamps();
@@ -146,17 +157,40 @@
 				// console.log("slots", this.timeslotcontroller.slots);
 				// console.error("timestamps", timestamps);
 
+
+				var resenabled = this.el.find(".inputRestrictionsEnable").eq(0).prop("checked");
+				var num = this.el.find(".inputMaxcheck").val();
+				var xnum = parseInt(num, 10);
+				if (isNaN(xnum)) {
+					xnum = 1;
+				}
+
+
+				var restrictions = null;
+				if (resenabled) {
+					restrictions = {
+						"enabled": true,
+						"maxcheck": xnum
+					};
+				}
+
+	
 				var datatype = this.el.find('.coldefdatatype').val();
 
-				var columnitems = [];
+				var columnitems = [], colitem;
 
 				for (var i = 0; i < timestamps.length; i++) {
-					columnitems.push({
+					colitem = {
 						idx: timestamps[i].utc().format('YYYY-MM-DD HH:mm'),
 						coltype: "datetime",
 						datatype: datatype,
 						title: timestamps[i]
-					});
+					};
+					if (resenabled) {
+						colitem.restrictions = $.extend(true, {}, restrictions);
+					}
+
+					columnitems.push(colitem);
 				}
 
 				this.foodle.columns = columnitems;
@@ -168,7 +202,8 @@
 				var view = {
 					"_": this.app.dict.get(),
 					"foodle": this.foodle.getView(),
-					"datatypes": this.foodle.getViewCommonDatatypes()
+					"datatypes": this.foodle.getViewCommonDatatypes(),
+					"restrictions": this.foodle.getCommonRestrictions()
 				};
 				// console.error("column date editor VIEW", JSON.stringify(view, undefined, 3));
 				this.el.children().detach();

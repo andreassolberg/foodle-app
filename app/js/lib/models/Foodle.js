@@ -128,6 +128,16 @@ define(function(require, exports, module) {
 			item.datatype = datatype;
 		},
 
+		"getCommonRestrictions": function() {
+
+			var data = null;
+			var item = this.columns[0];
+			if (item.restrictions && item.restrictions.enabled) {
+				data = $.extend(true, {}, item.restrictions);
+			}
+			return data;
+		},
+
 		"coldefSetRestrictionsMaxcheck": function(colid, num) {
 			var item = this.coldefGetById(colid);
 			console.error("Setting coldefSetRestrictionsMaxcheck on", colid, num, item);
