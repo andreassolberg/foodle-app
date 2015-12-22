@@ -44,7 +44,6 @@ define(function(require, exports, module) {
 			this.ebind('click', '.actNewP', 'actNewP');
 			this.ebind('click', '.actNewD', 'actNewD');
 
-
 		},
 
 		"updateList": function(foodles) {

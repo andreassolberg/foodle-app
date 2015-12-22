@@ -35,7 +35,7 @@ define(function(require) {
 			this.timezoneselector = new TimeZoneSelector(this.app);
 
 			this.timezoneselector.on('tz', function(tz) {
-				console.error("About to update drwa");
+				// console.error("About to update draw");
 				that.draw();
 			});
 
@@ -103,31 +103,31 @@ define(function(require) {
 				.then(this.proxy("_initLoaded"));
 		},
 
-		"loadFoodleResponsesMy": function() {
-			var that = this;
-			return this.foodle.getMyResponse()
-				.then(function(data) {
-					if (data === null) {
-						data = new FoodleResponse({}, that.foodle);
-						data.identifier = that.foodle.identifier;
-						data.userinfo = that.usercontext.getPublic();
-					}
-					that.myresponse = data;
-				});
-		},
-		"loadFoodleResponsesAll": function() {
-			var that = this;
-			return this.foodle.getAllResponses()
-				.then(function(data) {
-					that.allresponses = data;
-				});
-		},
-		"loadFoodleResponses": function() {
-			var that = this;
-			return Promise.all([
-				this.loadFoodleResponsesMy(), this.loadFoodleResponsesAll()
-			]);
-		},
+		// "loadFoodleResponsesMy": function() {
+		// 	var that = this;
+		// 	return this.foodle.getMyResponse()
+		// 		.then(function(data) {
+		// 			if (data === null) {
+		// 				data = new FoodleResponse({}, that.foodle);
+		// 				data.identifier = that.foodle.identifier;
+		// 				data.userinfo = that.usercontext.getPublic();
+		// 			}
+		// 			that.myresponse = data;
+		// 		});
+		// },
+		// "loadFoodleResponsesAll": function() {
+		// 	var that = this;
+		// 	return this.foodle.getAllResponses()
+		// 		.then(function(data) {
+		// 			that.allresponses = data;
+		// 		});
+		// },
+		// "loadFoodleResponses": function() {
+		// 	var that = this;
+		// 	return Promise.all([
+		// 		this.loadFoodleResponsesMy(), this.loadFoodleResponsesAll()
+		// 	]);
+		// },
 
 		"reloadResponses": function() {
 			var that = this;
@@ -135,49 +135,75 @@ define(function(require) {
 				.then(function() {
 					return that.usercontext.onLoaded();
 				})
-				.then(this.proxy("loadFoodleResponses"))
+				.then(function() {
+					return that.loadFull(that.foodle.identifier);
+				})
 				.then(this.proxy("updateResponses"));
 		},
 
-		"open": function(foodle) {
+
+		"loadFull": function(identifier) {
 
 			var that = this;
-			var foodletitle = (foodle.title ? foodle.title : '(without name)');
-			this.foodle = foodle;
+			return Foodle.getFullById(identifier)
+				.then(function(x) {
+					that.foodle = x.foodle;
+					that.allresponses = x.responses;
+					that.myresponse = x.myresponse;
+					if (that.myresponse === null) {
+						var y = new FoodleResponse({}, that.foodle);
+						y.identifier = that.foodle.identifier;
+						y.userinfo = that.usercontext.getPublic();
+						that.myresponse = y;
+					}
+				});
+			
+		},
 
-			this.app.bccontroller.draw([
-				this.app.getBCItem(), {
-					"title": foodletitle,
-					"active": true
-				}
-			]);
+		"open": function(identifier) {
 
+			var that = this;
 			return this.onLoaded()
 				.then(function() {
 					return that.usercontext.onLoaded();
 				})
 				.then(function() {
+					return that.loadFull(identifier);
+				})
+				.then(function() {
+
+					var foodletitle = (that.foodle.title ? that.foodle.title : '(without name)');	
+					that.app.bccontroller.draw([
+						that.app.getBCItem(), {
+							"title": foodletitle,
+							"active": true
+						}
+					]);
 					that.timezoneselector.setTZ(that.usercontext.timezone);
 				})
-				.then(this.proxy("loadFoodleResponses"))
-				.then(function() {
-					that.updateResponses();
-					return that.draw();
-				});
+				.then(this.proxy("draw"))
+				.then(this.proxy("updateResponses"));
+
 		},
 
 		"updateResponses": function() {
 			// console.error("MyResponseController", this.myresponsecontroller);
+					// console.error("Foodle", this.foodle);
+					// console.error("allresponses", this.allresponses);
+					// console.error("myresponse, ", this.myresponse);
 			this.myresponsecontroller.setData(this.foodle, this.myresponse);
 			this.allresponsescontroller.setData(this.foodle, this.allresponses);
 		},
 
 		"draw": function(act) {
+
 			var that = this;
 			var _config = that.feideconnect.getConfig();
 			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
 			var timezone = this.timezoneselector.getData();
 			var foodleview = this.foodle.getView();
+
+			// console.error("DRAW FOODLE", this.foodle);
 
 			var view = {
 				"_": this.app.dict.get(),
@@ -196,6 +222,7 @@ define(function(require) {
 			if (editor === 'dates') {
 				view.coldef = this.foodle.getViewColDefDates(timezone);
 			} else {
+				// console.error("XXXXX ABOUT tO GETVUIEW", this.foodle, this.foodle.getViewColDefGeneric());
 				view.coldef = this.foodle.getViewColDefGeneric();
 			}
 			// console.error("Responder view DATES", JSON.stringify(view.coldef.rows, undefined, 4));

@@ -247,14 +247,11 @@ define(function(require, exports, module) {
 
 		"routeResponse": function(identifier) {
 			var that = this;
-			Foodle.getById(identifier)
-				.then(function(f) {
-					return that.response.open(f)
-				})
+			this.response.open(identifier)
 				.catch(function(err) {
 
 					that.setErrorMessage("Error opening Foodle response page", "danger", err);
-					console.error(err.stack);
+					console.error(err.stack || null);
 				});
 		},
 

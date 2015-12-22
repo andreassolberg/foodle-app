@@ -74,7 +74,7 @@ define(function(require, exports, module) {
 					return that.responsecontroller.reloadResponses();
 				})
 				.catch(function(err){
-					console.error("Error", err);
+					console.error("Error", JSON.stringify(err, undefined, 2));
 					that.app.setErrorMessage(err.name, "danger", err.message);
 				});
 		},
@@ -106,11 +106,12 @@ define(function(require, exports, module) {
 			var view = {
 				"_": this.app.dict.get(),
 				"user": this.app.usercontext.user,
+				"foodle": this.foodle.getView(),
 				"coldef": this.foodle.getViewColDefGeneric(),
 				"profilephotoBase": profilephotoBase,
 				"response": this.response.getView()
 			};
-			// console.error("My response view", JSON.stringify(view.response, undefined, 3));
+			console.error("My response view", JSON.stringify(view.coldef, undefined, 3));
 			// console.error(this.el);
 
 			this.el.children().detach();

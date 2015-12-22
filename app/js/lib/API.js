@@ -5,7 +5,8 @@ define(function(require, exports, module) {
 		Class = require('bower/feideconnectjs/src/class'),
 
 		Foodle = require('./models/Foodle'),
-		FoodleResponse = require('./models/FoodleResponse');
+		FoodleResponse = require('./models/FoodleResponse'),
+		FoodleResponseSet  = require('./models/FoodleResponseSet');
 
 
 
@@ -48,6 +49,21 @@ define(function(require, exports, module) {
 				});
 		},
 
+		"getFoodleFullById": function(identifier) {
+			return this.feideconnect._customRequest(this.getURL('/api/foodles/' + identifier + '/full'))
+				.then(function(data) {
+					var f = new Foodle(data.foodle);
+					var x = {
+						foodle: f,
+						responses: new FoodleResponseSet(data.responses, f),
+						myresponse: null
+					};
+					if (data.myresponse !== null) {
+						x.myresponse = new FoodleResponse(data.myresponse, f);
+					}
+					return x;
+				});
+		},
 
 		"saveFoodleResponse": function(identifier, obj) {
 			return this.feideconnect._customRequestAdv('POST', this.getURL('/api/foodles/' + identifier + '/myresponse'), null, null, obj);

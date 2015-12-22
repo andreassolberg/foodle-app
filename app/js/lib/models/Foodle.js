@@ -311,6 +311,7 @@ define(function(require, exports, module) {
 			}
 
 			res.isStored = !!this.identifier;
+			res.responseAvailable = (this.lock === null && !this.isLocked);
 
 			return res;
 		},
@@ -476,6 +477,9 @@ define(function(require, exports, module) {
 				view.rows[0].push(x);
 
 			}
+
+			view.fullcolspan1 = view.cols.length;
+			view.fullcolspan2 = view.cols.length + 1;
 			return view;
 		},
 
@@ -695,6 +699,10 @@ define(function(require, exports, module) {
 
 	Foodle.getById = function(id) {
 		return Foodle.api.getFoodleById(id);
+	}
+
+	Foodle.getFullById = function(id) {
+		return Foodle.api.getFoodleFullById(id);
 	}
 
 	return Foodle;

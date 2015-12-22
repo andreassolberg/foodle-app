@@ -38,8 +38,8 @@ define(function(require, exports, module) {
 
 		"getResponsesView": function() {
 			var data = [];
-			for(var i = 0; i < this.responses.length; i++) {
-				var v = this.responses[i].getView();
+			for(var i = 0; i < this.responses.items.length; i++) {
+				var v = this.responses.items[i].getView();
 				// console.log(JSON.stringify(v, undefined, 2));
 				data.push(v);
 			}
