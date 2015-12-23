@@ -306,6 +306,9 @@ define(function(require, exports, module) {
 			if (usercontext) {
 				res.grouplist = usercontext.getGroupSelection(this.groups);
 			}
+			if (usercontext) {
+				res.adminlist = usercontext.getGroupSelection(this.admins);
+			}
 
 
 			if (this.deadline) {

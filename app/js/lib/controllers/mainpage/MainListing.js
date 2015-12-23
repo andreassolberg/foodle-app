@@ -50,7 +50,7 @@ define(function(require, exports, module) {
 			// console.error("FOO", this.app.usercontext);
 			var _config = this.feideconnect.getConfig();
 			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
-			var items = this.pool.getView(this.app.usercontext);
+			var items = this.pool.getView();
 			var view = {
 				"items": items,
 				"profilephotoBase": profilephotoBase
