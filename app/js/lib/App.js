@@ -53,8 +53,9 @@ define(function(require, exports, module) {
 			this.config = JSON.parse(rawconfig);
 
 			this.feideconnect = new FeideConnect(this.config);
-			this.pool = new Pool(this.feideconnect);
 			this.usercontext = new UserContext(this.feideconnect);
+			this.pool = new Pool(this.feideconnect, this);
+			
 			this.api = new API(this.feideconnect, this.config);
 
 			Foodle.api = this.api;

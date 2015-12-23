@@ -13,23 +13,35 @@ define(function(require, exports, module) {
 
 
 	var Pool = Controller.extend({
-		"init": function(feideconnect) {
+		"init": function(feideconnect, app) {
 			var that = this;
 			this.feideconnect = feideconnect;
+			this.app = app;
 			this.foodles = {};
 
 			this._super(undefined, true);
 		},
 
 		"initLoad": function() {
-			return this.load()
+			var that = this;
+			return this.app.usercontext.onLoaded()
+				.then(function() {
+					return that.load();
+				})
 				.then(this.proxy("_initLoaded"));
 		},
 
 		"load": function() {
 			var that = this;
 			that.foodles = {};
-			return that.feideconnect._customRequest('https://foodle.gk.feideconnect.no/api/foodles/')
+
+			// console.error("About to load groups");
+
+			var obj = {
+				"groups": this.app.usercontext.getGroupIdentifiers()
+			};
+			// console.error("About to load groups", obj);
+			return this.feideconnect._customRequestAdv('POST', 'https://foodle.gk.feideconnect.no/api/foodles/listing/', null, null, obj)
 				.then(function(foodles) {
 					var i;
 					for (i = 0; i < foodles.length; i++) {
@@ -37,6 +49,15 @@ define(function(require, exports, module) {
 					}
 					that.emit('listChange');
 				});
+
+			// return that.feideconnect._customRequest('https://foodle.gk.feideconnect.no/api/foodles/listing/')
+			// 	.then(function(foodles) {
+			// 		var i;
+			// 		for (i = 0; i < foodles.length; i++) {
+			// 			that.foodles[foodles[i].identifier] = new Foodle(foodles[i]);
+			// 		}
+			// 		that.emit('listChange');
+			// 	});
 		},
 
 		"getSeeAlso": function(foodle) {
@@ -66,13 +87,13 @@ define(function(require, exports, module) {
 
 		},
 
-		"getView": function(usercontext) {
+		"getView": function() {
 
 			var items = [];
 			for(var key in this.foodles) {
 				var x = this.foodles[key];
 				x.id = key;
-				items.push(x.getView(usercontext));
+				items.push(x.getView(this.app.usercontext));
 			}
 			return items.reverse();
 		},

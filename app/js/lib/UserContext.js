@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 
 
 			this.timezone = 'Europe/Amsterdam';
-			this.groups = {};
+			this.groups = [];
 			this._super(undefined, true);
 		},
 
@@ -69,6 +69,13 @@ define(function(require, exports, module) {
 			});
 		},
 
+		"getGroupIdentifiers": function() {
+			var data = [];
+			for(var i = 0; i < this.groups.length; i++) {
+				data.push(this.groups[i].id);
+			}
+			return data;
+		},
 
 		"getPublic": function() {
 
