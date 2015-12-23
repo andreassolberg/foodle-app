@@ -188,9 +188,6 @@ define(function(require) {
 			var foodleview = this.foodle.getView();
 
 
-			console.error("MARKDOWN", markdown);
-
-
 			var foodledescr = markdown.toHTML(this.foodle.descr);
 
 			var view = {
