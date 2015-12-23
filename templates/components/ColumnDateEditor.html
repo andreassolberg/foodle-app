@@ -39,25 +39,22 @@
 
 
             <div class="checkbox">
-                <label for="restr-{idx}">
+                <label for="restr-dates-enable">
                     
-                    <input type="checkbox" id="restr-{idx}" data-colid="{idx}" 
+                    <input type="checkbox" id="restr-dates-enable" 
                         class="inputRestrictionsEnable"
                         {?restrictions.enabled}checked="checked"{/restrictions.enabled} />
                     &nbsp; Restrict number of yes responses for each timeslot</label>
             </div>
 
-            {#restrictions}
+            <div id="restr-dates-enable-maxnum-container">
+                <label for="restr-maxcheck-dates" style="font-size: 90%">
+                    <input type="number" id="restr-maxcheck-dates" 
+                        class="form-control inputMaxcheck" value="{restrictions.maxcheck}" style="width: 4.5em" />
+                    &nbsp; Max. checked resp</label>
+            </div>
 
-                {#maxcheck}
-                <div>
-                    <label for="restr-maxcheck-dates" style="font-size: 90%">
-                        <input type="number" id="restr-maxcheck-dates" 
-                            class="form-control inputMaxcheck" value="{maxcheck}" style="width: 4.5em" />
-                        &nbsp; Max. checked resp</label>
-                </div>
-                {/maxcheck}
-
+<!--
                 {#maxnum}
                 <div>
                     <label for="restr-maxnum-dates" style="font-size: 90%">
@@ -66,8 +63,8 @@
                         &nbsp; Max. sum</label>
                 </div>
                 {/maxnum}
-
-            {/restrictions}
+-->
+   
 
 
 

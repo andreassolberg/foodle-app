@@ -88,15 +88,20 @@ define(function(require, exports, module) {
 		},
 
 		"getView": function() {
+			return this.getViewFrom(this.foodles);
+		},
+
+		"getViewFrom": function(foodles) {
 
 			var items = [];
-			for(var key in this.foodles) {
-				var x = this.foodles[key];
+			for(var key in foodles) {
+				var x = foodles[key];
 				x.id = key;
 				items.push(x.getView(this.app.usercontext));
 			}
 			return items.reverse();
 		},
+
 
 
 		// "setAPIGK": function(apigk) {

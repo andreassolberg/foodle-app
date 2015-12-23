@@ -74,7 +74,7 @@
 
 				this.restrictions = null;
 
-				this.ebind("change", ".inputRestrictionsEnable", "inputRestrictionsEnable");
+				this.ebind("change", ".inputRestrictionsEnable", "updateDynamics");
 
 				this.initLoad();
 			},
@@ -89,9 +89,16 @@
 					});
 			},
 
-			"inputRestrictionsEnable": function(e) {
-				this.updateFromUI();
-				return this.draw();
+
+			"updateDynamics": function() {
+				var resenabled = this.el.find(".inputRestrictionsEnable").eq(0).prop("checked");
+				console.error("UPDATE DYNAMICS", resenabled);
+				if (resenabled) {
+					this.el.find('#restr-dates-enable-maxnum-container').show();
+				} else {
+					this.el.find('#restr-dates-enable-maxnum-container').hide();
+				}
+				
 			},
 
 			"setup": function() {
@@ -126,7 +133,7 @@
 					// return item.clone().utc().hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
 				});
 
-				// this.restrictions = this.foodle.getCommonRestrictions();
+				this.restrictions = this.foodle.getCommonRestrictions();
 
 
 
@@ -164,11 +171,9 @@
 				if (isNaN(xnum)) {
 					xnum = 1;
 				}
-
-
-				var restrictions = null;
+				this.restrictions = null;
 				if (resenabled) {
-					restrictions = {
+					this.restrictions = {
 						"enabled": true,
 						"maxcheck": xnum
 					};
@@ -187,7 +192,7 @@
 						title: timestamps[i]
 					};
 					if (resenabled) {
-						colitem.restrictions = $.extend(true, {}, restrictions);
+						colitem.restrictions = $.extend(true, {}, this.restrictions);
 					}
 
 					columnitems.push(colitem);
@@ -203,8 +208,9 @@
 					"_": this.app.dict.get(),
 					"foodle": this.foodle.getView(),
 					"datatypes": this.foodle.getViewCommonDatatypes(),
-					"restrictions": this.foodle.getCommonRestrictions()
+					"restrictions": this.restrictions
 				};
+				console.error("DRAW", this.restrictions);
 				// console.error("column date editor VIEW", JSON.stringify(view, undefined, 3));
 				this.el.children().detach();
 				return this.template.render(this.el, view)
@@ -212,6 +218,7 @@
 
 						that.el.find('.timeslotcontroller').append(that.timeslotcontroller.el)
 						that.timeslotcontroller.setDates([], that.foodle.timezone);
+						that.updateDynamics();
 					})
 					.then(this.proxy("setup"))
 					.catch(function(err) {

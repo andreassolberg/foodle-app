@@ -81,7 +81,7 @@ define(function(require, exports, module) {
 			return new Promise(function(resolve, reject) {
 
 				var zones = moment.tz.names();
-				var s = $('<select id="timezoneselect" ></select').appendTo(that.el);
+				var s = $('<select id="timezoneselect" ></select>').appendTo(that.el);
 
 				for (var i = 0; i < zones.length; i++) {
 					s.append('<option value="' + zones[i] + '">' + zones[i] + '</option>');

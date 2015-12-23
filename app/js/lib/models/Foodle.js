@@ -37,6 +37,15 @@ define(function(require, exports, module) {
 
 		},
 
+		"searchMatch": function(term) {
+			if (this.title.toLowerCase().indexOf(term) !== -1){
+				return true;
+			}
+			if (this.descr.toLowerCase().indexOf(term) !== -1){
+				return true;
+			}
+			return false;
+		},
 
 		"getDuplicate": function() {
 			var dup = new Foodle(this);

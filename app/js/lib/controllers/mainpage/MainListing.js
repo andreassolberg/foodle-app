@@ -8,9 +8,11 @@ define(function(require, exports, module) {
 		TemplateEngine = require('bower/feideconnectjs/src/TemplateEngine'),
 		utils = require('bower/feideconnectjs/src/utils'),
 
+		Waiter = require('bower/feideconnectjs/src/controllers/Waiter'),
 		Foodle = require('../../models/Foodle'),
 
 		$ = require('jquery');
+
 
 	var
 		template = require('text!templates/MainListing.html'),
@@ -30,12 +32,19 @@ define(function(require, exports, module) {
 			this.tmp = new TemplateEngine(template, this.app.dict);
 			this.tmpL = new TemplateEngine(templateList, this.app.dict);
 
+
 			this.pool = pool;
 			this.pool.on('listChange', function(list) {
-				that.updateList(list);
+				that.updateList(that.pool.foodles);
 			});
 
 			this._super();
+
+			this.searchTerm = '';
+			this.searchWaiter = new Waiter(function(x) {
+				that.doSearch(x);
+			});
+			this.ebind('propertychange change click keyup input paste', "#foodlesearch", "searchInput");
 
 			this.dict = new Dictionary();
 
@@ -46,11 +55,45 @@ define(function(require, exports, module) {
 
 		},
 
+		"searchInput": function(e) {
+			var st = utils.normalizeST($("#foodlesearch").val());
+			if (st !== this.searchTerm) {
+				this.searchTerm = st;
+				if (st === null) {
+					this.searchWaiter.ping();
+				} else if (utils.stok(st)) {
+					this.searchWaiter.ping();
+				}
+			}
+
+		},
+
+		"doSearch": function() {
+
+			var term = this.el.find('#foodlesearch').val();
+
+			if (term === '') {
+				return this.updateList(this.pool.foodles);
+			}
+
+			var items = this.pool.foodles;
+			var temp = {};
+			for(var key in items) {
+
+				if (!items[key].searchMatch(term.toLowerCase())) {
+					continue;
+				}
+				temp[key] = items[key];
+			}
+			this.updateList(temp);
+
+		},
+
 		"updateList": function(foodles) {
 			// console.error("FOO", this.app.usercontext);
 			var _config = this.feideconnect.getConfig();
 			var profilephotoBase = _config.apis.core + '/userinfo/v1/user/media/';
-			var items = this.pool.getView();
+			var items = this.pool.getViewFrom(foodles);
 			var view = {
 				"items": items,
 				"profilephotoBase": profilephotoBase
@@ -118,6 +161,22 @@ define(function(require, exports, module) {
 					if (act) {
 						that.activate();
 					}
+				})
+				.then(function() {
+					setTimeout(function() {
+						that.el.find('#foodlesearch').focus();
+						// console.error("FOCUS");
+					}, 100);
+					// that.search = that.el.find('#foodlesearch').selectize({
+					// 	onChange: function(value) {
+					// 		console.log("value", value);
+					// 	}
+					// });
+					// setTimeout(function() {
+					// 	that.el.find('#foodlesearch').focus()
+
+					// }, 1000);
+
 				});
 
 
