@@ -32,6 +32,7 @@ define(function(require, exports, module) {
 				.then(this.proxy("_initLoaded"));
 		},
 
+
 		"getGroupSelection": function(groupselection) {
 			if (!groupselection) { return null; }
 			var data = [];
@@ -75,6 +76,25 @@ define(function(require, exports, module) {
 				data.push(this.groups[i].id);
 			}
 			return data;
+		},
+
+
+		"hasGroup": function(groupid) {
+			for(var i = 0; i < this.groups.length; i++) {
+				if (groupid === this.groups[i].id) {
+					return true;
+				}
+			}
+			return false;
+		},
+
+		"hasOneOfGroups": function(groups) {
+			for(var i = 0; i < groups.length; i++) {
+				if (this.hasGroup(groups[i])) {
+					return true;
+				}
+			}
+			return false;
 		},
 
 		"getPublic": function() {

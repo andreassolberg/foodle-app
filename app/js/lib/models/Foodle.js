@@ -59,6 +59,11 @@ define(function(require, exports, module) {
 		},
 
 		"isAdmin": function(usercontext) {
+			if (this.admins) {
+				if (usercontext.hasOneOfGroups(this.admins) ) {
+					return true;
+				}
+			}
 			return (usercontext.user.userid === this.owner);
 		},
 
