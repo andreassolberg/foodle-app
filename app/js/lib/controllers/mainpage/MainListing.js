@@ -72,7 +72,8 @@ define(function(require, exports, module) {
 					that.app.setHash('/create-dates');
 				})
 				.catch(function(err) {
-					that.app.setErrorMessage("Error opening Foodle editor", "danger", err);
+					that.app.setErrorMessage("Error opening Foodle editor (create new date foodle)", "danger", err);
+					console.error(err.stack);
 				});
 		},
 		"actNewP": function(e) {
@@ -86,7 +87,8 @@ define(function(require, exports, module) {
 					that.app.setHash('/create-poll');
 				})
 				.catch(function(err) {
-					that.app.setErrorMessage("Error opening Foodle editor", "danger", err);
+					that.app.setErrorMessage("Error opening Foodle editor (create new poll foodle)", "danger", err);
+					console.error(err.stack);
 				});
 		},
 

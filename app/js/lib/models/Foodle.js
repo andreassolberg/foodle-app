@@ -132,7 +132,7 @@ define(function(require, exports, module) {
 
 			var data = null;
 			var item = this.columns[0];
-			if (item.restrictions && item.restrictions.enabled) {
+			if (item && item.restrictions && item.restrictions.enabled) {
 				data = $.extend(true, {}, item.restrictions);
 			}
 			return data;
