@@ -669,7 +669,7 @@ define(function(require, exports, module) {
 				"idx": "attend",
 				"title": "Jeg deltar",
 				"coltype": "text",
-				"datatype": "checkmaybe"
+				"datatype": "check"
 			}
 
 			// {

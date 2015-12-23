@@ -23,7 +23,7 @@ requirejs.config({
 		"bootstrap-datepicker": "../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker",
 		"selectize": "../bower_components/selectize/dist/js/standalone/selectize",
 		"google-maps": "../bower_components/google-maps/lib/Google",
-		
+		"markdown": "../bower_components/markdown/lib/markdown"
 	},
 	shim: {
 		// "jquery": ["selectize"],
@@ -36,7 +36,10 @@ requirejs.config({
 		"bootstrap": {
 			"deps": ["jquery"]
 		},
-		"selectize": ["jquery"]
+		"selectize": ["jquery"],
+		"markdown": {
+			"exports": "markdown"
+		}
 		// "typeahead": ["jquery"]
 	}
 });

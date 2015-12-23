@@ -14,6 +14,8 @@ define(function(require) {
 		Foodle = require('../../models/Foodle'),
 		FoodleResponse = require('../../models/FoodleResponse'),
 		Waiter = require('../../Waiter'),
+
+		markdown = require('markdown'),
 		$ = require('jquery');
 
 	var responseTemplate = require('text!templates/FoodleResponse.html');
@@ -185,6 +187,12 @@ define(function(require) {
 			var timezone = this.timezoneselector.getData();
 			var foodleview = this.foodle.getView();
 
+
+			console.error("MARKDOWN", markdown);
+
+
+			var foodledescr = markdown.toHTML(this.foodle.descr);
+
 			var view = {
 				"_": this.app.dict.get(),
 				"user": this.usercontext.user,
@@ -194,7 +202,8 @@ define(function(require) {
 				"seealso": this.pool.getSeeAlso(this.foodle),
 				"profilephotoBase": profilephotoBase,
 				"isAdmin": this.foodle.isAdmin(this.usercontext),
-				"enableTZ": this.foodle.enableTZview()
+				"enableTZ": this.foodle.enableTZview(),
+				"foodledescr": foodledescr
 			};
 			var editor = this.foodle.detectEditor();
 			
