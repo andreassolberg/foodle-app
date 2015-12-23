@@ -29,7 +29,10 @@ define(function(require, exports, module) {
 
 		"initLoad": function() {
 			var that = this;
-			return this.loadGroups()
+			return this.app.usercontext.onLoaded()
+				.then(function() {
+					that.groups = that.app.usercontext.groups;
+				})
 				.then(this.proxy("draw"))
 				.then(this.proxy("_initLoaded"))
 				.catch(function(err) {
@@ -58,14 +61,15 @@ define(function(require, exports, module) {
 			return groups;
 		},
 
-		"loadGroups": function() {
-			var that = this;
-			return this.app.feideconnect.vootGroupsList()
-				.then(function(groups) {
-					// console.error("Groups data", groups);
-					that.groups = groups;
-				});
-		},
+		// "loadGroups": function() {
+		// 	// TODO STart using usercontext
+		// 	var that = this;
+		// 	return this.app.feideconnect.vootGroupsList()
+		// 		.then(function(groups) {
+		// 			// console.error("Groups data", groups);
+		// 			that.groups = groups;
+		// 		});
+		// },
 
 		"updateView": function(foodle) {
 			var that = this;
