@@ -44,9 +44,19 @@ define(function(require) {
 
 			this.ebind('click', '.actDelete', 'actDelete');
 			this.ebind("click", "ul#responsenav > li", "actTab");
+			this.ebind("click", ".maysort", "actSort");
 
 			this.initLoad();
 		},
+
+		"actSort": function(e) {
+
+			e.preventDefault();
+			e.stopPropagation();
+			var sortBy = $(e.currentTarget).data("sortby");
+			this.allresponsescontroller.sort(sortBy);
+		},
+		
 
 
 		"actDelete": function(e) {

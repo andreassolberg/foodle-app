@@ -47,6 +47,14 @@ define(function(require, exports, module) {
 		},
 
 
+		"getValue": function(idx) {
+			var x = this.getResponseByIdx(idx);
+			if (x.hasOwnProperty("val")) {
+				return x.val;
+			}
+			return null;
+		},
+
 		"save": function() {
 			if (!this.foodle || !this.foodle.identifier) {
 				throw new Error("cannot save foodleresponse with reference to a specific Foodle");
@@ -81,7 +89,7 @@ define(function(require, exports, module) {
 			}
 
 			if (view.empty) {
-				view[type] = true;
+				view[type] = {};
 			} else {
 				if (type === 'check' || type === 'checkmaybe' || type === 'radio') {
 					view[type] = {};

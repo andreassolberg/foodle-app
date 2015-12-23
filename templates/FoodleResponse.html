@@ -201,7 +201,7 @@
 				<tr class="info">
 					<th rowspan="2" style="vertical-align: bottom; width: 30%">Deltakere</th>
 					{#rows[0]}
-						<th colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
+						<th colspan="{colspan}" data-sortby="{idx}" class="maysort" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
 							{title}
 						</th>
 					{/rows[0]}
@@ -209,7 +209,7 @@
 				</tr>
 				<tr class="info">
 					{#rows[1]}
-						<th colspan="{colspan}" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
+						<th colspan="{colspan}" data-sortby="{idx}" class="maysort" rowspan="{rowspan}" style="vertical-align: middle; text-align: center">
 							{title}
 						</th>
 					{/rows[1]}

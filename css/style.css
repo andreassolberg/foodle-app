@@ -21,6 +21,11 @@ body.stateLoggedOut .showOnLoggedOut { display: block !important; }
 }
 
 
+.maysort {
+	cursor: s-resize;
+}
+
+
 
 .selectize-dropdown-content {
 	max-height: 500px !important;

@@ -30,8 +30,6 @@
 			{/foodle.lock.locked}
 		</td>
 
-		
-
 
 	{:else}
 
@@ -50,14 +48,16 @@
 				{>"partTextEdit"/}
 			{/text}
 		{/colresponses}
+
 		<td class="center">
 			{?isStored}
-				<a href="#" class="btn btn-primary btn-sm submitResponse"><i class="fa fa-pencil"></i> Update my response</a>&nbsp;
-				<a href="#" class="btn btn-danger btn-sm actDeleteResponse"><i class="fa fa-trash"></i> Delete response</a>
+				<a href="#" class="btn btn-primary btn-sm submitResponse" style="margin: 3px"><i class="fa fa-pencil"></i> Update my response</a>&nbsp;
+				<a href="#" class="btn btn-danger btn-sm actDeleteResponse" style="margin: 3px"><i class="fa fa-trash"></i> Delete response</a>
 			{:else}
 			<input class="btn btn-sm submitResponse" type="submit" value="Submit response" />
 			{/isStored}
 		</td>
+
 
 	{/foodle.responseAvailable}
 

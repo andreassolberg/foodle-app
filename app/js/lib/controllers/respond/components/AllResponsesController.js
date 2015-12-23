@@ -15,6 +15,25 @@ define(function(require, exports, module) {
 
 
 
+	var cmp = function(a, b) {
+
+		// console.error("COmparing", a, b);
+		if (a > b) {return -1;}
+		if (a < b) {return +1;}
+		return 0;
+	}
+	var sortByIdx = function(idx) {
+
+		return function(a, b) {
+
+			var x = a.getValue(idx);
+			var y = b.getValue(idx);
+
+			return cmp(x, y);
+
+		};	
+	}
+
 
 	var AllResponsesController = Controller.extend({
 		"init": function(app) {
@@ -27,7 +46,18 @@ define(function(require, exports, module) {
 			
 			var el = $('<tbody></tbody>')
 			this._super(el);
+
+
+
 			this.initLoad();
+		},
+
+
+		"sort": function(idx) {
+			this.responses.items.sort(sortByIdx(idx));
+
+			// console.error("this.responses.items", this.responses.items);
+			return this.draw();
 		},
 
 		"setData": function(foodle, responses, summary) {
