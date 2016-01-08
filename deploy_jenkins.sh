@@ -6,10 +6,10 @@ set -e # halt script on error
 
 
 app=foodleapp
-hostnameapp=foodle
+hostnameapp=beta
 oldapp="${app}-old"
 
-domain="paas.uninett.no"
+domain="foodl.org"
 
 echo "Ready to deploy updated version of ${domain}"
 
