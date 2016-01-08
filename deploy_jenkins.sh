@@ -37,7 +37,7 @@ fi
 
 cf routes
 
-cf push "${app}" -k 384M -m 128M -i 2
+cf push "${app}" -k 384M -m 256M -i 2
 cf map-route "${app}" "${domain}" -n "${hostnameapp}"
 
 
