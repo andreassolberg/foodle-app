@@ -53,7 +53,7 @@ define(function(require, exports, module) {
 		"loadGeoIP": function() {
 			var that = this;
 			return new Promise(function(resolve, reject) {
-				var url = 'http://freegeoip.net/json/';
+				var url = 'https://freegeoip.net/json/';
 				$.ajax({
 					dataType: "json",
 					url: url,
